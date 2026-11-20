@@ -11,30 +11,34 @@
 <title>Grab Fleet</title>
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%230f766e'/%3E%3Ctext x='32' y='42' font-size='28' font-family='Arial' font-weight='700' fill='white' text-anchor='middle'%3EGF%3C/text%3E%3C/svg%3E">
 <style>
-  html,body{margin:0;height:100%;background:#f6f7f9;overflow:hidden}
-  iframe{position:fixed;inset:0;width:100%;height:100%;border:0}
-  #fb{position:fixed;left:0;right:0;bottom:0;text-align:center;font:13px system-ui,sans-serif;padding:6px;background:#fff8;display:none}
-  #fb a{color:#0f766e;font-weight:600}
+  body{margin:0;min-height:100vh;display:flex;align-items:center;justify-content:center;background:#f6f7f9;font:15px system-ui,sans-serif;color:#334}
+  .box{text-align:center;padding:24px}
+  .logo{width:56px;height:56px;border-radius:14px;background:#0f766e;color:#fff;font:700 24px Arial;display:flex;align-items:center;justify-content:center;margin:0 auto 14px}
+  a{display:inline-block;margin-top:14px;padding:12px 22px;border-radius:10px;background:#0f766e;color:#fff;text-decoration:none;font-weight:600}
 </style>
 </head>
 <body>
-<iframe id="app" title="Grab Fleet" allow="camera; clipboard-read; clipboard-write; fullscreen" ></iframe>
-<div id="fb">ถ้าหน้าไม่ขึ้น <a id="fbl" target="_top">แตะที่นี่เพื่อเปิดแบบเต็มหน้า</a></div>
+<div class="box">
+  <div class="logo">GF</div>
+  <div id="msg">กำลังเปิด Grab Fleet…</div>
+  <a id="go" href="#">เปิด Grab Fleet</a>
+</div>
 <script>
   // grab.stromthailand.com            → แอปพนักงาน Grab Fleet
   // grab.stromthailand.com/sign/<รหัส> → หน้าลงนามสัญญาของลูกค้า
+  // เปิดแบบเต็มหน้า (ไม่ใช้ iframe) เพื่อให้ใช้ได้แม้เบราว์เซอร์ล็อกอิน Google หลายบัญชี
   var APP = 'https://script.google.com/macros/s/AKfycbzmSCEzmWVFiQFFnC2srZ9Che7S4lu6Z1-LTekJ2E1svfk5Oz0gyzvToOM-0nMMs3x01A/exec';
   var path = location.pathname.replace(/^\/+|\/+$/g, '');
   var m = path.match(/^sign\/([A-Za-z0-9-]{12,64})$/i);
   var url = APP;
-  if (m) { url = APP + '?sign=' + encodeURIComponent(m[1]); document.title = 'ลงนามสัญญาออนไลน์ | STROM'; }
-  else if (path) { location.replace('/'); }
-  var f = document.getElementById('app'), loaded = false;
-  f.onload = function () { loaded = true; document.getElementById('fb').style.display = 'none'; };
-  f.src = url;
-  document.getElementById('fbl').href = url;
-  // ถ้าโหลดไม่ขึ้นใน 15 วินาที แสดงทางเลือกเปิดแบบเต็มหน้า
-  setTimeout(function () { if (!loaded) document.getElementById('fb').style.display = 'block'; }, 15000);
+  if (m) {
+    url = APP + '?sign=' + encodeURIComponent(m[1]);
+    document.title = 'ลงนามสัญญาออนไลน์ | STROM';
+    document.getElementById('msg').textContent = 'กำลังเปิดหน้าลงนามสัญญา…';
+    document.getElementById('go').textContent = 'เปิดหน้าลงนามสัญญา';
+  }
+  document.getElementById('go').href = url;
+  location.replace(url);
 </script>
 </body>
 </html>
