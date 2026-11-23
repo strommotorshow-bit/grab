@@ -1,59 +1,1969 @@
 <!DOCTYPE html>
 <html lang="th">
 <head>
+<base target="_top">
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, viewport-fit=cover">
+<title>Grab Fleet</title>
 <meta name="robots" content="noindex, nofollow">
 <meta name="theme-color" content="#0f766e">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-title" content="Grab Fleet">
-<title>Grab Fleet</title>
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%230f766e'/%3E%3Ctext x='32' y='42' font-size='28' font-family='Arial' font-weight='700' fill='white' text-anchor='middle'%3EGF%3C/text%3E%3C/svg%3E">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 64 64%27%3E%3Crect width=%2764%27 height=%2764%27 rx=%2714%27 fill=%27%230f766e%27/%3E%3Ctext x=%2732%27 y=%2742%27 font-size=%2728%27 font-family=%27Arial%27 font-weight=%27700%27 fill=%27white%27 text-anchor=%27middle%27%3EGF%3C/text%3E%3C/svg%3E">
+<link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@400;600;700&display=swap" rel="stylesheet">
 <style>
-  html,body{margin:0;height:100%;background:#f6f7f9;font:15px system-ui,sans-serif;color:#334}
-  iframe{position:fixed;inset:0;width:100%;height:100%;border:0;display:none}
-  .box{position:fixed;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:24px}
-  .logo{width:56px;height:56px;border-radius:14px;background:#0f766e;color:#fff;font:700 24px Arial;display:flex;align-items:center;justify-content:center;margin-bottom:14px}
-  a.btn{display:inline-block;margin-top:14px;padding:12px 22px;border-radius:10px;background:#0f766e;color:#fff;text-decoration:none;font-weight:600}
-  #fb{position:fixed;left:0;right:0;top:0;text-align:center;font-size:13px;padding:6px;background:#fffbeb;display:none;z-index:9}
-  #fb a{color:#0f766e;font-weight:600}
+  :root{--pri:#0f766e;--pri-2:#115e59;--pri-bg:#e6f4f2;--ink:#1f2937;--mute:#6b7280;--line:#e5e7eb;--bg:#f6f7f9;--warn:#b45309;--warn-bg:#fef3c7;--bad:#b91c1c;--bad-bg:#fee2e2;--ok:#15803d;--ok-bg:#dcfce7}
+  *{box-sizing:border-box}
+  body{margin:0;font-family:'Sarabun',system-ui,sans-serif;font-size:16px;color:var(--ink);background:var(--bg)}
+  .wrap{max-width:760px;margin:0 auto;padding:0 14px 96px}
+  header.top{position:sticky;top:0;z-index:20;background:var(--pri);color:#fff}
+  header.top .in{max-width:760px;margin:0 auto;padding:10px 14px;display:flex;align-items:center;gap:10px}
+  header.top .title{flex:1;font-weight:700;font-size:17px;line-height:1.2}
+  header.top .sub{font-size:13px;opacity:.85;font-weight:400}
+  #hLoc{max-width:42vw;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;background:#fff!important;color:var(--pri)!important;font-weight:600}
+  header.top button{background:rgba(255,255,255,.15);color:#fff;border:0;border-radius:8px;padding:8px 12px;font:inherit;font-size:14px;cursor:pointer}
+  h2{font-size:20px;margin:18px 0 6px}
+  .hint{color:var(--mute);font-size:15px;margin:0 0 14px}
+  .card{background:#fff;border:1px solid var(--line);border-radius:12px;padding:14px;margin-bottom:12px}
+  .grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}
+  @media(min-width:600px){.grid.g3{grid-template-columns:repeat(3,1fr)}}
+  .tile{background:#fff;border:1px solid var(--line);border-radius:12px;padding:16px 12px;text-align:center;cursor:pointer;font-weight:600;font-size:16px;min-height:86px;display:flex;flex-direction:column;justify-content:center;gap:4px}
+  .tile .ic{font-size:24px}
+  .tile:active{background:var(--pri-bg)}
+  .stat{display:flex;justify-content:space-between;align-items:center;padding:10px 0;border-bottom:1px solid var(--line);cursor:pointer}
+  .stat:last-child{border-bottom:0}
+  .num{font-weight:700;font-size:20px;min-width:36px;text-align:right}
+  .num.warn{color:var(--warn)}.num.bad{color:var(--bad)}
+  .pill{display:inline-block;border-radius:999px;padding:2px 10px;font-size:13px;font-weight:600;background:#eef2f7;color:#374151}
+  .pill.ok{background:var(--ok-bg);color:var(--ok)}.pill.warn{background:var(--warn-bg);color:var(--warn)}.pill.bad{background:var(--bad-bg);color:var(--bad)}.pill.pri{background:var(--pri-bg);color:var(--pri-2)}
+  .row{display:flex;gap:10px;align-items:center}
+  .item{display:flex;justify-content:space-between;gap:10px;padding:12px;border:1px solid var(--line);border-radius:10px;background:#fff;margin-bottom:8px;cursor:pointer}
+  .item.sel{border-color:var(--pri);box-shadow:0 0 0 2px var(--pri) inset;background:var(--pri-bg)}
+  .item .l1{font-weight:600}.item .l2{color:var(--mute);font-size:14px}
+  label{display:block;font-weight:600;font-size:15px;margin:12px 0 4px}
+  input,select,textarea{width:100%;padding:11px 12px;border:1px solid #d1d5db;border-radius:10px;font:inherit;background:#fff}
+  input:focus,select:focus,textarea:focus{outline:2px solid var(--pri);border-color:var(--pri)}
+  input[readonly]{background:#f3f4f6}
+  .err{color:var(--bad);font-size:14px;margin-top:4px}
+  a.btn{text-decoration:none}
+  .btn{display:inline-flex;align-items:center;justify-content:center;gap:6px;border:0;border-radius:10px;padding:12px 18px;font:inherit;font-weight:600;cursor:pointer;background:var(--pri);color:#fff;min-height:48px}
+  .btn.sec{background:#fff;color:var(--ink);border:1px solid #d1d5db}
+  .btn.bad{background:var(--bad)}
+  .btn:disabled{opacity:.45;cursor:not-allowed}
+  .btn.block{width:100%}
+  .bar{position:fixed;left:0;right:0;bottom:0;background:#fff;border-top:1px solid var(--line);z-index:15}
+  .nav{position:fixed;left:0;right:0;bottom:0;background:#fff;border-top:1px solid var(--line);z-index:14;padding-bottom:env(safe-area-inset-bottom)}
+  .nav .in{max-width:760px;margin:0 auto;display:flex}
+  .nav a{flex:1;text-align:center;padding:7px 2px 6px;color:var(--mute);text-decoration:none;font-size:12px;position:relative;cursor:pointer}
+  .nav a .i{display:block;font-size:20px;line-height:1.2}
+  .nav a.on{color:var(--pri);font-weight:700}
+  .nav a .b{position:absolute;top:2px;left:50%;margin-left:6px;background:var(--bad);color:#fff;border-radius:9px;font-size:10px;padding:1px 5px;font-weight:700}
+  body.hasbar .nav,body.nonav .nav{display:none}
+  .tile.big{min-height:110px;font-size:17px}.tile.big .ic{font-size:30px}
+  .tile.off{opacity:.45;cursor:default}
+  .bar .in{max-width:760px;margin:0 auto;padding:10px 14px;display:flex;gap:10px}
+  .bar .btn{flex:1}
+  .steps{display:flex;gap:4px;margin:14px 0 4px}
+  .steps div{flex:1;height:6px;border-radius:3px;background:var(--line)}
+  .steps div.on{background:var(--pri)}
+  .stepname{font-size:14px;color:var(--pri-2);font-weight:700}
+  .chips{display:flex;gap:6px;flex-wrap:wrap;margin:8px 0 12px}
+  .chip{border:1px solid #d1d5db;background:#fff;border-radius:999px;padding:6px 12px;font-size:14px;cursor:pointer}
+  .chip.on{background:var(--pri);color:#fff;border-color:var(--pri)}
+  .alert{border-radius:10px;padding:10px 12px;margin:8px 0;font-size:15px}
+  .alert.warn{background:var(--warn-bg);color:#78350f}.alert.bad{background:var(--bad-bg);color:#7f1d1d}.alert.ok{background:var(--ok-bg);color:#14532d}.alert.info{background:var(--pri-bg);color:var(--pri-2)}
+  .kv{display:grid;grid-template-columns:140px 1fr;gap:6px 10px;font-size:15px}
+  .kv div:nth-child(odd){color:var(--mute)}
+  .photos{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+  .ph{border:2px dashed #d1d5db;border-radius:10px;aspect-ratio:1;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;font-size:13px;color:var(--mute);cursor:pointer;overflow:hidden;position:relative;background:#fff}
+  .ph img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+  .ph.done{border-style:solid;border-color:var(--ok)}
+  .ph.up{border-style:solid;border-color:#f59e0b}.ph.up::after{content:'กำลังอัปโหลด…';position:absolute;top:0;left:0;right:0;background:rgba(245,158,11,.9);color:#fff;font-size:11px;padding:2px}
+  .ph.err{border-style:solid;border-color:var(--bad)}.ph.err::after{content:'อัปโหลดไม่สำเร็จ แตะเพื่อถ่ายใหม่';position:absolute;top:0;left:0;right:0;background:rgba(180,35,24,.92);color:#fff;font-size:11px;padding:2px}
+  #hTask{background:#fff!important;color:var(--pri)!important;font-weight:700;white-space:nowrap}#hTask.err{color:#b42318!important}
+  .spin.sm{width:22px;height:22px;border-width:3px;display:inline-block;vertical-align:middle}
+  .ph .cap{position:absolute;bottom:0;left:0;right:0;background:rgba(0,0,0,.55);color:#fff;font-size:12px;padding:2px}
+  .sig{border:1px solid #d1d5db;border-radius:10px;background:#fff;touch-action:none;width:100%;height:180px;display:block}
+  .notice{max-height:260px;overflow:auto;border:1px solid var(--line);border-radius:10px;padding:10px 12px;background:#fafafa;font-size:14px;line-height:1.55}
+  .check{display:flex;gap:10px;align-items:flex-start;margin:10px 0;font-weight:400}
+  .check input{width:22px;height:22px;flex:0 0 22px;margin-top:2px}
+  .checks{display:grid;grid-template-columns:repeat(2,1fr);gap:2px 10px}
+  .checks label{display:flex;gap:8px;align-items:center;font-weight:400;margin:6px 0}
+  .checks input{width:20px;height:20px}
+  .loading{position:fixed;inset:0;background:rgba(255,255,255,.75);z-index:50;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:10px;font-weight:600}
+  .spin{width:42px;height:42px;border:4px solid var(--pri-bg);border-top-color:var(--pri);border-radius:50%;animation:sp 1s linear infinite}
+  @keyframes sp{to{transform:rotate(360deg)}}
+  .toast{position:fixed;left:50%;bottom:90px;transform:translateX(-50%);background:#111827;color:#fff;padding:10px 16px;border-radius:10px;z-index:60;max-width:90%;font-size:15px}
+  .modal{position:fixed;inset:0;background:rgba(0,0,0,.4);z-index:40;display:flex;align-items:flex-end;justify-content:center}
+  .modal .box{background:#fff;width:100%;max-width:760px;max-height:92vh;overflow:auto;border-radius:16px 16px 0 0;padding:16px 16px 24px}
+  .muted{color:var(--mute)}.small{font-size:14px}.right{text-align:right}.mt{margin-top:12px}
+  table.t{width:100%;border-collapse:collapse;font-size:14px}table.t td,table.t th{padding:8px 6px;border-bottom:1px solid var(--line);text-align:left}
+  .hide{display:none}
+  .kpis{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+  @media(min-width:600px){.kpis{grid-template-columns:repeat(4,minmax(0,1fr))}}
+  .kpi{background:#fff;border:1px solid var(--line);border-radius:12px;padding:12px}
+  .kpi .v{font-size:24px;font-weight:700;line-height:1.1}.kpi .k{color:var(--mute);font-size:13px}
+  .hbar{display:flex;align-items:center;gap:8px;margin:6px 0;font-size:14px}
+  .hbar .lb{width:120px;flex:0 0 120px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .hbar .tr{flex:1;background:#eef2f7;border-radius:6px;height:16px;overflow:hidden}
+  .hbar .fl{height:100%;background:var(--pri);border-radius:6px}
+  .hbar .nv{width:64px;text-align:right;font-variant-numeric:tabular-nums}
+  .vbars{display:flex;align-items:flex-end;gap:6px;height:160px;padding-top:6px;border-bottom:1px solid var(--line)}
+  .vbars .col{flex:1;display:flex;flex-direction:column;justify-content:flex-end;align-items:stretch;height:100%;min-width:0}
+  .vbars .seg{border-radius:3px 3px 0 0}
+  .vlbl{display:flex;gap:6px;font-size:11px;color:var(--mute)}.vlbl div{flex:1;text-align:center;min-width:0}
+  .legend{display:flex;gap:14px;font-size:13px;margin:8px 0;flex-wrap:wrap}.legend i{display:inline-block;width:10px;height:10px;border-radius:2px;margin-right:4px}
+  .tbl{width:100%;border-collapse:collapse;font-size:14px}.tbl th,.tbl td{padding:8px 6px;border-bottom:1px solid var(--line);text-align:right;white-space:nowrap}.tbl th:first-child,.tbl td:first-child{text-align:left}
+  .scroll{overflow-x:auto}
 </style>
 </head>
 <body>
-<div class="box" id="box">
-  <div class="logo">GF</div>
-  <div id="msg">กำลังเปิด Grab Fleet…</div>
-  <a class="btn" id="go" href="#" target="_top">เปิด Grab Fleet</a>
-</div>
-<iframe id="app" title="Grab Fleet" allow="camera; clipboard-read; clipboard-write; fullscreen"></iframe>
-<div id="fb">ถ้าหน้าไม่ขึ้น <a id="fbl" target="_top">แตะที่นี่เพื่อเปิดแบบเต็มหน้า</a></div>
+<header class="top"><div class="in">
+  <button id="hBack" class="hide" onclick="goBack()">‹ กลับ</button>
+  <div class="title"><span id="hTitle">Grab Fleet</span><div class="sub" id="hSub"></div></div>
+  <button id="hTask" class="hide" onclick="taskList()"></button>
+  <button id="hLoc" class="hide" onclick="locPicker()"></button>
+  <button id="hMenu" class="hide" onclick="navTo('more')">เมนู</button>
+</div></header>
+<div class="wrap" id="app"></div>
+<div id="barHost"></div>
+<div id="navHost"></div>
+<div id="overlay"></div>
+
+<script>window.addEventListener('error',function(e){var a=document.getElementById('app');if(a&&!a.innerHTML)a.innerHTML='<div style="margin:16px;padding:12px;border-radius:10px;background:#fee2e2;color:#b91c1c">เปิดแอปไม่สำเร็จ: '+String(e.message).replace(/</g,'&lt;')+' (บรรทัด '+e.lineno+')<br>ลองรีเฟรชหน้า ถ้ายังไม่ได้ แจ้งผู้ดูแลระบบ</div>';});</script>
 <script>
-  // grab.stromthailand.com            → แอปพนักงาน Grab Fleet
-  // grab.stromthailand.com/sign/<รหัส> → หน้าลงนามสัญญาของลูกค้า
-  // มือถือ/แท็บเล็ต: ฝังในหน้านี้ (ลิงก์สั้นอยู่ตลอด)
-  // คอมพิวเตอร์: เปิดแบบเต็มหน้า (กันปัญหาเบราว์เซอร์ที่ล็อกอิน Google หลายบัญชี)
-  var APP = 'https://script.google.com/macros/s/AKfycbzmSCEzmWVFiQFFnC2srZ9Che7S4lu6Z1-LTekJ2E1svfk5Oz0gyzvToOM-0nMMs3x01A/exec';
-  var path = location.pathname.replace(/^\/+|\/+$/g, '');
-  var m = path.match(/^sign\/([A-Za-z0-9-]{12,64})$/i);
-  var url = APP;
-  if (m) {
-    url = APP + '?sign=' + encodeURIComponent(m[1]);
-    document.title = 'ลงนามสัญญาออนไลน์ | STROM';
-    document.getElementById('msg').textContent = 'กำลังเปิดหน้าลงนามสัญญา…';
-    document.getElementById('go').textContent = 'เปิดหน้าลงนามสัญญา';
-  } else if (path) { location.replace('/'); }
-  document.getElementById('go').href = url;
-  document.getElementById('fbl').href = url;
-  var mobile = /Android|iPhone|iPad|iPod|Mobile/i.test(navigator.userAgent) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
-  if (mobile) {
-    var f = document.getElementById('app'), loaded = false;
-    f.onload = function () { loaded = true; f.style.display = 'block'; document.getElementById('box').style.display = 'none'; };
-    f.src = url;
-    setTimeout(function () { if (!loaded) document.getElementById('fb').style.display = 'block'; }, 15000);
-  } else {
-    location.replace(url);
+/* ===================== สถานะของแอป ===================== */
+// localStorage อาจใช้ไม่ได้ในบางเบราว์เซอร์ (บล็อกคุกกี้บุคคลที่สาม) จึงห่อด้วย try/catch
+const store = {
+  get(k) { try { return localStorage.getItem(k); } catch (e) { return null; } },
+  set(k, v) { try { localStorage.setItem(k, v); } catch (e) {} },
+  del(k) { try { localStorage.removeItem(k); } catch (e) {} }
+};
+const S = { token: store.get('gf_token') || '', user: null, boot: null, loc: '', history: [], wiz: null };
+const SCREENS = {};
+const PHOTO_ANGLES = [['front','ด้านหน้า'],['back','ด้านหลัง'],['left','ด้านซ้าย'],['right','ด้านขวา'],['mileage','เลขไมล์'],['vin','เลข VIN']];
+const ACCESSORIES = ['ที่ชาร์จ','OBC','Type2 / Type2 Adapter','แบตเตอรี่ SWAP','แฮนด์บาร์','ที่จับมือถือ','ที่วางแก้ว','กระจกข้าง','ท้ายรถ-กันตก','ท้ายรถ-แร็คสไลด์','Crashbar','Spotlight','IC CARD'];
+const CANCEL_REASONS = ['ผู้เช่าขอยกเลิก/คืนรถก่อนกำหนด','ค้างชำระเกิน 7 วัน','ผิดเงื่อนไขสัญญา','ทำสัญญาผิด (ข้อมูลไม่ถูกต้อง)','อื่นๆ'];
+const V_PILL = {'ว่าง':'ok','จองแล้ว':'warn','ให้เช่า':'pri','ระหว่างโยก':'warn','รอเคลม':'bad','ส่งซ่อม':'warn','ติดตามยึด':'bad','ยึดคืนแล้ว':'','ปลดระวาง':''};
+const K_PILL = {'รอประกันอนุมัติ':'warn','ประกันอนุมัติ':'pri','กำลังซ่อม':'warn','ซ่อมเสร็จ':'ok','ปิดเคส':''};
+const C_PILL = {'Active':'ok','รอเซ็น':'warn','หมดสัญญา':'bad','ต้องตรวจสอบ':'bad','ยกเลิก':'','คืนรถแล้ว':'','ต่อสัญญาแล้ว':'pri','ยึดรถ':'bad'};
+
+/* ===================== เครื่องมือ ===================== */
+const $ = id => document.getElementById(id);
+const esc = s => String(s == null ? '' : s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const money = n => Number(n || 0).toLocaleString('th-TH');
+const pill = (t, map) => `<span class="pill ${map[t] || ''}">${esc(t)}</span>`;
+const ymd = d => d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0');
+const th = s => { if (!s) return ''; const d = new Date(s.length === 10 ? s + 'T00:00:00' : s); return d.getDate() + '/' + (d.getMonth() + 1) + '/' + (d.getFullYear() + 543); };
+function may(k) { return !!(S.boot && S.boot.perms && S.boot.perms.indexOf(k) >= 0); }
+const can = (...roles) => S.user && roles.indexOf(S.user.role) >= 0;
+const locName = c => { const l = (S.boot ? S.boot.locations : []).find(x => x.code === c); return l ? l.name : c; };
+
+// เปิดจาก grab.stromthailand.com → เรียกระบบหลังบ้านด้วย fetch โดยไม่ส่งคุกกี้ Google (กันปัญหาล็อกอินหลายบัญชี)
+// เปิดจากลิงก์ script.google.com → ใช้ google.script.run เหมือนเดิม
+const API_URL = 'https:\/\/script.google.com/macros/s/AKfycbzmSCEzmWVFiQFFnC2srZ9Che7S4lu6Z1-LTekJ2E1svfk5Oz0gyzvToOM-0nMMs3x01A/exec';
+const IN_GAS = typeof google !== 'undefined' && !!(google.script && google.script.run);
+const cleanErr = m => String(m || '').replace(/^(Error|Exception):\s*/, '');
+async function callServer(fn, args) {
+  if (IN_GAS) return new Promise((res, rej) => google.script.run.withSuccessHandler(res).withFailureHandler(e => rej(new Error(cleanErr((e && e.message) || String(e)))))[fn](...args));
+  let r;
+  for (let i = 0; ; i++) {
+    try { r = await fetch(API_URL, { method: 'POST', body: JSON.stringify({ fn, args }), headers: { 'Content-Type': 'text/plain;charset=utf-8' }, credentials: 'omit', redirect: 'follow' }); break; }
+    catch (e) { if (i >= 1 || !/^(get|list|search|find|verify|returnPreview)/.test(fn)) throw new Error('เชื่อมต่อระบบไม่ได้ ตรวจสอบอินเทอร์เน็ตแล้วลองใหม่'); await new Promise(z => setTimeout(z, 1200)); }
   }
+  let j;
+  try { j = await r.json(); } catch (e) { throw new Error('ระบบตอบกลับผิดปกติ (' + r.status + ') ลองใหม่อีกครั้ง'); }
+  if (!j.ok) throw new Error(cleanErr(j.error));
+  return j.data;
+}
+function api(fn, ...args) {
+  return callServer(fn, [S.token, ...args]).catch(e => {
+    if (/SESSION_EXPIRED/.test(e.message)) { toast('หมดเวลาการใช้งาน กรุณาเข้าสู่ระบบใหม่'); doLogout(true); }
+    throw e;
+  });
+}
+function apiRaw(fn, ...args) { return callServer(fn, args); }
+
+async function busy(msg, p) {
+  $('overlay').innerHTML = `<div class="loading"><div class="spin"></div><div>${esc(msg)}</div></div>`;
+  try { return await p; } finally { $('overlay').innerHTML = ''; }
+}
+function toast(msg, ms) { const t = document.createElement('div'); t.className = 'toast'; t.textContent = msg; document.body.appendChild(t); setTimeout(() => t.remove(), ms || 3200); }
+function fail(e) { toast('ทำรายการไม่สำเร็จ: ' + e.message, 5000); }
+
+function setHeader(title, sub, back) {
+  $('hTitle').textContent = title; $('hSub').textContent = sub || '';
+  $('hBack').textContent = S.history.length ? '‹ กลับ' : '‹ หน้าหลัก'; $('hBack').classList.toggle('hide', !back); $('hMenu').classList.toggle('hide', !S.user);
+}
+function setBar(html) { $('barHost').innerHTML = html ? `<div class="bar"><div class="in">${html}</div></div>` : ''; document.body.classList.toggle('hasbar', !!html); }
+function show(html) { $('app').innerHTML = html; window.scrollTo(0, 0); }
+function go(screen, arg, push = true) { if (push && S.cur) S.history.push(S.cur); S.cur = { screen, arg }; renderNav(); renderLocBtn(); const r = SCREENS[screen](arg); markUploads(); if (r && r.then) r.then(markUploads, () => {}); }
+
+/* ===================== งานเบื้องหลัง =====================
+   งานที่ต้องสร้าง PDF (เซ็นสัญญา รับคืนรถ ยึดรถ ฯลฯ) ใช้เวลา 15–30 วินาที
+   ระบบส่งคำสั่งแล้วปล่อยให้ผู้ใช้ทำรายการอื่นต่อได้ทันที เมื่อเสร็จจะแจ้งเตือน และดูผลได้ที่ปุ่มงานบนแถบด้านบน */
+S.tasks = [];
+function bgRun(label, thunk, onDone, sec) {
+  const t = { id: 't' + Date.now() + Math.floor(Math.random() * 1000), label: label, thunk: thunk, onDone: onDone, sec: sec || 30, state: 'run', start: Date.now() };
+  S.tasks.unshift(t); S.tasks = S.tasks.slice(0, 15);
+  S.bgId = t.id; S.wiz = null; go('bgwait', t.id, false);
+  bgExec(t);
+}
+function bgExec(t) {
+  t.state = 'run'; t.start = Date.now(); t.err = ''; renderTray();
+  t.thunk().then(r => {
+    t.state = 'ok'; t.r = r; t.end = Date.now(); S.today = null; renderTray();
+    if (S.cur && S.cur.screen === 'bgwait' && S.cur.arg === t.id) t.onDone(r); else toast('✓ ' + t.label + ' เสร็จแล้ว (ดูที่ปุ่มงานด้านบน)', 5000);
+  }).catch(e => {
+    t.state = 'err'; t.err = e.message || String(e); renderTray();
+    if (S.cur && S.cur.screen === 'bgwait' && S.cur.arg === t.id) SCREENS.bgwait(t.id); else toast('✗ ' + t.label + ' ไม่สำเร็จ — แตะปุ่มงานด้านบนเพื่อลองใหม่', 7000);
+  });
+}
+SCREENS.bgwait = id => {
+  const t = S.tasks.find(x => x.id === id); if (!t) return home();
+  if (t.state === 'ok') return t.onDone(t.r);
+  setHeader(t.label, '', false);
+  if (t.state === 'err') {
+    show(`<div class="card mt" style="text-align:center"><div style="font-size:44px">⚠️</div><h2>บันทึกไม่สำเร็จ</h2><p>${esc(t.err)}</p>
+      <p class="small muted">ข้อมูลที่กรอกและลายเซ็นยังอยู่ กด "ลองอีกครั้ง" ได้เลย</p></div>`);
+    return setBar(`<button class="btn sec" onclick="home()">กลับหน้าหลัก</button><button class="btn" onclick="bgRetry('${t.id}')">ลองอีกครั้ง</button>`);
+  }
+  show(`<div class="card mt" style="text-align:center"><div class="spin" style="margin:6px auto 12px"></div><h2>กำลังบันทึกและสร้างเอกสาร…</h2>
+    <p>ใช้เวลาประมาณ ${t.sec} วินาที<br><b>ไม่ต้องรอหน้านี้</b> กด "ทำรายการอื่น" ได้เลย ระบบจะแจ้งเมื่อเสร็จ</p>
+    <p class="small muted">ห้ามปิดหน้าเว็บหรือแอปจนกว่างานจะเสร็จ (ดูสถานะที่ปุ่ม ⏳ ด้านบน)</p></div>`);
+  setBar(`<button class="btn" onclick="home()">ทำรายการอื่น</button>`);
+};
+function bgRetry(id) { const t = S.tasks.find(x => x.id === id); if (!t) return; S.cur = { screen: 'bgwait', arg: id }; bgExec(t); SCREENS.bgwait(id); }
+function renderTray() {
+  const b = $('hTask'); if (!b) return;
+  const run = S.tasks.filter(t => t.state === 'run').length, err = S.tasks.filter(t => t.state === 'err').length;
+  b.classList.toggle('hide', !run && !err && !S.tasks.length);
+  b.classList.toggle('err', !!err);
+  b.innerHTML = run ? '⏳ ' + run : err ? '⚠️ ' + err : '✓';
+  window.onbeforeunload = run ? () => 'ยังมีงานที่กำลังบันทึกอยู่' : null;
+}
+function taskList() {
+  if (!S.tasks.length) return;
+  modal(`<h2 style="margin-top:0">งานล่าสุด</h2>${S.tasks.map(t => `<div class="item" onclick="closeModal();S.cur=null;go('bgwait','${t.id}',true)"><div><div class="l1">${t.state === 'run' ? '⏳' : t.state === 'ok' ? '✅' : '⚠️'} ${esc(t.label)}</div>
+    <div class="l2">${t.state === 'run' ? 'กำลังทำงาน ' + Math.round((Date.now() - t.start) / 1000) + ' วินาที' : t.state === 'ok' ? 'เสร็จแล้ว แตะเพื่อเปิดเอกสาร' : esc(t.err) + ' — แตะเพื่อลองใหม่'}</div></div><div>›</div></div>`).join('')}
+    ${S.tasks.some(t => t.state !== 'run') ? `<button class="btn sec block mt" onclick="S.tasks=S.tasks.filter(t=>t.state==='run');renderTray();closeModal()">ล้างรายการที่เสร็จแล้ว</button>` : ''}`);
+}
+
+/* ---- อัปโหลดรูปเบื้องหลัง (ถ่ายรูปต่อได้เลย ไม่ต้องรอทีละรูป) ---- */
+S.upl = {};
+function markUploads() {
+  document.querySelectorAll('#app .ph[onclick^="snap("]').forEach(el => {
+    const m = el.getAttribute('onclick').match(/snap\('([^']+)'/); if (!m || !S.wiz) return;
+    const st = (S.upl[S.wiz.contractId + '|' + m[1]] || {}).state;
+    el.classList.toggle('up', st === 'run'); el.classList.toggle('err', st === 'err');
+  });
+}
+async function waitUploads() {
+  const cid = S.wiz && S.wiz.contractId; if (!cid) return true;
+  const mine = Object.keys(S.upl).filter(k => k.startsWith(cid + '|')).map(k => S.upl[k]);
+  const run = mine.filter(u => u.state === 'run');
+  if (run.length) await busy('รอรูปอัปโหลดให้เสร็จ (' + run.length + ' รูป)…', Promise.all(run.map(u => u.p.catch(() => {}))));
+  if (mine.some(u => u.state === 'err')) { toast('มีรูปที่อัปโหลดไม่สำเร็จ (กรอบสีแดง) แตะเพื่อถ่ายใหม่ก่อน', 5000); markUploads(); return false; }
+  return true;
+}
+/* ปุ่มเปลี่ยนพื้นที่บนแถบด้านบน (แสดงเฉพาะหน้าหลัก ๆ ไม่แสดงระหว่างทำรายการ) */
+function renderLocBtn() {
+  const b = $('hLoc'); if (!b) return;
+  const ok = S.user && S.boot && S.boot.locations.length > 1 && S.loc && S.cur && NAV_OF[S.cur.screen] && S.cur.screen !== 'contract';
+  b.classList.toggle('hide', !ok); if (ok) b.innerHTML = '&#x1F4CD; ' + esc(locName(S.loc)) + ' &#x25BE;';
+}
+function locPicker() {
+  modal(`<h2 style="margin-top:0">เลือกพื้นที่ / สาขา</h2>
+    ${S.boot.locations.length > 1 && may('reports') ? `<div class="item" onclick="closeModal();go('dashboard',{})"><div><div class="l1">&#x1F4CA; Dashboard รวมทุกสาขา</div></div><div>›</div></div>` : ''}
+    ${S.boot.locations.map(l => `<div class="item" onclick="closeModal();switchLoc('${esc(l.code)}')" style="${l.code === S.loc ? 'background:#e6f4f1' : ''}"><div><div class="l1">${esc(l.name)}${l.code === S.loc ? ' ✓' : ''}</div><div class="l2">${esc(l.code)}</div></div><div>›</div></div>`).join('')}`);
+}
+/* เปลี่ยนสาขาแล้วอยู่หน้าเดิม (ถ้าเป็นหน้าที่ขึ้นกับสาขา) */
+function switchLoc(c) {
+  S.loc = c; S.today = null; saveLoc_(c);
+  const cur = S.cur && S.cur.screen;
+  if (cur === 'dashboard') return go('dashboard', { branch: true }, false);
+  if (cur && NAV_OF[cur] && ['contract', 'search', 'list', 'vhist'].indexOf(cur) < 0) return go(cur, S.cur.arg, false);
+  home();
+}
+
+/* ===================== แถบเมนูด้านล่าง ===================== */
+// หน้าจอไหนอยู่ในแถบไหน (หน้าจอที่ไม่อยู่ในรายการ = ไม่แสดงแถบ เช่น ขั้นตอนทำสัญญา)
+const NAV_OF = { home: 'home', list: 'home', search: 'home', contract: 'home',
+  follow: 'follow', arrears: 'follow', seize: 'follow', debts: 'follow', abandon: 'follow',
+  cars: 'cars', stock: 'cars', claims: 'cars', vhist: 'cars',
+  reports: 'reports', report: 'reports', dashboard: 'reports',
+  more: 'more', active: 'home', users: 'more', password: 'more', legacy: 'more', packages: 'more' };
+function navTabs() {
+  return [['home', '&#x1F3E0;', 'หน้าแรก', true], ['follow', '&#x1F4DE;', 'ติดตาม', !can('VIEWER') || may('followup') || may('payment') || may('seize_record')], ['cars', '&#x1F6F5;', 'รถ', true],
+    ['reports', '&#x1F4CA;', 'รายงาน', may('reports')], ['more', '&#x2630;', 'อื่นๆ', true]].filter(t => t[3]);
+}
+function navBadge(k) {
+  const t = S.today; if (!t) return 0;
+  if (k === 'follow') return (t.arrears ? (t.arrears.call || 0) + (t.arrears.cancels || 0) : 0) + (t.seizures || 0);
+  if (k === 'reports') return (t.approvals || []).length;
+  if (k === 'cars') return (t.incoming || []).length + (t.openClaims || 0);
+  return 0;
+}
+function renderNav() {
+  const cur = S.cur && NAV_OF[S.cur.screen];
+  document.body.classList.toggle('nonav', !S.user || !S.loc || !cur);
+  if (!S.user || !cur) { $('navHost').innerHTML = ''; return; }
+  $('navHost').innerHTML = `<nav class="nav"><div class="in">${navTabs().map(([k, ic, l]) => { const b = navBadge(k);
+    return `<a class="${k === cur ? 'on' : ''}" onclick="navTo('${k}')"><span class="i">${ic}</span>${l}${b ? `<span class="b">${b > 99 ? '99+' : b}</span>` : ''}</a>`; }).join('')}</div></nav>`;
+}
+function navTo(k) { S.history = []; S.wiz = null; go(k, null, false); }
+function goBack() { const p = S.history.pop(); if (p) { S.cur = p; SCREENS[p.screen](p.arg); } else go('home', null, false); }
+function home() { S.history = []; S.wiz = null; go('home', null, false); }
+
+function modal(html) {
+  const m = document.createElement('div'); m.className = 'modal';
+  m.innerHTML = `<div class="box">${html}</div>`;
+  m.addEventListener('click', e => { if (e.target === m) m.remove(); });
+  document.body.appendChild(m); return m;
+}
+function closeModal() { document.querySelectorAll('.modal').forEach(m => m.remove()); }
+
+/* ===================== รูปถ่าย (ย่อขนาดก่อนส่ง) ===================== */
+function pickPhoto(facing) {
+  return new Promise(resolve => {
+    const inp = document.createElement('input'); inp.type = 'file';
+    if (facing === 'file') inp.accept = 'image/' + '*,application/pdf'; else { inp.accept = 'image/' + '*'; inp.capture = facing || 'environment'; }
+    inp.onchange = () => {
+      const f = inp.files[0]; if (!f) return resolve(null);
+      const r = new FileReader();
+      if (/pdf/.test(f.type)) { if (f.size > 10 * 1024 * 1024) { toast('ไฟล์ PDF ใหญ่เกิน 10MB'); return resolve(null); } r.onload = () => resolve(r.result); return r.readAsDataURL(f); }
+      r.onload = () => { const img = new Image(); img.onload = () => {
+        const max = 1280, k = Math.min(1, max / Math.max(img.width, img.height));
+        const c = document.createElement('canvas'); c.width = Math.round(img.width * k); c.height = Math.round(img.height * k);
+        c.getContext('2d').drawImage(img, 0, 0, c.width, c.height); resolve(c.toDataURL('image/jpeg', 0.75)); }; img.src = r.result; };
+      r.readAsDataURL(f);
+    };
+    inp.click();
+  });
+}
+
+/* ===================== ช่องลายเซ็น ===================== */
+function sigPad(id) {
+  const c = $(id); const r = c.getBoundingClientRect(); const dpr = window.devicePixelRatio || 1;
+  c.width = r.width * dpr; c.height = r.height * dpr;
+  const x = c.getContext('2d'); x.scale(dpr, dpr); x.lineWidth = 2.4; x.lineCap = 'round'; x.strokeStyle = '#111';
+  let down = false, last = null; c.dataset.empty = '1';
+  const p = e => { const b = c.getBoundingClientRect(); return { x: e.clientX - b.left, y: e.clientY - b.top }; };
+  c.onpointerdown = e => { down = true; last = p(e); c.setPointerCapture(e.pointerId); };
+  c.onpointermove = e => { if (!down) return; const q = p(e); x.beginPath(); x.moveTo(last.x, last.y); x.lineTo(q.x, q.y); x.stroke(); last = q; c.dataset.empty = '0'; };
+  c.onpointerup = c.onpointercancel = () => { down = false; };
+  return { clear() { x.clearRect(0, 0, c.width, c.height); c.dataset.empty = '1'; }, empty() { return c.dataset.empty === '1'; }, data() { return c.toDataURL('image/png'); } };
+}
+
+/* ===================== เข้าสู่ระบบ ===================== */
+function screenLogin() {
+  setHeader('Grab Fleet', 'ระบบสัญญาและสต็อกรถ', false); setBar('');
+  show(`<h2>เข้าสู่ระบบ</h2><p class="hint">ใช้ชื่อผู้ใช้และรหัสผ่านที่ได้รับจากผู้ดูแลระบบ</p>
+  <div class="card"><label>ชื่อผู้ใช้</label><input id="lu" autocomplete="username" autocapitalize="none">
+  <label>รหัสผ่าน</label><input id="lp" type="password" autocomplete="current-password" onkeydown="if(event.key==='Enter')doLogin()">
+  <div id="lerr" class="err"></div><button class="btn block mt" onclick="doLogin()">เข้าสู่ระบบ</button></div>`);
+}
+async function doLogin() {
+  try {
+    const r = await busy('กำลังเข้าสู่ระบบ…', apiRaw('login', $('lu').value, $('lp').value));
+    S.token = r.token; store.set('gf_token', r.token); await boot();
+  } catch (e) { $('lerr').textContent = e.message; }
+}
+async function doLogout(silent) {
+  if (!silent) { try { await api('logout'); } catch (e) {} }
+  S.token = ''; S.user = null; S.today = null; S.loc = ''; S.history = []; S.cur = null; store.del('gf_token'); store.del('gf_loc'); closeModal(); renderNav(); renderLocBtn(); screenLogin();
+}
+async function boot() {
+  try {
+    S.boot = await busy('กำลังโหลดข้อมูล…', api('getBootstrap')); S.user = S.boot.user; S.allLocs = S.boot.allLocations;
+    if (!S.boot.locations.length) { show('<div class="alert bad mt">บัญชีนี้ยังไม่ได้รับสิทธิ์พื้นที่ใด ติดต่อผู้ดูแลระบบ</div>'); return; }
+    S.loc = store.get('gf_loc_' + S.user.username) || ''; S.history = []; S.cur = null; S.today = null; S.dash = null; S.dashF = null;
+    if (!S.boot.locations.some(l => l.code === S.loc)) S.loc = S.boot.locations.length === 1 ? S.boot.locations[0].code : '';
+    S.loc ? home() : go('pickLoc', null, false);
+  } catch (e) { if (!/หมดเวลา/.test(e.message)) screenLogin(); }
+}
+
+function openMenu() {
+  modal(`<h2 style="margin-top:0">${esc(S.user.display_name)}</h2><p class="hint">${esc(S.user.role)} · พื้นที่ ${esc(locName(S.loc))}</p>
+  ${S.boot.locations.length > 1 ? `<button class="btn sec block mt" onclick="closeModal();go('pickLoc')">เปลี่ยนพื้นที่</button>` : ''}
+  ${can('ADMIN') ? `<button class="btn sec block mt" onclick="closeModal();go('users')">จัดการผู้ใช้</button>` : ''}
+  <button class="btn sec block mt" onclick="closeModal();go('password')">เปลี่ยนรหัสผ่าน</button>
+  <button class="btn bad block mt" onclick="doLogout()">ออกจากระบบ</button>`);
+}
+
+
+/* ===================== หน้าหลักของแต่ละแถบ ===================== */
+const hubTile = (ic, label, onclick, badge, sub, off) => `<div class="tile${off ? ' off' : ''}" ${off ? '' : `onclick="${onclick}"`} style="position:relative"><span class="ic">${ic}</span>${label}${sub ? `<span class="small muted" style="font-weight:400">${sub}</span>` : ''}${badge ? `<span class="pill bad" style="position:absolute;top:8px;right:8px">${badge}</span>` : ''}</div>`;
+async function ensureToday() { if (!S.today || S.todayLoc !== S.loc) { try { S.today = await api('getToday', S.loc); S.todayLoc = S.loc; renderNav(); } catch (e) { } } return S.today || {}; }
+SCREENS.follow = async () => {
+  setHeader('ติดตาม', locName(S.loc), true); setBar('');
+  show('<p class="muted mt">กำลังโหลด…</p>');
+  const t = await ensureToday(), a = t.arrears || {};
+  show(`<h2>งานติดตาม</h2><p class="hint">โทรแล้วกด "บันทึกการติดตาม" ทุกครั้ง ผลงานจะไปขึ้นในรายงานประจำวัน</p><div class="grid">
+    ${hubTile('&#x1F4B8;', 'ค้างชำระ', "go('arrears','call')", a.call || '', 'ค้าง 4–6 วัน ' + (a.call || 0) + ' · เกิน 7 วัน ' + (a.over7 || 0))}
+    ${hubTile('&#x26D4;', 'Grab ยกเลิก รอคืนรถ', "go('arrears','cancels')", a.cancels || '', 'ต้องนัดคืนรถ / ส่งงานยึด')}
+    ${hubTile('&#x1F501;', 'โทรต่อสัญญา', "go('list','expiring')", (t.expiring || []).length || '', 'สัญญาหมดใน 7 วัน')}
+    ${hubTile('&#x1F3CD;', 'หมดสัญญา ยังไม่คืนรถ', "go('list','overdueReturn')", (t.overdueReturn || []).length || '', 'ต้องนัดคืนรถ')}
+    ${(t.cancelPending || []).length ? hubTile('&#x26A0;', 'ยกเลิกแล้ว รถยังไม่คืน', "go('list','cancelPending')", t.cancelPending.length, 'นัดคืนรถ / ส่งงานยึด') : ''}
+    ${hubTile('&#x1F6A8;', 'ติดตามยึดรถ', "go('seize')", t.seizures || '', 'งานยึด / บันทึกยึด / ค่าเสียหาย')}
+    ${hubTile('&#x1F9FE;', 'หนี้ที่ต้องเก็บ', "go('debts')", t.debtsOpen || '', 'ค่าเสียหาย / ค่าติดตาม / ค่าปรับ')}
+    ${may('seize_record') || may('seize_manage') ? hubTile('&#x1F6FB;', 'พบรถจอดทิ้ง', "S.ab=null;go('abandon')", '', 'ผู้เช่าทิ้งรถ → ยกกลับ ปรับ ตั้งหนี้') : ''}
+  </div>`);
+};
+SCREENS.cars = async () => {
+  setHeader('รถ', locName(S.loc), true); setBar('');
+  show('<p class="muted mt">กำลังโหลด…</p>');
+  const t = await ensureToday(), vc = t.vehicleCounts || {};
+  show(`<h2>รถในพื้นที่</h2><div class="small muted">ว่าง ${vc['ว่าง'] || 0} · ให้เช่า ${vc['ให้เช่า'] || 0} · จองแล้ว ${vc['จองแล้ว'] || 0} · ซ่อม ${vc['ส่งซ่อม'] || 0} · รอเคลม ${vc['รอเคลม'] || 0}</div><div class="grid mt">
+    ${hubTile('&#x1F6F5;', 'สต็อกรถ', "go('stock')", '', 'ดู / เพิ่มรถ / โยกสาขา')}
+    ${hubTile('&#x1F69A;', 'รถที่โยกมา รอรับ', "go('list','incoming')", (t.incoming || []).length || '', 'กดรับรถเข้าสาขา')}
+    ${hubTile('&#x1F691;', 'อุบัติเหตุ/เคลม', "go('claims')", t.openClaims || '', 'รถสำรอง / รอประกัน')}
+  </div>`);
+};
+SCREENS.reports = async () => {
+  setHeader('รายงาน', locName(S.loc), true); setBar('');
+  show('<p class="muted mt">กำลังโหลด…</p>');
+  const t = await ensureToday();
+  show(`<h2>รายงานและอนุมัติ</h2><div class="grid">
+    ${hubTile('&#x1F4C8;', 'รายงานประจำวัน', "go('report')", '', 'ผลงานเจ้าหน้าที่')}
+    ${hubTile('&#x1F4CA;', 'Dashboard สาขา', "go('dashboard',{branch:true})", '', locName(S.loc))}
+    ${S.boot.locations.length > 1 ? hubTile('&#x1F5FA;', 'Dashboard รวมทุกสาขา', "go('dashboard',{})", '', 'เทียบทุกสาขา') : ''}
+    ${hubTile('&#x2705;', 'คำขอยกเลิก รออนุมัติ', "go('list','approvals')", (t.approvals || []).length || '', '')}
+  </div>`);
+};
+SCREENS.more = () => {
+  setHeader('อื่นๆ', locName(S.loc), true); setBar('');
+  show(`<div class="card mt"><b>${esc(S.user.display_name)}</b><div class="small muted">${esc(S.user.username)} · ${esc(S.user.role)} · พื้นที่ ${esc(locName(S.loc))}</div></div>
+    ${can('ADMIN') ? `<div class="item" onclick="go('legacy')"><div><div class="l1">ข้อมูลจาก AppSheet</div><div class="l2">ดึงสัญญา/รถจาก AppSheet เข้าระบบอัตโนมัติทุกวัน จนกว่าจะเริ่มใช้จริง</div></div><div>›</div></div>` : ''}
+    ${may('packages') ? `<div class="item" onclick="go('packages')"><div><div class="l1">แพ็กเกจและราคาค่าเช่า</div><div class="l2">ตั้งค่าเช่ารายวันและเงินมัดจำ แยกตามสาขา รุ่น และระยะเวลา</div></div><div>›</div></div>` : ''}
+    ${can('ADMIN') ? `<div class="item" onclick="go('users')"><div><div class="l1">จัดการผู้ใช้</div><div class="l2">เพิ่มเจ้าหน้าที่ กำหนดสิทธิ์และพื้นที่ รีเซ็ตรหัสผ่าน</div></div><div>›</div></div>` : ''}
+    <div class="item" onclick="go('password')"><div><div class="l1">เปลี่ยนรหัสผ่าน</div></div><div>›</div></div>
+    <button class="btn bad block mt" onclick="doLogout()">ออกจากระบบ</button>`);
+};
+
+/* ===================== แพ็กเกจ / ราคา ===================== */
+SCREENS.packages = async () => {
+  setHeader('แพ็กเกจและราคา', '', true); setBar(may('packages') ? `<button class="btn" onclick="pkForm()">+ เพิ่มแพ็กเกจ</button>` : '');
+  show('<p class="muted mt">กำลังโหลด…</p>');
+  try { S.pk = await api('listPackages'); if (!S.pkLoc) S.pkLoc = S.loc; pkRender(); } catch (e) { fail(e); }
+};
+function pkRender() {
+  const d = S.pk, rows = d.packages.filter(p => p.location_code === S.pkLoc);
+  const by = {}; rows.forEach(p => (by[p.model] = by[p.model] || []).push(p));
+  show(`<p class="hint">ราคานี้ใช้ตอนทำสัญญาใหม่และต่อสัญญา พนักงานที่ไม่มีสิทธิ์ "แก้ราคา" จะต้องใช้ราคาตามแพ็กเกจเท่านั้น สัญญาเดิมไม่เปลี่ยนราคา</p>
+    <label>สาขา</label><select onchange="S.pkLoc=this.value;pkRender()">${d.locations.map(l => `<option value="${esc(l.code)}" ${l.code === S.pkLoc ? 'selected' : ''}>${esc(l.name)}</option>`).join('')}</select>
+    ${Object.keys(by).sort().map(m => `<h2>${esc(m)}</h2><div class="card">${by[m].map(p => { const i = d.packages.indexOf(p); return `<div class="stat" onclick="pkForm(${i})" style="cursor:pointer"><div><b>${esc(p.duration)}</b> · ${money(p.daily_rate)} บาท/วัน<div class="small muted">มัดจำ ${money(p.deposit)} บาท${p.in_use ? ' · ใช้อยู่ ' + p.in_use + ' สัญญา' : ''}</div></div><div>${p.active === 'Y' ? '<span class="pill ok">ใช้งาน</span>' : '<span class="pill">ปิด</span>'} ›</div></div>`; }).join('')}</div>`).join('') || '<p class="muted mt">ยังไม่มีแพ็กเกจในสาขานี้</p>'}`);
+}
+function pkForm(i) {
+  const d = S.pk, p = i === undefined ? null : d.packages[i];
+  modal(`<h2 style="margin-top:0">${p ? 'แก้ไขแพ็กเกจ' : 'เพิ่มแพ็กเกจ'}</h2>
+  ${p ? `<p class="hint">${esc(locName(p.location_code))} · ${esc(p.model)} · ${esc(p.duration)}</p>` : `
+  <label>สาขา</label><select id="pkL">${d.locations.map(l => `<option value="${esc(l.code)}" ${l.code === S.pkLoc ? 'selected' : ''}>${esc(l.name)}</option>`).join('')}</select>
+  <label>รุ่นรถ</label><input id="pkM" list="pkML" placeholder="เลือกหรือพิมพ์รุ่น"><datalist id="pkML">${d.models.map(m => `<option value="${esc(m)}">`).join('')}</datalist>
+  <label>ระยะเวลา</label><select id="pkD">${d.durations.map(x => `<option>${x}</option>`).join('')}</select>`}
+  <label>ค่าเช่าต่อวัน (บาท)</label><input id="pkR" type="number" min="1" value="${p ? esc(p.daily_rate) : ''}">
+  <label>เงินมัดจำ (บาท)</label><input id="pkDep" type="number" min="0" value="${p ? esc(p.deposit) : d.defaultDeposit}">
+  <label class="check"><input type="checkbox" id="pkA" ${!p || p.active === 'Y' ? 'checked' : ''}> เปิดใช้งาน (ให้เลือกตอนทำสัญญา)</label>
+  <button class="btn block mt" onclick="pkSave(${p ? i : -1})">บันทึก</button>`);
+}
+async function pkSave(i) {
+  const p = i >= 0 ? S.pk.packages[i] : null;
+  const d = p ? { package_id: p.package_id, location_code: p.location_code, model: p.model, duration: p.duration } : { location_code: $('pkL').value, model: $('pkM').value.trim(), duration: $('pkD').value };
+  Object.assign(d, { daily_rate: +$('pkR').value, deposit: +$('pkDep').value, active: $('pkA').checked });
+  try {
+    await busy('กำลังบันทึก…', api('savePackage', d)); closeModal(); toast('บันทึกแล้ว');
+    try { S.boot.packages = (await api('getBootstrap')).packages; } catch (e) { }
+    S.pkLoc = d.location_code; go('packages', null, false);
+  } catch (e) { fail(e); }
+}
+
+/* ===================== ข้อมูลจาก AppSheet (ช่วงเปลี่ยนผ่าน) ===================== */
+SCREENS.legacy = async () => {
+  setHeader('ข้อมูลจาก AppSheet', 'ช่วงเปลี่ยนผ่าน', true); setBar('');
+  show('<p class="muted mt">กำลังโหลด…</p>');
+  try { S.lg = await api('getLegacyStatus'); lgRender(); } catch (e) { fail(e); }
+};
+function lgRender() {
+  const d = S.lg, l = d.last || {};
+  show(`<div class="card"><div class="row" style="justify-content:space-between"><b>ดึงข้อมูลอัตโนมัติทุกวัน 05:30</b><span class="pill ${d.on && d.scheduled ? 'ok' : ''}">${d.on && d.scheduled ? 'เปิดอยู่' : 'ปิด'}</span></div>
+    <p class="hint">ระบบอ่านไฟล์ AppSheet ทั้ง 18 สาขาโดยตรง แล้วอัปเดตสัญญา ผู้เช่า และรถ เข้าระบบใหม่ทุกเช้า โดย<b>ไม่ทับ</b>งานที่ทำในระบบใหม่แล้ว (สัญญาที่ทำ/ต่อ/คืน/ยกเลิก/ยึดในระบบใหม่ รถที่โยกสาขา เคลม หรือติดตามยึด)</p>
+    <div class="row" style="flex-wrap:wrap"><button class="btn" onclick="lgSync()">ดึงข้อมูลตอนนี้</button>
+    <button class="btn sec" onclick="lgSet({on:${!(d.on && d.scheduled)}})">${d.on && d.scheduled ? 'หยุดดึงข้อมูลทั้งหมด' : 'เปิดการดึงข้อมูลทุกวัน'}</button></div></div>
+    <h2>ดึงล่าสุด</h2><div class="card small">${!d.last ? '<span class="muted">ยังไม่เคยดึงแบบอัปเดต</span>' : l.error ? `<div class="alert bad">${th(l.at)} ${esc(String(l.at).slice(11, 16))} น. ผิดพลาด: ${esc(l.error)}</div>` :
+      `<div class="kv"><div>เวลา</div><div>${th(l.at)} ${esc(String(l.at).slice(11, 16))} น.</div><div>สัญญาใหม่</div><div>${l.contracts_added}</div><div>สัญญาที่อัปเดต</div><div>${l.contracts_updated}</div>
+      <div>ระบบใหม่ดูแลแล้ว (ไม่ทับ)</div><div>${l.contracts_kept}</div><div>ลบออก (ไม่มีใน AppSheet แล้ว)</div><div>${l.contracts_removed}</div><div>ผู้เช่าใหม่</div><div>${l.customers_added}</div>
+      <div>รถใหม่</div><div>${l.vehicles_added} (รวม ${l.vehicles} คัน)</div><div>รายการให้ตรวจ</div><div>${l.review}</div></div>
+      <details class="mt"><summary>รายไฟล์</summary>${(l.files || []).map(f => `<div class="${/ไม่ได้/.test(f) ? 'err' : ''}">${esc(f)}</div>`).join('')}</details>`}</div>
+    <h2>พื้นที่ที่เริ่มใช้ระบบใหม่จริงแล้ว</h2>
+    <p class="hint">ติ๊กเมื่อพื้นที่นั้นเลิกใช้ AppSheet แล้ว ระบบจะไม่ดึงข้อมูลของพื้นที่นั้นจาก AppSheet อีก (ข้อมูลที่มีอยู่ไม่ถูกลบ)</p>
+    <div class="card checks">${(S.allLocs || S.boot.locations).map(x => `<label><input type="checkbox" class="lgloc" value="${esc(x.code)}" ${d.liveLocs.includes(x.code) ? 'checked' : ''}> ${esc(x.name)}</label>`).join('')}</div>
+    <button class="btn block mt" onclick="lgSet({liveLocs:[...document.querySelectorAll('.lgloc:checked')].map(i=>i.value)})">บันทึกพื้นที่ที่เริ่มใช้จริง</button>`);
+}
+async function lgSync() {
+  try { const r = await busy('กำลังดึงข้อมูลจาก AppSheet 18 ไฟล์… (ประมาณ 1–3 นาที อย่าปิดหน้านี้)', api('syncLegacyNow'));
+    toast('ดึงแล้ว: สัญญาใหม่ ' + r.contracts_added + ' · อัปเดต ' + r.contracts_updated + ' · รถใหม่ ' + r.vehicles_added, 6000); S.today = null; go('legacy', null, false); } catch (e) { fail(e); }
+}
+async function lgSet(d) { try { S.lg = await busy('กำลังบันทึก…', api('setLegacySync', d)); toast('บันทึกแล้ว'); lgRender(); } catch (e) { fail(e); } }
+
+/* ===================== เลือกพื้นที่ ===================== */
+SCREENS.pickLoc = () => {
+  setHeader('เลือกพื้นที่', S.user.display_name, S.history.length > 0); setBar('');
+  show(`<h2>เลือกพื้นที่ที่จะทำงาน</h2><p class="hint">เปลี่ยนพื้นที่ภายหลังได้จากปุ่ม "เมนู" มุมขวาบน</p>
+  ${S.boot.locations.map(l => `<div class="item" onclick="setLoc('${esc(l.code)}')"><div><div class="l1">${esc(l.name)}</div><div class="l2">${esc(l.code)}</div></div><div>›</div></div>`).join('')}`);
+};
+/* จำพื้นที่ล่าสุดแยกตามผู้ใช้ (เครื่องเดียวกันหลายคนใช้ ไม่ติดพื้นที่ของคนก่อน) */
+function saveLoc_(c) { if (S.user) store.set('gf_loc_' + S.user.username, c); }
+function setLoc(c, next) { S.loc = c; S.today = null; saveLoc_(c); if (next) { S.history = []; return go(next[0], next[1], false); } home(); }
+
+/* ===================== หน้าหลัก ===================== */
+SCREENS.home = async () => {
+  setHeader('Grab Fleet', 'พื้นที่ ' + locName(S.loc), false); setBar('');
+  show(`<div class="card mt"><input id="q" placeholder="ค้นหา: ทะเบียน / VIN / GRAB NO. / ชื่อ / เบอร์ / เลขสัญญา" onkeydown="if(event.key==='Enter')go('search',this.value)"></div>
+  ${may('contract') || may('return') ? `<div class="grid">
+    ${may('contract') ? `<div class="tile big" onclick="startNew()"><span class="ic">&#x1F4DD;</span>สัญญาใหม่</div>
+    <div class="tile big" onclick="startRenew()"><span class="ic">&#x1F501;</span>ต่อสัญญา</div>` : ''}
+    ${may('return') ? `<div class="tile big" onclick="startReturn()"><span class="ic">&#x1F3C1;</span>คืนรถ</div>
+    <div class="tile big" onclick="startCancel()"><span class="ic">⛔</span>ยกเลิกสัญญา</div>` : ''}
+  </div>` : ''}
+  <div class="item mt" onclick="go('active')"><div><div class="l1">&#x1F4CB; สัญญาที่ใช้งาน</div><div class="l2">สัญญาที่รถยังอยู่กับผู้เช่า — ดูรายละเอียด เอกสาร ประวัติ</div></div><div><span id="actN" class="pill"></span> ›</div></div>
+  <h2>งานวันนี้</h2><div id="today" class="card"><div class="muted">กำลังโหลด…</div></div>`);
+  try {
+    const t = await api('getToday', S.loc); S.today = t; S.todayLoc = S.loc; renderNav();
+    const row = (label, n, key, cls) => `<div class="stat" onclick="go('list','${key}')"><div>${label}</div><div class="num ${n ? cls : 'muted'}">${n}</div></div>`;
+    const vc = t.vehicleCounts;
+    if ($('actN')) $('actN').textContent = (vc['ให้เช่า'] || 0) + ' คัน';
+    $('today').innerHTML =
+      (t.approvals.length ? row('คำขอยกเลิกสัญญา รออนุมัติ', t.approvals.length, 'approvals', '') : '') +
+      (t.incoming.length ? row('รถที่โยกมา รอรับเข้าสาขา', t.incoming.length, 'incoming', '') : '') +
+      (t.openClaims ? `<div class="stat" onclick="go('claims')"><div>เคสอุบัติเหตุที่ยังไม่ปิด</div><div class="num">${t.openClaims}</div></div>` : '') +
+      (t.arrears && t.arrears.cancels ? `<div class="stat" onclick="go('arrears','cancels')"><div>Grab ยกเลิกสัญญา ยังไม่คืนรถ</div><div class="num bad">${t.arrears.cancels}</div></div>` : '') +
+      (t.arrears && t.arrears.call ? `<div class="stat" onclick="go('arrears','call')"><div>ค้างค่าเช่า 4–6 วัน ต้องโทรตาม</div><div class="num warn">${t.arrears.call}</div></div>` : '') +
+      (t.remoteSigned && t.remoteSigned.length ? row('ลูกค้าเซ็นออนไลน์แล้ว รอผู้ให้เช่าเซ็น', t.remoteSigned.length, 'remoteSigned', 'warn') : '') +
+      row('รอผู้เช่าเซ็นสัญญา', t.waitingSign.length, 'waitingSign', '') +
+      row('สัญญาหมดใน 7 วัน (ติดต่อต่อสัญญา)', t.expiring.length, 'expiring', '') +
+      row('หมดสัญญาแล้ว ยังไม่คืนรถ', t.overdueReturn.length, 'overdueReturn', '') +
+      ((t.cancelPending || []).length ? row('ยกเลิกสัญญาแล้ว รถยังไม่คืน', t.cancelPending.length, 'cancelPending', 'warn') : '') +
+      (t.review.length ? row('สัญญาที่ต้องตรวจสอบ (จากการย้ายข้อมูล)', t.review.length, 'review', '') : '') +
+      `<div class="small muted mt">รถ: ว่าง ${vc['ว่าง'] || 0} · ให้เช่า ${vc['ให้เช่า'] || 0} · จองแล้ว ${vc['จองแล้ว'] || 0} · ซ่อม ${vc['ส่งซ่อม'] || 0}</div>` +
+      (may('reports') ? `<button class="btn sec block mt" onclick="go('dashboard',{branch:true})">&#x1F4CA; Dashboard สาขา ${esc(locName(S.loc))}</button>` : '');
+  } catch (e) { $('today').innerHTML = `<div class="alert bad">${esc(e.message)}</div>`; }
+};
+
+const LIST_TITLES = { remoteSigned: 'ลูกค้าเซ็นออนไลน์แล้ว รอผู้ให้เช่าเซ็น', incoming: 'รถที่โยกมา รอรับเข้าสาขา', waitingSign: 'รอผู้เช่าเซ็นสัญญา', expiring: 'สัญญาหมดใน 7 วัน', overdueReturn: 'หมดสัญญาแล้ว ยังไม่คืนรถ', cancelPending: 'ยกเลิกสัญญาแล้ว รถยังไม่คืน (ต้องนัดคืน/ส่งงานยึด)', review: 'สัญญาที่ต้องตรวจสอบ', approvals: 'คำขอยกเลิก รออนุมัติ' };
+SCREENS.list = key => {
+  setHeader(LIST_TITLES[key], locName(S.loc), true); setBar('');
+  const rows = (S.today && S.today[key]) || [];
+  if (key === 'incoming') {
+    S.vehicles = rows;
+    show(`<h2>${LIST_TITLES[key]}</h2><p class="hint">ตรวจรถที่มาถึงแล้วกด "รับรถเข้าสาขา" รถจะเปลี่ยนเป็น "ว่าง" ในสาขานี้</p>` + (rows.map(vehicleItem).join('') || '<p class="muted">ไม่มีรายการ</p>'));
+    return;
+  }
+  if (key === 'approvals') {
+    show(`<h2>${LIST_TITLES[key]}</h2>` + (rows.map(a => `<div class="card"><div class="row" style="justify-content:space-between"><b>${esc(a.contract_id)}</b>${pill('รออนุมัติ', {'รออนุมัติ': 'warn'})}</div>
+      <div class="small mt">เหตุผล: ${esc(a.reason)}</div><div class="small muted">${esc(a.note)}</div><div class="small muted">ขอโดย ${esc(a.requested_by)} · ${th(a.requested_at)}</div>
+      <div class="row mt"><button class="btn sec" onclick="go('contract','${esc(a.contract_id)}')">ดูสัญญา</button><button class="btn bad" onclick="decide('${esc(a.approval_id)}',false)">ไม่อนุมัติ</button><button class="btn" onclick="decide('${esc(a.approval_id)}',true)">อนุมัติ</button></div></div>`).join('') || '<p class="muted">ไม่มีรายการ</p>'));
+    return;
+  }
+  if (key === 'expiring') {
+    show(`<h2>${LIST_TITLES[key]}</h2><p class="hint">โทรหาผู้เช่าเพื่อถามเรื่องต่อสัญญา แล้วกด "บันทึกการโทร" ทุกครั้ง ผลจะขึ้นในรายงานประจำวัน</p>` + (rows.map((c, i) => `<div class="card">${contractItem(c)}
+      ${c.last ? `<div class="small" style="color:var(--pri-2)">โทรล่าสุด ${th(c.last.at)}: <b>${esc(c.last.result)}</b>${c.last.promise_date ? ' (นัด ' + th(c.last.promise_date) + ')' : ''}${c.last.note ? ' · ' + esc(c.last.note) : ''} · ${esc(c.last.by)}</div>` : '<div class="small muted">ยังไม่ได้โทร</div>'}
+      ${may('followup') ? `<button class="btn mt" onclick="renewFuForm(${i})">บันทึกการโทรต่อสัญญา</button>` : ''}</div>`).join('') || '<p class="muted">ไม่มีรายการ</p>'));
+    return;
+  }
+  show(`<h2>${LIST_TITLES[key]}</h2>` + (rows.map(contractItem).join('') || '<p class="muted">ไม่มีรายการ</p>'));
+};
+function renewFuForm(i) {
+  const c = S.today.expiring[i]; S.rfu = c;
+  modal(`<h2 style="margin-top:0">บันทึกการโทรต่อสัญญา</h2><p class="hint">${esc(c.name)} · สัญญาหมด ${esc(c.end)}${c.phone ? ' · <a href="tel:' + esc(c.phone) + '">' + esc(c.phone) + '</a>' : ''}</p>
+  <label>ช่องทาง</label><select id="rfCh"><option>โทร</option><option>LINE</option><option>SMS</option><option>พบตัว</option></select>
+  <label>ผล</label><select id="rfRes" onchange="$('rfPd').parentNode.style.display=this.value.indexOf('นัด')>=0?'':'none'"><option value="">-- เลือก --</option>${(S.today.renewResults || []).map(x => `<option>${x}</option>`).join('')}</select>
+  <div style="display:none"><label>วันที่นัดโทร/นัดมาต่อสัญญา</label><input id="rfPd" type="date"></div>
+  <label>รายละเอียด</label><textarea id="rfNote" rows="2" placeholder="เช่น จะมาต่อวันเสาร์ ขอเปลี่ยนเป็นแพ็กเกจ 90 วัน"></textarea>
+  <button class="btn block mt" onclick="doRenewFu()">บันทึก</button>`);
+}
+async function doRenewFu() {
+  const c = S.rfu;
+  try {
+    await busy('กำลังบันทึก…', api('logFollowup', { type: 'renew', contract_id: c.contract_id, channel: $('rfCh').value, result: $('rfRes').value, promise_date: $('rfPd').value, note: $('rfNote').value }));
+    closeModal(); toast('บันทึกแล้ว'); S.today = await api('getToday', S.loc); go('list', 'expiring', false);
+  } catch (e) { fail(e); }
+}
+async function decide(id, ok) {
+  const note = prompt(ok ? 'หมายเหตุการอนุมัติ (ถ้ามี)' : 'เหตุผลที่ไม่อนุมัติ');
+  if (note === null) return;
+  try { await busy('กำลังบันทึก…', api('decideCancel', id, ok, note)); toast(ok ? 'อนุมัติแล้ว' : 'ไม่อนุมัติแล้ว'); home(); } catch (e) { fail(e); }
+}
+const contractItem = c => `<div class="item" onclick="go('contract','${esc(c.contract_id)}')"><div><div class="l1">${esc(c.name || '-')} ${pill(c.status, C_PILL)}</div>
+  <div class="l2">${esc(c.contract_id)} · ${esc(c.duration)} · ${esc(c.start)} – ${esc(c.end)}</div><div class="l2">${esc(c.vin)}${c.phone ? ' · ' + esc(c.phone) : ''}</div></div><div>›</div></div>`;
+
+/* ===================== ค้นหา / สัญญาที่ใช้งาน ===================== */
+SCREENS.search = async q => {
+  setHeader('ผลการค้นหา', '"' + q + '"', true); setBar('');
+  show('<p class="muted mt">กำลังค้นหา…</p>');
+  try {
+    const r = await api('search', S.loc, q);
+    show(`<h2>สัญญา (${r.contracts.length})</h2>${r.contracts.map(contractItem).join('') || '<p class="muted">ไม่พบ</p>'}
+    <h2>รถ (${r.vehicles.length})</h2>${r.vehicles.map(vehicleItem).join('') || '<p class="muted">ไม่พบ</p>'}`);
+  } catch (e) { fail(e); }
+};
+SCREENS.active = async () => {
+  setHeader('สัญญาที่ใช้งาน', locName(S.loc), true); setBar('');
+  show('<p class="muted mt">กำลังโหลด…</p>');
+  try { const r = await api('listActive', S.loc); show(`<h2>สัญญาที่รถยังอยู่กับผู้เช่า (${r.length})</h2><p class="hint">เรียงตามวันหมดสัญญา ใกล้หมดอยู่บนสุด</p>${r.map(contractItem).join('') || '<p class="muted">ไม่มี</p>'}`); } catch (e) { fail(e); }
+};
+
+/* ===================== รายละเอียดสัญญา ===================== */
+SCREENS.contract = async id => {
+  setHeader('สัญญา ' + id, '', true); setBar('');
+  show('<p class="muted mt">กำลังโหลด…</p>');
+  try {
+    const d = await api('getContract', id); const c = d.contract, cu = d.customer, v = d.vehicle;
+    const acts = [], arc = c.archived === 'Y';
+    {
+      const P = may('contract') && !arc, R = may('return') && !arc;
+      if (P && c.status === 'รอเซ็น' && d.signLink && d.signLink.status === 'ลูกค้าเซ็นแล้ว') acts.push(`<button class="btn" onclick="countersign('${esc(c.contract_id)}')">เซ็นในนามผู้ให้เช่า</button>`);
+      if (P && c.status === 'รอเซ็น') acts.push(`<button class="btn ${d.signLink && d.signLink.status === 'ลูกค้าเซ็นแล้ว' ? 'sec' : ''}" onclick="resumeSign('${esc(c.contract_id)}')">เซ็นที่สาขา (ลูกค้าอยู่ด้วย)</button>`);
+      if (P && c.status === 'รอเซ็น') acts.push(`<button class="btn sec" onclick="sendSignLink('${esc(c.contract_id)}')">${d.signLink ? 'ส่งลิงก์ใหม่' : 'ส่งลิงก์ให้ลูกค้าเซ็น'}</button>`);
+      const carHere = !['ยกเลิก','ต้องตรวจสอบ'].includes(c.status) || (v && v.current_contract_id === c.contract_id && ['ให้เช่า','ติดตามยึด','จองแล้ว'].includes(v.status));
+      if (P && ['Active','หมดสัญญา'].includes(c.status)) acts.push(`<button class="btn" onclick="startRenew('${esc(c.contract_id)}')">ต่อสัญญา</button>`);
+      if (R && carHere && ['Active','หมดสัญญา','ยกเลิก','ต้องตรวจสอบ'].includes(c.status)) acts.push(`<button class="btn sec" onclick="startReturn('${esc(c.contract_id)}')">รับคืนรถ</button>`);
+      if (R && ['Active','รอเซ็น','หมดสัญญา','ต้องตรวจสอบ'].includes(c.status) && !d.pendingApproval) acts.push(`<button class="btn sec" onclick="startCancel('${esc(c.contract_id)}')">ขอยกเลิก</button>`);
+      if (!arc && may('claim') && ['Active','หมดสัญญา'].includes(c.status) && !d.claims.some(k => k.status !== 'ปิดเคส')) acts.push(`<button class="btn sec" onclick="accidentForm('${esc(c.contract_id)}')">แจ้งอุบัติเหตุ</button>`);
+    }
+    const openSz = (d.seizures || []).find(z => z.status !== 'ปิดเคส');
+    const carHere2 = !['ยกเลิก','ต้องตรวจสอบ'].includes(c.status) || (v && v.current_contract_id === c.contract_id && ['ให้เช่า','ติดตามยึด'].includes(v.status));
+    if (can('ADMIN') && ['Active','หมดสัญญา','ยกเลิก','ต้องตรวจสอบ','คืนรถแล้ว'].includes(c.status) && !openSz) acts.push(`<button class="btn sec" onclick="fixStatusForm('${esc(c.contract_id)}','${esc(c.status)}')">แก้สถานะสัญญา (ผู้ดูแล)</button>`);
+    if (!arc && may('seize_manage') && !openSz && carHere2 && ['Active','หมดสัญญา','ยกเลิก','ต้องตรวจสอบ'].includes(c.status)) acts.push(`<button class="btn sec" style="color:#b42318;border-color:#b42318" onclick="seizeForm('${esc(c.contract_id)}')">ส่งงานติดตามยึดรถ</button>`);
+    if (can('ADMIN') && !c.migrated && !c.legacy_no) acts.push(`<button class="btn sec" style="color:#b42318;border-color:#b42318" onclick="delTestForm('${esc(c.contract_id)}')">ลบสัญญาทดสอบ</button>`);
+    show(`<div class="card mt"><div class="row" style="justify-content:space-between"><h2 style="margin:0">${esc(cu.title || '')} ${esc(cu.full_name || '')}</h2>${pill(c.status, C_PILL)}</div>
+      ${c.status === 'รอเซ็น' && d.signLink ? signLinkAlert(d.signLink) : ''}
+      ${d.pendingApproval ? `<div class="alert warn">มีคำขอยกเลิกรออนุมัติ: ${esc(d.pendingApproval.reason)}</div>` : ''}
+      ${openSz ? `<div class="alert bad" onclick="go('seize')">งานยึดรถ: ${esc(openSz.status)}${openSz.reason ? ' · ' + esc(openSz.reason) : ''} ›</div>` : ''}
+      ${(d.debts || []).filter(x => x.status === 'ค้างชำระ').map(x => `<div class="alert warn" onclick="go('debts')">หนี้ค้าง ${esc(x.source)}: ${money(Number(x.amount) - Number(x.paid || 0))} บาท ครบกำหนด ${th(x.due_date)} ›</div>`).join('')}
+      ${d.claims.filter(k => k.status !== 'ปิดเคส').map(k => `<div class="alert bad" onclick="go('claims')">เคสอุบัติเหตุ: ${esc(k.status)}${k.replacement_vin ? ' · ใช้รถสำรอง ' + esc(k.replacement_vin) : ' · ยังไม่มีรถสำรอง'} ›</div>`).join('')}
+      <div class="kv mt"><div>เลขที่สัญญา</div><div>${esc(c.contract_id)}${c.legacy_no && c.legacy_no !== c.contract_id ? ' (เดิม ' + esc(c.legacy_no) + ')' : ''}</div>
+      <div>ประเภท</div><div>${esc(c.kind)}${c.parent_contract_id ? ' ต่อจาก ' + esc(c.parent_contract_id) : ''}</div>
+      <div>ระยะเวลา</div><div>${esc(c.duration)} · ${esc(c.start_th)} – ${esc(c.end_th)}</div>
+      <div>ค่าเช่า</div><div>${money(c.daily_rate)} บาท/วัน · มัดจำ ${money(c.deposit)} บาท</div>
+      <div>รถ</div><div>${esc(v.fleet_no || '')} · ${esc(v.plate || '')}<br><span class="small muted">${esc(c.vin)} · ${esc(c.model)}</span></div>
+      <div>เลขบัตร</div><div>${esc(cu.national_id || '')}</div><div>โทร</div><div>${cu.phone ? `<a href="tel:${esc(cu.phone)}">${esc(cu.phone)}</a>` : '-'}</div>
+      <div>ที่อยู่ปัจจุบัน</div><div>${esc(cu.current_address || cu.id_address || '-')}</div></div>
+      ${arc ? '<div class="small muted mt">&#x1F5C4; สัญญาที่ปิดแล้ว เก็บในคลัง (ดูได้อย่างเดียว)</div>' : ''}
+      ${acts.length ? `<div class="row mt" style="flex-wrap:wrap">${acts.join('')}</div>` : ''}</div>
+    <h2>เอกสาร</h2><div class="card">${d.documents.map(x => `<div class="stat" onclick="openFile('${esc(x.url)}')"><div>${esc(x.type)}<div class="small muted">${th(x.created_at)}</div></div><div>เปิด ›</div></div>`).join('') || '<span class="muted">ยังไม่มีเอกสาร</span>'}</div>
+    ${d.photos.length ? `<h2>รูปถ่าย (${d.photos.length})</h2><div class="card small">${d.photos.map(p => `<a href="${esc(p.url)}" target="_blank">${esc(p.kind)}</a>`).join(' · ')}</div>` : ''}
+    <h2>ประวัติ</h2><div class="card small">${d.events.map(e => `<div class="stat"><div>${esc(eventName(e.type))}<div class="muted">${esc(e.by)}</div></div><div class="muted">${th(e.at)}</div></div>`).join('') || '<span class="muted">-</span>'}</div>`);
+  } catch (e) { fail(e); goBack(); }
+};
+function fixStatusForm(id, cur) {
+  modal(`<h2 style="margin-top:0">แก้สถานะสัญญา</h2><p class="hint">ใช้แก้ข้อมูลที่ย้ายมาจาก AppSheet แล้วไม่ตรงความจริง เช่น รถคืนมานานแล้วแต่สัญญายังค้าง ระบบ<b>ไม่ออกเอกสาร</b> แต่บันทึกเหตุผลไว้ในประวัติสัญญา<br>สถานะปัจจุบัน: <b>${esc(cur)}</b></p>
+  <label>สถานะใหม่</label><select id="fxS"><option value="">-- เลือก --</option>${['คืนรถแล้ว','ยกเลิก','Active','หมดสัญญา'].filter(x => x !== cur).map(x => `<option>${x}</option>`).join('')}</select>
+  <div class="small muted">คืนรถแล้ว/ยกเลิก: ถ้ารถยังผูกกับสัญญานี้ รถจะกลับเป็น "ว่าง" · Active/หมดสัญญา: รถจะเป็น "ให้เช่า" ผูกกับสัญญานี้</div>
+  <label>เหตุผล *</label><textarea id="fxR" rows="2" placeholder="เช่น ตรวจกับ AppSheet แล้ว รถคืนตั้งแต่ 3 มี.ค. 69 สัญญาซ้ำ"></textarea>
+  <button class="btn block mt" onclick="doFixStatus('${esc(id)}')">บันทึก</button>`);
+}
+async function doFixStatus(id) {
+  if (!$('fxS').value) return toast('เลือกสถานะใหม่');
+  try { await busy('กำลังบันทึก…', api('fixContractStatus', id, { status: $('fxS').value, reason: $('fxR').value })); closeModal(); S.today = null; toast('แก้สถานะแล้ว'); go('contract', id, false); } catch (e) { fail(e); }
+}
+function delTestForm(id) {
+  modal(`<h2 style="margin-top:0;color:#b42318">ลบสัญญาทดสอบ</h2>
+  <p class="hint">ใช้สำหรับลบสัญญาที่สร้างขึ้นเพื่อทดสอบเท่านั้น ระบบจะ:<br>
+  &bull; ลบสัญญา ประวัติ เอกสาร รูปถ่าย ลายเซ็น เคสอุบัติเหตุ และคำขออนุมัติของสัญญานี้<br>
+  &bull; เปลี่ยนรถกลับเป็น "ว่าง" (ถ้าเป็นสัญญาต่ออายุ สัญญาเดิมจะกลับเป็น Active)<br>
+  &bull; ลบข้อมูลลูกค้า ถ้าลูกค้าคนนี้ไม่มีสัญญาอื่น<br>
+  &bull; ย้ายไฟล์ใน Google Drive ไปถังขยะ (กู้คืนได้ภายใน 30 วัน)<br>
+  <b>ลบแล้วกู้ข้อมูลในระบบคืนไม่ได้</b> สัญญาจริงห้ามใช้ปุ่มนี้</p>
+  <label>พิมพ์เลขที่สัญญา <b>${esc(id)}</b> เพื่อยืนยัน</label><input id="delConf" autocomplete="off">
+  <div class="row mt"><button class="btn sec" onclick="closeModal()">ยกเลิก</button>
+  <button class="btn" style="background:#b42318" onclick="doDelTest('${esc(id)}')">ลบถาวร</button></div>`);
+}
+async function doDelTest(id) {
+  const t = $('delConf').value.trim();
+  if (t !== id) { toast('พิมพ์เลขที่สัญญาไม่ตรง'); return; }
+  try {
+    await busy('กำลังลบสัญญาทดสอบ…', api('deleteTestContract', id, t));
+    closeModal(); toast('ลบสัญญา ' + id + ' เรียบร้อยแล้ว'); go('home');
+  } catch (e) { fail(e); }
+}
+/* เปิดไฟล์ Drive ผ่านระบบ (ผู้ใช้ไม่ต้องมีสิทธิ์ใน Google Drive) */
+function openFile(url) {
+  openBlob(async prog => {
+    const first = await api('getFile', url);
+    if (first.parts <= 1) return first;
+    const chunks = [first.b64];
+    for (let i = 1; i < first.parts; i++) { prog('กำลังโหลด ' + Math.round(i / first.parts * 100) + '% (ไฟล์ ' + (first.size / 1048576).toFixed(1) + ' MB)'); chunks.push((await api('getFile', url, i)).b64); }
+    return Object.assign(first, { chunks: chunks });
+  }, url);
+}
+/* ตัวเปิดเอกสารในแอป (ไม่ใช้หน้าต่างใหม่ — ใช้ได้ทั้งมือถือ คอม และตอนเปิดผ่าน grab.stromthailand.com) */
+const PDFJS = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/';
+let pdfjsReady = null;
+function loadPdfJs() {
+  if (!pdfjsReady) pdfjsReady = new Promise((ok, bad) => {
+    const sc = document.createElement('script'); sc.src = PDFJS + 'pdf.min.js';
+    sc.onload = () => { window.pdfjsLib.GlobalWorkerOptions.workerSrc = PDFJS + 'pdf.worker.min.js'; ok(window.pdfjsLib); };
+    sc.onerror = () => { pdfjsReady = null; bad(new Error('โหลดตัวเปิด PDF ไม่ได้ ตรวจอินเทอร์เน็ตแล้วลองใหม่')); };
+    document.head.appendChild(sc);
+  });
+  return pdfjsReady;
+}
+function closeViewer() { const v = $('docv'); if (v) { if (v._url) URL.revokeObjectURL(v._url); v.remove(); } document.body.style.overflow = ''; }
+async function openBlob(fetcher, srcUrl) {
+  closeViewer();
+  const v = document.createElement('div'); v.id = 'docv';
+  v.style.cssText = 'position:fixed;inset:0;z-index:9999;background:#525659;display:flex;flex-direction:column';
+  v.innerHTML = `<div style="display:flex;align-items:center;gap:8px;padding:8px 10px;background:#0f766e;color:#fff;padding-top:max(8px,env(safe-area-inset-top))">
+      <button class="btn sec" style="padding:6px 12px" onclick="closeViewer()">&#x2715; ปิด</button>
+      <div id="docvT" style="flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-weight:600">กำลังเปิดเอกสาร…</div>
+      <a id="docvD" class="btn sec" style="padding:6px 12px;display:none">ดาวน์โหลด</a></div>
+    <div id="docvB" style="flex:1;overflow:auto;-webkit-overflow-scrolling:touch;padding:10px 0;text-align:center;color:#fff">กำลังโหลด…</div>`;
+  document.body.appendChild(v); document.body.style.overflow = 'hidden';
+  try {
+    const f = await fetcher(t => { const b = $('docvB'); if (b) b.textContent = t; });
+    if (!$('docv')) return;
+    const parts = (f.chunks || [f.b64]).map(x => atob(x)), total = parts.reduce((a, x) => a + x.length, 0), arr = new Uint8Array(total);
+    let k = 0; parts.forEach(bin => { for (let i = 0; i < bin.length; i++) arr[k++] = bin.charCodeAt(i); });
+    const url = URL.createObjectURL(new Blob([arr], { type: f.mime })); v._url = url;
+    $('docvT').textContent = f.name;
+    const d = $('docvD'); d.href = url; d.download = /\.\w{2,4}$/.test(f.name) ? f.name : f.name + (/pdf/.test(f.mime) ? '.pdf' : ''); d.style.display = '';
+    const body = $('docvB');
+    if (/^image\//.test(f.mime)) { body.innerHTML = `<img src="${url}" style="max-width:96%;background:#fff">`; return; }
+    if (!/pdf/.test(f.mime)) { body.innerHTML = '<p>ไฟล์ชนิดนี้แสดงในแอปไม่ได้ กด "ดาวน์โหลด" ด้านบน</p>'; return; }
+    const lib = await loadPdfJs();
+    const pdf = await lib.getDocument({ data: arr, cMapUrl: PDFJS + 'cmaps/', cMapPacked: true, standardFontDataUrl: PDFJS + 'standard_fonts/' }).promise;
+    body.innerHTML = '';
+    const w = Math.min(body.clientWidth - 16, 900), ratio = window.devicePixelRatio || 1;
+    for (let n = 1; n <= pdf.numPages; n++) {
+      if (!$('docv')) return;
+      const page = await pdf.getPage(n);
+      const base = page.getViewport({ scale: 1 }), scale = w / base.width;
+      const vp = page.getViewport({ scale: scale * ratio });
+      const c = document.createElement('canvas'); c.width = vp.width; c.height = vp.height;
+      c.style.cssText = `width:${Math.round(vp.width / ratio)}px;height:${Math.round(vp.height / ratio)}px;background:#fff;display:block;margin:0 auto 10px;box-shadow:0 1px 4px #0006`;
+      body.appendChild(c);
+      await page.render({ canvasContext: c.getContext('2d'), viewport: vp }).promise;
+    }
+  } catch (e) {
+    const msg = String(e.message || e), legacy = /LEGACY_NO_ACCESS/.test(msg);
+    const b = $('docvB'); if (b) b.innerHTML = legacy
+      ? `<div class="card" style="margin:16px;text-align:left;color:#222"><b>เปิดไฟล์สัญญาเดิมไม่ได้</b><p class="small">ไฟล์นี้สร้างจาก AppSheet และเก็บอยู่ใน Google Drive ของบัญชีอื่น ระบบใหม่ไม่มีสิทธิ์เปิด</p>
+         ${srcUrl ? `<a class="btn block" href="${esc(srcUrl)}" target="_blank" rel="noopener">เปิดใน Google Drive (ต้องล็อกอินบัญชีที่มีสิทธิ์)</a>` : ''}
+         <p class="small muted">ถ้าต้องการให้เปิดในแอปได้ทุกไฟล์ ให้เจ้าของโฟลเดอร์สัญญาเดิมแชร์โฟลเดอร์ให้ strommotorshow@gmail.com (สิทธิ์ผู้ดู)</p></div>`
+      : `<div class="alert bad" style="margin:16px">${esc(msg)}</div>`;
+    const t = $('docvT'); if (t) t.textContent = 'เปิดเอกสารไม่ได้';
+  }
+}
+document.addEventListener('click', e => {
+  const a = e.target.closest && e.target.closest('a[href]');
+  if (a && /^https:\/\/(drive|docs)\.google\.com\//.test(a.getAttribute('href'))) { e.preventDefault(); openFile(a.getAttribute('href')); }
+}, true);
+const eventName = t => ({created:'สร้างสัญญา',renew_created:'สร้างสัญญาต่ออายุ',signed:'เซ็นสัญญา',handover:'ส่งมอบรถ',returned:'รับคืนรถ',cancel_requested:'ขอยกเลิกสัญญา',cancel_approved:'อนุมัติยกเลิก',cancel_rejected:'ไม่อนุมัติยกเลิก',auto_release:'ปลดการจองอัตโนมัติ',followup:'ติดตามค่าเช่า',followup_renew:'โทรต่อสัญญา',sign_link_created:'ส่งลิงก์ให้ลูกค้าเซ็น',sign_link_opened:'ลูกค้าเปิดลิงก์',customer_signed_remote:'ลูกค้าเซ็นออนไลน์',cancel_for_seizure:'ยกเลิกสัญญาเพื่อยึดรถ',seizure_ordered:'ส่งงานติดตามยึดรถ',seizure_update:'อัปเดตงานยึด',seized:'ยึดรถได้แล้ว',damage_notice:'แจ้งค่าเสียหาย',seizure_closed:'ปิดงานยึด',debt_created:'ตั้งหนี้',debt_paid:'รับชำระหนี้',debt_status:'เปลี่ยนสถานะหนี้',followup_seize:'ติดตามยึดรถ',status_fix:'แก้สถานะสัญญา',abandoned_found:'พบรถจอดทิ้ง'})[t] || t;
+
+/* ===================== สต็อกรถ ===================== */
+const vehicleItem = v => `<div class="item" onclick="vehicleSheet('${esc(v.vin)}')"><div><div class="l1">${esc(v.fleet_no || '-')} · ${esc(v.plate || 'ไม่มีทะเบียน')} ${pill(v.status, V_PILL)}${v.status === 'ระหว่างโยก' ? ` <span class="small muted">${v.transfer_to === S.loc ? 'มาจาก ' + esc(locName(v.location_code)) : 'ไป ' + esc(locName(v.transfer_to))}</span>` : ''}</div>
+  <div class="l2">${esc(v.vin)} · ${esc(v.model || '')}</div>${v.current_contract_id ? `<div class="l2">สัญญา ${esc(v.current_contract_id)}</div>` : ''}</div><div>›</div></div>`;
+SCREENS.stock = async filter => {
+  setHeader('สต็อกรถ', locName(S.loc), true);
+  setBar(may('stock') ? `<button class="btn" onclick="vehicleForm()">+ รับรถเข้าสต็อก</button>` : '');
+  show('<p class="muted mt">กำลังโหลด…</p>');
+  try {
+    S.vehicles = await api('listVehicles', S.loc);
+    const f = filter || 'ทั้งหมด';
+    const counts = {}; S.vehicles.forEach(v => counts[v.status] = (counts[v.status] || 0) + 1);
+    const list = f === 'ทั้งหมด' ? S.vehicles : S.vehicles.filter(v => v.status === f);
+    show(`<h2>รถในพื้นที่ ${esc(locName(S.loc))} (${S.vehicles.length} คัน)</h2>
+    <div class="chips">${['ทั้งหมด'].concat(S.boot.cfg.vStatus).filter(s => s === 'ทั้งหมด' || counts[s]).map(s => `<span class="chip ${s === f ? 'on' : ''}" onclick="go('stock','${s}',false)">${s} ${s === 'ทั้งหมด' ? S.vehicles.length : counts[s]}</span>`).join('')}</div>
+    ${list.map(vehicleItem).join('') || '<p class="muted">ไม่มีรถ</p>'}`);
+  } catch (e) { fail(e); }
+};
+function vehicleSheet(vin) {
+  const v = (S.vehicles || []).find(x => x.vin === vin) || {};
+  modal(`<h2 style="margin-top:0">${esc(v.fleet_no || '')} · ${esc(v.plate || '')}</h2>${pill(v.status, V_PILL)}
+  <div class="kv mt"><div>VIN</div><div>${esc(v.vin)}</div><div>รุ่น</div><div>${esc(v.model)}</div><div>เลขมอเตอร์</div><div>${esc(v.motor_no)}</div>
+  <div>GPS</div><div>${esc(v.gps_no)}</div><div>กรรมสิทธิ์</div><div>${esc(v.ownership)}</div><div>หมายเหตุ</div><div>${esc(v.note)}</div></div>
+  ${v.current_contract_id ? `<button class="btn sec block mt" onclick="closeModal();go('contract','${esc(v.current_contract_id)}')">ดูสัญญา ${esc(v.current_contract_id)}</button>` : ''}
+  ${may('stock') ? `<button class="btn sec block mt" onclick="closeModal();vehicleForm('${esc(v.vin)}')">แก้ไขข้อมูลรถ</button>` : ''}
+  ${v.status === 'ระหว่างโยก' ? `<div class="alert warn mt">กำลังโยกจาก ${esc(locName(v.location_code))} ไป ${esc(locName(v.transfer_to))}</div>` : ''}
+  ${may('stock') && v.status === 'ระหว่างโยก' && v.transfer_to === S.loc ? `<button class="btn block mt" onclick="receiveCar('${esc(v.vin)}')">รับรถเข้าสาขา</button>` : ''}
+  ${may('stock') && v.status === 'ระหว่างโยก' && v.location_code === S.loc ? `<button class="btn sec block mt" onclick="cancelMove('${esc(v.vin)}')">ยกเลิกการโยก</button>` : ''}
+  ${may('stock') && ['ว่าง','ส่งซ่อม','ปลดระวาง','ยึดคืนแล้ว'].includes(v.status) && v.location_code === S.loc ? `<button class="btn sec block mt" onclick="closeModal();moveForm('${esc(v.vin)}')">โยกสาขา / เปลี่ยนสถานะ</button>` : ''}
+  <button class="btn sec block mt" onclick="closeModal();go('vhist','${esc(v.vin)}')">ประวัติรถ (การโยก · สัญญา · เคลม)</button>`);
+}
+function vehicleForm(vin) {
+  const v = vin ? (S.vehicles || []).find(x => x.vin === vin) : {};
+  const models = ['Model 1 : Gorilla Standard (2000W)', 'Model 2 : Gorilla Pro (3000W)', 'Model 3 : Gorilla Extra Long Range'];
+  if (v.model && !models.includes(v.model)) models.unshift(v.model);
+  modal(`<h2 style="margin-top:0">${vin ? 'แก้ไขข้อมูลรถ' : 'รับรถเข้าสต็อก'}</h2><p class="hint">ระบบจะเตือนถ้าทะเบียน เลขมอเตอร์ GPS หรือ GRAB NO. ซ้ำกับรถคันอื่น</p>
+  <label>เลข VIN *</label><input id="fvin" value="${esc(v.vin || '')}" ${vin ? 'readonly' : ''} style="text-transform:uppercase">
+  <label>GRAB NO.</label><input id="ffleet" value="${esc(v.fleet_no || '')}" placeholder="เช่น GRAB NO. 123">
+  <label>ทะเบียน</label><input id="fplate" value="${esc(v.plate || '')}">
+  <label>รุ่น</label><select id="fmodel">${models.map(m => `<option ${m === v.model ? 'selected' : ''}>${m}</option>`).join('')}</select>
+  <label>เลขมอเตอร์</label><input id="fmotor" value="${esc(v.motor_no || '')}">
+  <label>เลข GPS</label><input id="fgps" value="${esc(v.gps_no || '')}" inputmode="numeric">
+  <label>กรรมสิทธิ์</label><input id="fown" value="${esc(v.ownership || '')}" placeholder="เช่น VST">
+  <label>หมายเหตุ</label><input id="fnote" value="${esc(v.note || '')}">
+  <div id="fwarn"></div><button class="btn block mt" onclick="saveVehicleForm(false)">บันทึก</button>`);
+}
+async function saveVehicleForm(force) {
+  const d = { vin: $('fvin').value.trim().toUpperCase(), fleet_no: $('ffleet').value, plate: $('fplate').value, model: $('fmodel').value, motor_no: $('fmotor').value, gps_no: $('fgps').value, ownership: $('fown').value, note: $('fnote').value, location_code: S.loc, force: force };
+  try {
+    const r = await busy('กำลังบันทึก…', api('saveVehicle', d));
+    if (!r.ok) { $('fwarn').innerHTML = `<div class="alert warn">${r.warnings.map(esc).join('<br>')}</div><button class="btn sec block" onclick="saveVehicleForm(true)">ยืนยันบันทึกทั้งที่ซ้ำ</button>`; return; }
+    closeModal(); toast('บันทึกแล้ว'); go('stock', null, false);
+  } catch (e) { $('fwarn').innerHTML = `<div class="alert bad">${esc(e.message)}</div>`; }
+}
+function moveForm(vin) {
+  const v = S.vehicles.find(x => x.vin === vin);
+  const allLocs = S.allLocs || S.boot.locations;
+  modal(`<h2 style="margin-top:0">โยกสาขา / เปลี่ยนสถานะ</h2><p class="hint">${esc(v.fleet_no)} · ${esc(v.vin)}<br>ถ้าเลือกสาขาอื่น รถจะเป็น "ระหว่างโยก" จนกว่าสาขาปลายทางกด "รับรถเข้าสาขา" ทุกครั้งบันทึกประวัติไว้</p>
+  <label>สาขาปลายทาง</label><select id="mloc" onchange="$('mstW').classList.toggle('hide', this.value !== '${esc(v.location_code)}')">${allLocs.map(l => `<option value="${esc(l.code)}" ${l.code === v.location_code ? 'selected' : ''}>${esc(l.name)}${l.code === v.location_code ? ' (สาขาเดิม)' : ''}</option>`).join('')}</select>
+  <div id="mstW"><label>สถานะ (กรณีไม่ย้ายสาขา)</label><select id="mst">${['ว่าง','ส่งซ่อม','ปลดระวาง'].map(s => `<option ${s === v.status ? 'selected' : ''}>${s}</option>`).join('')}</select></div>
+  <label>เหตุผล *</label><input id="mreason" placeholder="เช่น โยกไปสาขาอมตะเพราะรถไม่พอ, ส่งซ่อมแบตเตอรี่">
+  <button class="btn block mt" onclick="doMove('${esc(vin)}')">บันทึก</button>`);
+}
+async function receiveCar(vin) {
+  try { await busy('กำลังบันทึก…', api('receiveVehicle', vin, '')); closeModal(); toast('รับรถเข้าสาขาแล้ว'); home(); } catch (e) { fail(e); }
+}
+async function cancelMove(vin) {
+  if (!confirmBox()) return;
+  try { await busy('กำลังบันทึก…', api('cancelTransfer', vin)); closeModal(); toast('ยกเลิกการโยกแล้ว'); go('stock', null, false); } catch (e) { fail(e); }
+}
+function confirmBox() { return window.confirm ? window.confirm('ยืนยันทำรายการนี้?') : true; }
+SCREENS.vhist = async vin => {
+  setHeader('ประวัติรถ', vin, true); setBar('');
+  show('<p class="muted mt">กำลังโหลด…</p>');
+  try {
+    const h = await api('getVehicleHistory', vin), v = h.vehicle;
+    show(`<div class="card mt"><b>${esc(v.fleet_no || '-')} · ${esc(v.plate || '')}</b> ${pill(v.status, V_PILL)}<div class="small muted">${esc(v.vin)} · ${esc(v.model)} · สาขา ${esc(locName(v.location_code))}</div></div>
+    <h2>การโยก / เปลี่ยนสถานะ (${h.moves.length})</h2><div class="card small">${h.moves.map(m => `<div class="stat"><div>${esc(locName(m.from_location))} → ${esc(locName(m.to_location))} · ${esc(m.from_status)} → ${esc(m.to_status)}<div class="muted">${esc(m.reason)} · ${esc(m.by)}</div></div><div class="muted">${th(m.at)}</div></div>`).join('') || '<span class="muted">ยังไม่มีประวัติ</span>'}</div>
+    <h2>สัญญา (${h.contracts.length})</h2>${h.contracts.map(contractItem).join('') || '<p class="muted">ไม่มี</p>'}
+    <h2>อุบัติเหตุ/เคลม (${h.claims.length})</h2><div class="card small">${h.claims.map(k => `<div class="stat"><div>${esc(k.description)}<div class="muted">${esc(k.insurer)} ${esc(k.claim_no)} · ${esc(k.result || '')}</div></div><div>${pill(k.status, K_PILL)}</div></div>`).join('') || '<span class="muted">ไม่มี</span>'}</div>`);
+  } catch (e) { fail(e); }
+};
+async function doMove(vin) {
+  try { await busy('กำลังบันทึก…', api('moveVehicle', vin, $('mloc').value, $('mst').value, $('mreason').value)); closeModal(); toast('บันทึกแล้ว'); go('stock', null, false); } catch (e) { fail(e); }
+}
+
+/* ===================== ตัวช่วยวิซาร์ด ===================== */
+function stepHead(names, i) {
+  return `<div class="steps">${names.map((n, k) => `<div class="${k <= i ? 'on' : ''}"></div>`).join('')}</div>
+  <div class="stepname">ขั้นตอน ${i + 1} จาก ${names.length}: ${names[i]}</div>`;
+}
+function pkgFor(model) {
+  const all = S.boot.packages.filter(p => p.model === model);
+  const here = all.filter(p => p.loc === S.loc);
+  const list = here.length ? here : all;
+  const byDur = {}; list.forEach(p => { if (!byDur[p.duration]) byDur[p.duration] = p; });
+  const durs = ['1 เดือน', '3 เดือน', '6 เดือน', '1 ปี'].filter(d => byDur[d] || d !== '6 เดือน');
+  return durs.map(d => byDur[d] || { duration: d, months: d === '1 ปี' ? 12 : parseInt(d, 10), daily: 0, deposit: S.boot.cfg.deposit });
+}
+function endDate(startYmd, months) { const d = new Date(startYmd + 'T00:00:00'); d.setMonth(d.getMonth() + months); d.setDate(d.getDate() - 1); return ymd(d); }
+function daysBetween(a, b) { return Math.round((new Date(b + 'T00:00:00') - new Date(a + 'T00:00:00')) / 86400000) + 1; }
+
+/* ===================== ทำสัญญาใหม่ ===================== */
+const NEW_STEPS = ['เลือกรถ', 'ข้อมูลผู้เช่า', 'แพ็กเกจและตรวจสอบ', 'ส่งมอบรถ', 'ผู้เช่ารับทราบ PDPA และเซ็น'];
+async function startNew() {
+  S.wiz = { type: 'new', step: 0, vin: '', customer: {}, idPhotos: {}, pkg: null, start: ymd(new Date()) };
+  try { S.vehicles = await busy('กำลังโหลดรถว่าง…', api('listVehicles', S.loc)); go('newWiz'); } catch (e) { fail(e); }
+}
+SCREENS.newWiz = () => {
+  const w = S.wiz; setHeader('ทำสัญญาใหม่', locName(S.loc), true);
+  [newStep1, newStep2, newStep3, handoverStep, signStep][w.step]();
+};
+function wizNext() { S.wiz.step++; SCREENS[S.cur.screen](); window.scrollTo(0, 0); }
+function wizPrev() { if (S.wiz.step === 0 || S.wiz.locked) return goBack(); S.wiz.step--; SCREENS[S.cur.screen](); }
+
+function newStep1() {
+  const w = S.wiz; const free = S.vehicles.filter(v => v.status === 'ว่าง');
+  show(stepHead(NEW_STEPS, 0) + `<h2>เลือกรถที่จะให้เช่า</h2><p class="hint">แสดงเฉพาะรถที่ว่างในพื้นที่ ${esc(locName(S.loc))} (${free.length} คัน) แตะเพื่อเลือก</p>
+  <input placeholder="กรองด้วยทะเบียน / GRAB NO. / VIN" oninput="filterFree(this.value)"><div id="freeList" class="mt"></div>`);
+  filterFree('');
+  setBar(`<button class="btn sec" onclick="wizPrev()">ยกเลิก</button><button class="btn" id="nx" ${w.vin ? '' : 'disabled'} onclick="wizNext()">ถัดไป</button>`);
+}
+function filterFree(q) {
+  q = q.trim().toUpperCase().replace(/\s/g, '');
+  const list = S.vehicles.filter(v => v.status === 'ว่าง' && (!q || [v.vin, v.plate, v.fleet_no].some(x => String(x).toUpperCase().replace(/\s/g, '').includes(q))));
+  $('freeList').innerHTML = list.map(v => `<div class="item ${v.vin === S.wiz.vin ? 'sel' : ''}" onclick="S.wiz.vin='${esc(v.vin)}';filterFree('${esc(q)}');$('nx').disabled=false"><div><div class="l1">${esc(v.fleet_no || '-')} · ${esc(v.plate || 'ไม่มีทะเบียน')}</div><div class="l2">${esc(v.model)} · ${esc(v.vin)}</div></div><div>${v.vin === S.wiz.vin ? '✔' : ''}</div></div>`).join('') || '<p class="muted">ไม่มีรถว่างที่ตรงกับคำค้น</p>';
+}
+
+function newStep2() {
+  const c = S.wiz.customer;
+  const ph = (k, label) => `<div class="ph ${S.wiz.idPhotos[k] ? 'done' : ''}" onclick="takeIdPhoto('${k}')">${S.wiz.idPhotos[k] ? `<img src="${S.wiz.idPhotos[k]}">` : '&#x1F4F7;'}<span class="cap">${label}</span></div>`;
+  show(stepHead(NEW_STEPS, 1) + `<h2>ข้อมูลผู้เช่า</h2><p class="hint">กรอกเลขบัตรประชาชน 13 หลัก แล้วกด "ค้นหา" ถ้าเคยเช่าแล้ว ระบบจะดึงข้อมูลเดิมมาให้ตรวจ</p>
+  <div class="card"><label>เลขบัตรประชาชน *</label><div class="row"><input id="cid" inputmode="numeric" maxlength="17" value="${esc(c.national_id || '')}"><button class="btn sec" onclick="lookupCustomer()">ค้นหา</button></div>
+  <div id="cflags"></div>
+  <label>คำนำหน้า *</label><select id="ctitle">${['นาย','นาง','นางสาว'].map(t => `<option ${t === c.title ? 'selected' : ''}>${t}</option>`).join('')}</select>
+  <label>ชื่อ-นามสกุล *</label><input id="cname" value="${esc(c.full_name || '')}">
+  <label>วันเกิด</label><input id="cbirth" type="date" value="${esc(c.birth_date || '')}">
+  <label>เบอร์มือถือ *</label><input id="cphone" inputmode="tel" value="${esc(c.phone || '')}">
+  <label>ที่อยู่ตามบัตรประชาชน *</label><textarea id="caddr" rows="2">${esc(c.id_address || '')}</textarea>
+  <label class="check"><input type="checkbox" id="csame" ${c.current_address && c.current_address !== c.id_address ? '' : 'checked'} onchange="$('ccurW').classList.toggle('hide',this.checked)"> ที่อยู่ปัจจุบันเหมือนที่อยู่ตามบัตร</label>
+  <div id="ccurW" class="${c.current_address && c.current_address !== c.id_address ? '' : 'hide'}"><label>ที่อยู่ปัจจุบัน</label><textarea id="ccur" rows="2">${esc(c.current_address || '')}</textarea></div>
+  <label>เลขที่ใบขับขี่</label><input id="clic" value="${esc(c.license_no || '')}">
+  <label>Grab Driver ID</label><input id="cgrab" value="${esc(c.grab_driver_id || '')}"></div>
+  <h2>รูปเอกสาร</h2><p class="hint">ถ่ายรูปบัตรประชาชนและใบขับขี่ (จำเป็น) และโปรไฟล์ Grab ของผู้เช่า</p>
+  <div class="photos">${ph('id_card','บัตรประชาชน *')}${ph('license','ใบขับขี่ *')}${ph('grab_profile','โปรไฟล์ Grab')}</div><div id="cerr" class="err"></div>`);
+  setBar(`<button class="btn sec" onclick="saveCust();wizPrev()">ย้อนกลับ</button><button class="btn" onclick="custNext()">ถัดไป</button>`);
+}
+function saveCust() {
+  if (!$('cid')) return;
+  const same = $('csame').checked;
+  S.wiz.customer = { national_id: $('cid').value.replace(/\D/g, ''), title: $('ctitle').value, full_name: $('cname').value.trim(), birth_date: $('cbirth').value, phone: $('cphone').value.replace(/\D/g, ''), id_address: $('caddr').value.trim(), current_address: same ? $('caddr').value.trim() : $('ccur').value.trim(), license_no: $('clic').value.trim(), grab_driver_id: $('cgrab').value.trim() };
+}
+async function takeIdPhoto(k) { saveCust(); const d = await pickPhoto(); if (d) { S.wiz.idPhotos[k] = d; newStep2(); } }
+function thaiIdOk(id) { if (!/^\d{13}$/.test(id)) return false; let s = 0; for (let i = 0; i < 12; i++) s += +id[i] * (13 - i); return (11 - s % 11) % 10 === +id[12]; }
+async function lookupCustomer() {
+  saveCust(); const id = S.wiz.customer.national_id;
+  if (!thaiIdOk(id)) { $('cflags').innerHTML = '<div class="alert bad">เลขบัตรประชาชนไม่ถูกต้อง ตรวจอีกครั้ง</div>'; return; }
+  try {
+    const r = await busy('กำลังค้นหา…', api('findCustomer', id));
+    if (!r) { $('cflags').innerHTML = '<div class="alert info">ผู้เช่าใหม่ กรอกข้อมูลด้านล่างให้ครบ</div>'; return; }
+    S.wiz.customer = Object.assign({}, S.wiz.customer, r.customer); S.wiz.custFlags = r.flags; S.wiz.custRisk = r.risk || 0; S.wiz.riskAck = false; newStep2();
+    $('cflags').innerHTML = `<div class="alert ok">พบข้อมูลเดิม (${r.contracts} สัญญา) ตรวจและแก้ให้เป็นปัจจุบัน</div>` + r.flags.map(f => `<div class="alert bad">${esc(f)}</div>`).join('') +
+      (r.risk ? `<label class="check mt"><input type="checkbox" onchange="S.wiz.riskAck=this.checked"> รับทราบประวัติข้างต้น และหัวหน้า/ผู้จัดการอนุมัติให้ทำสัญญาได้</label>` : '');
+  } catch (e) { fail(e); }
+}
+function custNext() {
+  saveCust(); const c = S.wiz.customer, errs = [];
+  if (!thaiIdOk(c.national_id)) errs.push('เลขบัตรประชาชนไม่ถูกต้อง');
+  if (!c.full_name) errs.push('กรอกชื่อ-นามสกุล');
+  if (!/^0\d{8,9}$/.test(c.phone)) errs.push('เบอร์มือถือไม่ถูกต้อง');
+  if (!c.id_address) errs.push('กรอกที่อยู่ตามบัตร');
+  if (!S.wiz.idPhotos.id_card || !S.wiz.idPhotos.license) errs.push('ถ่ายรูปบัตรประชาชนและใบขับขี่');
+  if (S.wiz.custRisk && !S.wiz.riskAck) errs.push('ผู้เช่ารายนี้มีประวัติหนี้/ยึดรถ ต้องติ๊กรับทราบและได้รับอนุมัติก่อน');
+  if (errs.length) { $('cerr').innerHTML = errs.join('<br>'); window.scrollTo(0, document.body.scrollHeight); return; }
+  wizNext();
+}
+
+function pkgBlock(model, startYmd, startLocked) {
+  const w = S.wiz; const pk = pkgFor(model);
+  if (!w.pkg) w.pkg = pk.find(p => p.daily) || pk[0];
+  if (!w.daily) w.daily = w.pkg.daily;
+  w.start = w.start || startYmd; w.end = endDate(w.start, w.pkg.months);
+  const days = daysBetween(w.start, w.end), editRate = may('edit_rate') || !w.pkg.daily;
+  return `<div class="card"><label>ระยะเวลาเช่า</label><div class="chips">${pk.map(p => `<span class="chip ${p.duration === w.pkg.duration ? 'on' : ''}" onclick="pickPkg('${p.duration}')">${p.duration}${p.daily ? ' · ' + money(p.daily) + '/วัน' : ''}</span>`).join('')}</div>
+  <label>ค่าเช่าต่อวัน (บาท)</label><input id="pdaily" type="number" value="${w.daily || ''}" ${editRate ? '' : 'readonly'} oninput="S.wiz.daily=+this.value;refreshPkg()">
+  ${!w.pkg.daily ? '<div class="alert warn">ยังไม่มีราคามาตรฐานของแพ็กเกจนี้ กรอกค่าเช่าเอง</div>' : ''}
+  <div class="grid"><div><label>วันเริ่มสัญญา</label><input id="pstart" type="date" value="${w.start}" ${startLocked ? 'readonly' : ''} onchange="S.wiz.start=this.value;refreshPkg()"></div>
+  <div><label>วันสิ้นสุดสัญญา</label><input id="pend" type="date" value="${w.end}" readonly></div></div>
+  ${w.type === 'renew' ? '' : `<label>เงินมัดจำ (บาท)</label><input id="pdep" type="number" value="${w.deposit != null ? w.deposit : S.boot.cfg.deposit}" oninput="S.wiz.deposit=+this.value">`}
+  <label>โปรโมชั่นขับฟรี (ถ้ามี)</label><input id="ppromo" value="${esc(w.promo || '')}" oninput="S.wiz.promo=this.value" placeholder="เช่น ขับฟรี 7 วัน">
+  <label>เลข IC CARD (ถ้ามี)</label><input id="pic" value="${esc(w.iccard || '')}" oninput="S.wiz.iccard=this.value">
+  <div class="alert info mt">${days} วัน × ${money(w.daily)} บาท = <b>${money(days * (w.daily || 0))} บาท</b></div></div>`;
+}
+function pickPkg(dur) { const w = S.wiz; const v = w.vehicle || S.vehicles.find(x => x.vin === w.vin); w.pkg = pkgFor(v.model).find(p => p.duration === dur); w.daily = w.pkg.daily; SCREENS[S.cur.screen](); }
+function refreshPkg() { const y = window.scrollY; SCREENS[S.cur.screen](); window.scrollTo(0, y); }
+
+function newStep3() {
+  const w = S.wiz, v = S.vehicles.find(x => x.vin === w.vin), c = w.customer;
+  show(stepHead(NEW_STEPS, 2) + `<h2>แพ็กเกจและตรวจสอบ</h2><p class="hint">เลือกระยะเวลาเช่า ตรวจสรุปให้ถูกต้อง แล้วกด "สร้างสัญญา" รถจะถูกจองไว้ ${24} ชั่วโมงระหว่างรอเซ็น</p>
+  ${pkgBlock(v.model, ymd(new Date()))}
+  <div class="card"><div class="kv"><div>ผู้เช่า</div><div>${esc(c.title)} ${esc(c.full_name)}</div><div>เลขบัตร</div><div>${esc(c.national_id)}</div><div>โทร</div><div>${esc(c.phone)}</div>
+  <div>รถ</div><div>${esc(v.fleet_no)} · ${esc(v.plate)}<br><span class="small muted">${esc(v.vin)}</span></div><div>รุ่น</div><div>${esc(v.model)}</div></div></div>`);
+  setBar(`<button class="btn sec" onclick="wizPrev()">ย้อนกลับ</button><button class="btn" onclick="createNew()">สร้างสัญญา</button>`);
+}
+async function createNew() {
+  const w = S.wiz;
+  if (!(w.daily > 0)) return toast('กรอกค่าเช่าต่อวัน');
+  try {
+    const r = await busy('กำลังสร้างสัญญา…', api('createContract', { location_code: S.loc, vin: w.vin, customer: w.customer, duration: w.pkg.duration, start_date: w.start, end_date: w.end, daily_rate: w.daily, deposit: w.deposit != null ? w.deposit : S.boot.cfg.deposit, promotion: w.promo || '', iccard_no: w.iccard || '' }));
+    w.contractId = r.contract_id; w.locked = true;
+    for (const k of Object.keys(w.idPhotos)) await busy('กำลังอัปโหลดรูป ' + k + '…', api('uploadPhoto', w.contractId, k, w.idPhotos[k]));
+    toast('สร้างสัญญา ' + r.contract_id + ' แล้ว'); wizNext();
+  } catch (e) { fail(e); }
+}
+
+/* ===================== ขั้นตอนเซ็น (ใช้ร่วม: สัญญาใหม่ / ต่อสัญญา) ===================== */
+function noticeHtml() {
+  return `<b>ประกาศความเป็นส่วนตัวสำหรับผู้เช่า (ฉบับ ${esc(S.boot.cfg.notice)})</b><br>
+  ${esc(S.boot.cfg.lessor)} ("บริษัท") เก็บและใช้ข้อมูลส่วนบุคคลของท่าน ได้แก่ ชื่อ-นามสกุล เลขบัตรประชาชน วันเกิด รูปบัตรประชาชน (ปิดทับศาสนาและหมู่เลือด) ใบขับขี่ ที่อยู่ เบอร์โทร LINE ข้อมูลสัญญาและการชำระเงิน Grab driver ID ตำแหน่ง GPS ของรถที่เช่า รูปถ่ายรถ และลายมือชื่ออิเล็กทรอนิกส์<br><br>
+  <b>เพื่อ</b> (1) ทำและปฏิบัติตามสัญญาเช่า ส่งมอบและรับคืนรถ (2) เก็บค่าเช่า ติดตามหนี้ และติดตามรถคืนเมื่อผิดสัญญา (3) ติดตามตำแหน่งรถเพื่อความปลอดภัยของทรัพย์สิน (4) แจ้งเตือนสัญญาและยอดค้างทาง LINE/โทรศัพท์ (5) ปฏิบัติตามกฎหมายบัญชีและภาษี — โดยอาศัยฐานสัญญา ประโยชน์อันชอบธรรม และหน้าที่ตามกฎหมาย<br><br>
+  <b>ผู้รับข้อมูล</b> Grab (เฉพาะที่จำเป็นต่อการหักค่าเช่า) บริษัทในกลุ่ม ผู้ให้บริการ GPS บริษัทประกันภัย ผู้รับจ้างติดตามหนี้หรือทนายความ และหน่วยงานรัฐตามกฎหมาย ข้อมูลอาจจัดเก็บบนบริการคลาวด์ที่มีเซิร์ฟเวอร์นอกประเทศไทย<br><br>
+  <b>ระยะเวลาเก็บ</b> ตลอดอายุสัญญาและหลังสิ้นสุดตามที่กฎหมายกำหนด<br><br>
+  <b>สิทธิของท่าน</b> ขอเข้าถึง ขอสำเนา แก้ไข ลบ ระงับ คัดค้าน โอนย้ายข้อมูล ถอนความยินยอม และร้องเรียนต่อสำนักงานคณะกรรมการคุ้มครองข้อมูลส่วนบุคคล ติดต่อได้ที่สาขาหรือ LINE ของบริษัท<br><br>
+  ข้อมูลข้างต้น (ยกเว้นเพื่อการตลาด) จำเป็นต่อการทำสัญญา หากไม่ให้ข้อมูล บริษัทจะทำสัญญาเช่าไม่ได้<br><br><i>— สิ้นสุดประกาศ —</i>`;
+}
+function signStep() {
+  const w = S.wiz; const steps = w.type === 'renew' ? RENEW_STEPS : NEW_STEPS; const i = w.type === 'renew' ? 2 : 4;
+  show(stepHead(steps, i) + `<h2>ผู้เช่ารับทราบ PDPA และเซ็นสัญญา</h2><p class="hint">ส่งเครื่องให้ผู้เช่าอ่านประกาศจนจบ ติ๊กรับทราบ แล้วเซ็นในกรอบ จากนั้นพนักงานเซ็นในนามผู้ให้เช่า</p>
+  <div class="alert info">สัญญาเลขที่ <b>${esc(w.contractId)}</b></div>
+  <div class="card small">ลูกค้าไม่ได้อยู่ที่นี่? ส่งลิงก์ให้ลูกค้าอ่านและเซ็นบนมือถือของตัวเองได้ <button class="btn sec block mt" onclick="sendSignLink('${esc(w.contractId)}')">ส่งลิงก์ให้ลูกค้าเซ็นแทน</button></div>
+  <div class="notice" id="notice" onscroll="if(this.scrollTop+this.clientHeight>=this.scrollHeight-8)$('ack').disabled=false">${noticeHtml()}</div>
+  <label class="check"><input type="checkbox" id="ack" disabled> ข้าพเจ้าได้อ่านและรับทราบประกาศความเป็นส่วนตัวแล้ว (เลื่อนอ่านให้จบก่อน)</label>
+  <label class="check"><input type="checkbox" id="mkt"> ยินยอมให้ส่งข่าวสาร โปรโมชั่น และบริการใหม่ทาง LINE (ไม่บังคับ)</label>
+  <label class="check"><input type="checkbox" id="grp"> ยินยอมให้บริษัทในกลุ่มติดต่อเสนอบริการชาร์จ/สลับแบตเตอรี่ (ไม่บังคับ)</label>
+  <label>ลายเซ็นผู้เช่า</label><canvas id="sigC" class="sig"></canvas><button class="btn sec mt" onclick="padC.clear()">ล้างลายเซ็นผู้เช่า</button>
+  <label>ลายเซ็นพนักงาน (ผู้ให้เช่า)</label><canvas id="sigS" class="sig"></canvas><button class="btn sec mt" onclick="padS.clear()">ล้างลายเซ็นพนักงาน</button>
+  <p class="small muted">เมื่อกด "ยืนยันการเซ็น" ระบบจะสร้างสัญญา PDF ตามแบบสัญญาของบริษัท พร้อมเอกสารแนบท้ายที่กรอกให้อัตโนมัติ (บันทึกส่งมอบรถ อุปกรณ์ รูปถ่าย และเงื่อนไขบัตร IC CARD) และหน้าบันทึกการลงนาม</p>`);
+  window.padC = sigPad('sigC'); window.padS = sigPad('sigS');
+  setBar(`<button class="btn sec" onclick="home()">ทำต่อภายหลัง</button><button class="btn" onclick="doSign()">ยืนยันการเซ็น</button>`);
+}
+async function doSign() {
+  const w = S.wiz;
+  if (!$('ack').checked) return toast('ผู้เช่าต้องอ่านและติ๊กรับทราบประกาศก่อน');
+  if (padC.empty() || padS.empty()) return toast('ต้องมีลายเซ็นทั้งผู้เช่าและพนักงาน');
+  const payload = { customer: padC.data(), staff: padS.data(), pdpaAck: true, marketing: $('mkt').checked, group: $('grp').checked, userAgent: navigator.userAgent };
+  const cid = w.contractId, renew = w.type === 'renew', st = w.start, en = w.end;
+  bgRun('เซ็นสัญญา ' + cid, () => api('signContract', cid, payload), r => renew
+    ? doneScreen('ต่อสัญญาเรียบร้อย', `สัญญาใหม่ ${cid} เริ่มใช้ตั้งแต่ ${th(st)} ถึง ${th(en)}`, r.pdf_url, cid)
+    : doneScreen('ทำสัญญาและส่งมอบรถเรียบร้อย', 'สัญญา ' + cid + ' เริ่มใช้งานแล้ว', r.pdf_url, cid), 25);
+}
+async function resumeSign(id) {
+  S.wiz = { type: 'new', step: 3, contractId: id, locked: true, handoverPhotos: {} };
+  try { const d = await busy('กำลังโหลด…', api('getContract', id)); S.wiz.vin = d.contract.vin;
+    d.photos.filter(p => /^handover_/.test(p.kind)).forEach(p => { S.wiz.handoverPhotos[p.kind.replace('handover_', '')] = 'uploaded'; });
+    const ho = d.events.find(e => e.type === 'handover');
+    if (ho) { try { const x = JSON.parse(ho.detail || '{}'); Object.assign(S.wiz, { mileage: x.mileage, acc: x.checklist, defects: x.defects, icDep: x.ic_deposit, icDepNote: x.ic_deposit_note }); } catch (e) { } }
+    if (d.contract.kind === 'ต่อ') { S.wiz.type = 'renew'; S.wiz.step = 2; S.wiz.start = d.contract.start_date; S.wiz.end = d.contract.end_date; go('renewWiz'); } else go('newWiz'); } catch (e) { fail(e); }
+}
+
+/* ===================== ส่งมอบรถ ===================== */
+function handoverStep() {
+  const w = S.wiz; w.handoverPhotos = w.handoverPhotos || {}; w.acc = w.acc || ACCESSORIES.slice();
+  const hasIc = w.acc.includes('IC CARD');
+  show(stepHead(NEW_STEPS, 3) + `<h2>ส่งมอบรถ</h2><p class="hint">ถ่ายรูปรถให้ครบ 6 รูป กรอกเลขไมล์ ติ๊กอุปกรณ์ที่ส่งมอบ แล้วกด "ถัดไป" ข้อมูลหน้านี้จะถูกใส่ในเอกสารแนบท้ายสัญญาให้อัตโนมัติ ผู้เช่าเซ็นครั้งเดียวในขั้นตอนถัดไป</p>
+  <div class="photos">${PHOTO_ANGLES.map(([k, l]) => `<div class="ph ${w.handoverPhotos[k] ? 'done' : ''}" onclick="snap('handover_${k}','${k}')">${String(w.handoverPhotos[k] || '').startsWith('data:') ? `<img src="${w.handoverPhotos[k]}">` : (w.handoverPhotos[k] ? '&#x2714;' : '&#x1F4F7;')}<span class="cap">${l}</span></div>`).join('')}</div>
+  <label>เลขไมล์ (กม.)</label><input id="hmile" type="number" inputmode="numeric" value="${esc(w.mileage || '')}" oninput="S.wiz.mileage=this.value">
+  <label>อุปกรณ์ที่ส่งมอบ</label><div class="checks">${ACCESSORIES.map(a => `<label><input type="checkbox" ${w.acc.includes(a) ? 'checked' : ''} onchange="toggleAcc('${a}',this.checked);if('${a}'==='IC CARD')handoverStep()"> ${a}</label>`).join('')}</div>
+  ${hasIc ? `<label>มัดจำบัตร IC CARD 200 บาท ชำระโดย</label><select id="icdep" onchange="S.wiz.icDep=this.value;handoverStep()">${[['', '-- เลือก --'], ['cash', 'เงินสด'], ['deposit', 'หักจากเงินมัดจำ'], ['other', 'อื่นๆ']].map(([v, l]) => `<option value="${v}" ${(w.icDep || '') === v ? 'selected' : ''}>${l}</option>`).join('')}</select>
+  ${w.icDep === 'other' ? `<input placeholder="ระบุวิธีชำระ" value="${esc(w.icDepNote || '')}" oninput="S.wiz.icDepNote=this.value">` : ''}` : ''}
+  <label>ตำหนิในตัวรถ (ถ้ามี)</label><textarea id="hdef" rows="2" placeholder="เช่น รอยขีดข่วนบังลมด้านซ้าย" oninput="S.wiz.defects=this.value">${esc(w.defects || '')}</textarea>`);
+  setBar(`<button class="btn sec" onclick="home()">ทำต่อภายหลัง</button><button class="btn" onclick="finishHandover()">ถัดไป: เซ็นสัญญา</button>`);
+}
+function toggleAcc(a, on) { const s = new Set(S.wiz.acc); on ? s.add(a) : s.delete(a); S.wiz.acc = [...s]; }
+async function snap(kind, key, mode) {
+  const d = await pickPhoto(mode); if (!d || !S.wiz) return;
+  const w = S.wiz, cid = w.contractId, k = cid + '|' + kind, scr = S.cur.screen;
+  const store = kind.startsWith('return_') ? w.returnPhotos : kind.startsWith('retdmg_') ? w.dmgFiles : kind.startsWith('seize_') ? w.seizePhotos : kind.startsWith('damage_') ? w.damagePhotos : w.handoverPhotos;
+  store[key] = d;
+  const u = S.upl[k] = { state: 'run' };
+  const redraw = () => { if (S.wiz === w && S.cur.screen === scr) { SCREENS[scr](); markUploads(); } };
+  redraw();
+  u.p = api('uploadPhoto', cid, kind, d).then(() => { u.state = 'ok'; redraw(); })
+    .catch(e => { u.state = 'err'; if (store[key] === d) delete store[key]; redraw(); toast('อัปโหลดรูปไม่สำเร็จ: ' + e.message, 5000); throw e; });
+}
+function dmgSlot(prefix, k, store) {
+  const d = store[k], isPdf = d && /^data:application\/pdf/.test(d);
+  return `<div class="ph ${d ? 'done' : ''}" onclick="snap('${prefix}${k}','${k}','file')">${d ? (isPdf ? '<span style="font-size:30px">&#x1F4C4;</span>' : `<img src="${d}">`) : '&#x2795;'}<span class="cap">${d ? (isPdf ? 'PDF' : 'รูป ' + k) : 'แนบไฟล์'}</span></div>`;
+}
+async function finishHandover() {
+  const w = S.wiz;
+  if (!(await waitUploads())) return;
+  if (Object.keys(w.handoverPhotos).length < 6) return toast('ถ่ายรูปรถให้ครบ 6 รูปก่อน');
+  if (!String(w.mileage || '').trim()) return toast('กรอกเลขไมล์ก่อน');
+  if (w.acc.includes('IC CARD') && !w.icDep) return toast('เลือกวิธีชำระมัดจำบัตร IC CARD');
+  try { await busy('กำลังบันทึกการส่งมอบ…', api('saveHandover', w.contractId, { mileage: w.mileage, checklist: w.acc, defects: w.defects || '', ic_deposit: w.acc.includes('IC CARD') ? w.icDep : '', ic_deposit_note: w.icDepNote || '' })); wizNext(); } catch (e) { fail(e); }
+}
+function doneScreen(title, msg, pdf, id) {
+  S.wiz = null; setHeader('เสร็จเรียบร้อย', '', false);
+  show(`<div class="card mt" style="text-align:center"><div style="font-size:48px">✅</div><h2>${esc(title)}</h2><p>${esc(msg)}</p>
+  ${pdf ? `<button class="btn block mt" onclick="openFile('${esc(pdf)}')">เปิดเอกสาร PDF</button>` : ''}
+  ${id ? `<button class="btn sec block mt" onclick="S.history=[];go('contract','${esc(id)}',false)">ดูรายละเอียดสัญญา</button>` : ''}</div>`);
+  setBar(`<button class="btn" onclick="home()">กลับหน้าหลัก</button>`);
+}
+
+/* ===================== เลือกสัญญา (ใช้ร่วม: ต่อสัญญา / คืนรถ / ยกเลิก) ===================== */
+async function pickContract(title, hint, filterFn, onPick) {
+  setHeader(title, locName(S.loc), true); setBar('');
+  show('<p class="muted mt">กำลังโหลด…</p>');
+  try {
+    const list = (await api('listActive', S.loc)).filter(filterFn);
+    S.pickList = list; S.onPick = onPick;
+    show(`<h2>${esc(title)}</h2><p class="hint">${esc(hint)}</p><input placeholder="กรองด้วยชื่อ / เลขสัญญา / VIN" oninput="renderPick(this.value)"><div id="pick" class="mt"></div>`);
+    renderPick('');
+  } catch (e) { fail(e); }
+}
+function renderPick(q) {
+  q = q.trim().toUpperCase();
+  const l = S.pickList.filter(c => !q || [c.name, c.contract_id, c.vin, c.legacy_no, c.phone].some(x => String(x || '').toUpperCase().includes(q)));
+  $('pick').innerHTML = l.map(c => `<div class="item" onclick="S.onPick('${esc(c.contract_id)}')"><div><div class="l1">${esc(c.name)} ${pill(c.status, C_PILL)}</div><div class="l2">${esc(c.contract_id)} · หมด ${esc(c.end)}</div><div class="l2">${esc(c.vin)}</div></div><div>›</div></div>`).join('') || '<p class="muted">ไม่พบสัญญา</p>';
+}
+
+/* ===================== ต่อสัญญา ===================== */
+const RENEW_STEPS = ['เลือกสัญญาเดิม', 'แพ็กเกจใหม่', 'ผู้เช่ารับทราบ PDPA และเซ็น'];
+function startRenew(id) {
+  const begin = async cid => {
+    try {
+      const d = await busy('กำลังโหลด…', api('getContract', cid));
+      if (!['Active', 'หมดสัญญา'].includes(d.contract.status)) return toast('ต่อสัญญาได้เฉพาะสัญญาที่ Active หรือหมดสัญญาแต่รถยังอยู่กับผู้เช่า');
+      const st = new Date(d.contract.end_date + 'T00:00:00'); st.setDate(st.getDate() + 1);
+      S.wiz = { type: 'renew', step: 1, parent: d.contract, vin: d.contract.vin, vehicle: { model: d.contract.model }, customer: d.customer, start: ymd(st), deposit: d.contract.deposit };
+      go('renewWiz');
+    } catch (e) { fail(e); }
+  };
+  if (id) return begin(id);
+  pickContract('ต่อสัญญา', 'เลือกสัญญาที่จะต่ออายุ (เฉพาะสัญญา Active) สัญญาที่ใกล้หมดอยู่บนสุด', c => c.status === 'Active', begin);
+}
+SCREENS.renewWiz = () => {
+  const w = S.wiz; setHeader('ต่อสัญญา', locName(S.loc), true);
+  if (w.step === 2) return signStep();
+  show(stepHead(RENEW_STEPS, 1) + `<h2>แพ็กเกจใหม่</h2><p class="hint">สัญญาใหม่เริ่มวันถัดจากสัญญาเดิมสิ้นสุด ใช้รถคันเดิม ไม่ต้องส่งมอบรถใหม่</p>
+  <div class="card"><div class="kv"><div>ผู้เช่า</div><div>${esc(w.customer.full_name)}</div><div>สัญญาเดิม</div><div>${esc(w.parent.contract_id)} · หมด ${th(w.parent.end_date)}</div><div>รถ</div><div>${esc(w.vin)}</div></div></div>
+  ${pkgBlock(w.parent.model, w.start, true)}`);
+  setBar(`<button class="btn sec" onclick="goBack()">ยกเลิก</button><button class="btn" onclick="createRenew()">สร้างสัญญาต่ออายุ</button>`);
+};
+async function createRenew() {
+  const w = S.wiz;
+  if (!(w.daily > 0)) return toast('กรอกค่าเช่าต่อวัน');
+  try {
+    const r = await busy('กำลังสร้างสัญญา…', api('createContract', { location_code: S.loc, vin: w.vin, parent_contract_id: w.parent.contract_id, duration: w.pkg.duration, start_date: w.start, end_date: w.end, daily_rate: w.daily, promotion: w.promo || '', iccard_no: w.iccard || '' }));
+    w.contractId = r.contract_id; w.locked = true; w.step = 2; SCREENS.renewWiz();
+  } catch (e) { fail(e); }
+}
+
+/* ===================== คืนรถ ===================== */
+const RET_STEPS = ['เลือกสัญญา', 'ตรวจสภาพรถและสรุปยอด', 'เซ็นรับคืนรถ'];
+function startReturn(id) {
+  const begin = async cid => {
+    try {
+      const [d, pv] = await busy('กำลังโหลด…', Promise.all([api('getContract', cid), api('returnPreview', cid)]));
+      S.wiz = { type: 'return', step: 1, contractId: cid, d: d, pv: pv, returnPhotos: {}, dmgFiles: {}, acc: ACCESSORIES.slice(), damage: 0, overdue: Number(pv.grab_owed || 0), overdueAuto: Number(pv.grab_owed || 0), other: 0, cancelFee: Number(pv.cancel_fee || 0), waive: false, waiveReason: '' };
+      go('returnWiz');
+    } catch (e) { fail(e); }
+  };
+  if (id) return begin(id);
+  pickContract('รับคืนรถ', 'เลือกสัญญาของรถที่ผู้เช่านำมาคืน', () => true, begin);
+}
+SCREENS.returnWiz = () => {
+  const w = S.wiz, c = w.d.contract, cu = w.d.customer; setHeader('รับคืนรถ', locName(S.loc), true);
+  const late = retLate(), net = Number(c.deposit || 0) - w.damage - w.overdue - w.other - (w.cancelFee || 0) - late;
+  if (w.step === 1) {
+    show(stepHead(RET_STEPS, 1) + `<h2>ตรวจสภาพรถและสรุปยอด</h2><p class="hint">ถ่ายรูปรถ 6 มุม เทียบกับรูปตอนส่งมอบ ติ๊กอุปกรณ์ที่ได้คืน แล้วกรอกยอดที่ต้องหัก</p>
+    <div class="card"><div class="kv"><div>ผู้เช่า</div><div>${esc(cu.full_name)}</div><div>สัญญา</div><div>${esc(c.contract_id)} · หมด ${esc(c.end_th)}</div><div>รถ</div><div>${esc(c.vin)}</div><div>มัดจำ</div><div>${money(c.deposit)} บาท</div></div>
+    ${w.d.photos.filter(p => p.kind.startsWith('handover_')).length ? `<div class="small mt">รูปตอนส่งมอบ: ${w.d.photos.filter(p => p.kind.startsWith('handover_')).map(p => `<a href="${esc(p.url)}" target="_blank">${esc(p.kind.replace('handover_', ''))}</a>`).join(' · ')}</div>` : ''}</div>
+    <div class="photos">${PHOTO_ANGLES.map(([k, l]) => `<div class="ph ${w.returnPhotos[k] ? 'done' : ''}" onclick="snap('return_${k}','${k}')">${w.returnPhotos[k] ? `<img src="${w.returnPhotos[k]}">` : '&#x1F4F7;'}<span class="cap">${l}</span></div>`).join('')}</div>
+    <label>เลขไมล์ (กม.)</label><input type="number" value="${esc(w.mileage || '')}" oninput="S.wiz.mileage=this.value">
+    <label>อุปกรณ์ที่ได้รับคืน</label><div class="checks">${ACCESSORIES.map(a => `<label><input type="checkbox" ${w.acc.includes(a) ? 'checked' : ''} onchange="toggleAcc('${a}',this.checked)"> ${a}</label>`).join('')}</div>
+    <label>ความเสียหาย / อุปกรณ์ที่ขาด</label><textarea rows="2" oninput="S.wiz.damages=this.value">${esc(w.damages || '')}</textarea>
+    <label>ค่าความเสียหาย (บาท)</label><input type="number" value="${w.damage || ''}" oninput="S.wiz.damage=+this.value||0;retSum()">
+    <div class="small muted">แนบรูปความเสียหาย หรือใบประเมิน/ใบเสนอราคา (รูปหรือ PDF) — รูปจะใส่ในใบรับคืนรถให้อัตโนมัติ</div>
+    <div class="photos">${[1, 2, 3, 4, 5, 6].map(k => dmgSlot('retdmg_', k, w.dmgFiles)).join('')}</div>
+    <label>ค่าเช่าค้าง (บาท)</label><input type="number" value="${w.overdue || ''}" oninput="S.wiz.overdue=+this.value||0;retSum()">
+    <div class="small ${w.overdueAuto ? '' : 'muted'}">${w.overdueAuto ? `ระบบคำนวณให้: ${esc(w.pv.grab_text)} = <b>${money(w.overdueAuto)} บาท</b>${w.overdue !== w.overdueAuto ? ` · <a href="#" onclick="S.wiz.overdue=S.wiz.overdueAuto;SCREENS.returnWiz();return false">ใช้ยอดที่ระบบคำนวณ</a>` : ' (แก้ไขตัวเลขได้)'}` : 'ไม่พบยอดค้างจากข้อมูล Grab — ถ้ามีค่าเช่าค้าง ใส่ตัวเลขเองได้'}</div>
+    <div class="card mt"><b>ค่าปรับคืนรถล่าช้า</b> <span class="small muted">(สัญญาข้อ 12 วันละ ${money(w.pv.per_day)} บาท)</span>
+      <div class="small mt">กำหนดคืน ${esc(w.pv.due_th)} · ${esc(w.pv.basis)}</div>
+      ${w.pv.late_days ? `<div class="mt">คืนช้า <b>${w.pv.late_days} วัน</b> = <b>${money(w.pv.late_fee)} บาท</b> (ระบบคำนวณให้)</div>
+      <label class="check"><input type="checkbox" ${w.waive ? 'checked' : ''} onchange="S.wiz.waive=this.checked;SCREENS.returnWiz()"> ยกเว้นค่าปรับ</label>
+      ${w.waive ? `<input placeholder="เหตุผลที่ยกเว้น (บังคับ)" value="${esc(w.waiveReason)}" oninput="S.wiz.waiveReason=this.value">` : ''}` : '<div class="mt" style="color:var(--ok)">คืนตรงเวลา ไม่มีค่าปรับ</div>'}</div>
+    ${w.pv.cancel_fee || w.d.contract.status === 'ยกเลิก' ? `<label>ค่าปรับยกเลิกสัญญาก่อนกำหนด (บาท)</label><input type="number" value="${w.cancelFee || ''}" oninput="S.wiz.cancelFee=+this.value||0;retSum()">
+    <div class="small muted">${w.pv.cancel_fee ? `คำนวณไว้ตอนขอยกเลิก: ${esc(w.pv.cancel_text)} = <b>${money(w.pv.cancel_fee)} บาท</b> (แก้ไขได้ ใส่ 0 ถ้าผู้จัดการยกเว้น)` : 'ไม่มีค่าปรับยกเลิกที่คำนวณไว้'}</div>` : ''}
+    <label>ค่าใช้จ่ายอื่น</label><input type="number" value="${w.other || ''}" oninput="S.wiz.other=+this.value||0;retSum()">
+    <label class="check"><input type="checkbox" ${w.needRepair ? 'checked' : ''} onchange="S.wiz.needRepair=this.checked"> ต้องส่งซ่อมก่อนให้เช่าต่อ</label>
+    <label>หมายเหตุ</label><input value="${esc(w.note || '')}" oninput="S.wiz.note=this.value">
+    <div id="retsum" class="alert ${net >= 0 ? 'ok' : 'warn'} mt">${net >= 0 ? 'คืนเงินให้ผู้เช่า' : 'ผู้เช่าต้องชำระเพิ่ม'} <b>${money(Math.abs(net))} บาท</b></div>`);
+    setBar(`<button class="btn sec" onclick="goBack()">ยกเลิก</button><button class="btn" onclick="if(Object.keys(S.wiz.returnPhotos).length<6)return toast('ถ่ายรูปรถให้ครบ 6 รูปก่อน');if(S.wiz.waive&&!S.wiz.waiveReason.trim())return toast('ระบุเหตุผลที่ยกเว้นค่าปรับ');S.wiz.step=2;SCREENS.returnWiz()">ถัดไป</button>`);
+  } else {
+    show(stepHead(RET_STEPS, 2) + `<h2>เซ็นรับคืนรถ</h2><p class="hint">ให้ผู้เช่าตรวจสรุปยอดแล้วเซ็น จากนั้นพนักงานเซ็นรับคืน</p>
+    <div class="alert ${net >= 0 ? 'ok' : 'warn'}">${net >= 0 ? 'คืนเงินมัดจำให้ผู้เช่า' : 'ผู้เช่าต้องชำระเพิ่ม'} <b>${money(Math.abs(net))} บาท</b><br><span class="small">มัดจำ ${money(c.deposit)} − ความเสียหาย ${money(w.damage)} − ค่าเช่าค้าง ${money(w.overdue)} − ค่าปรับคืนช้า ${money(late)}${w.cancelFee ? ` − ค่าปรับยกเลิก ${money(w.cancelFee)}` : ''} − อื่นๆ ${money(w.other)}</span>
+    ${net < 0 ? '<br><span class="small"><b>ระบบจะออกหนังสือรับสภาพหนี้ให้อัตโนมัติ</b> ใช้ลายเซ็นชุดนี้ ชำระเต็มจำนวนภายใน 7 วัน ไม่มีผ่อน</span>' : ''}</div>
+    <label>ลายเซ็นผู้เช่า</label><canvas id="sigC" class="sig"></canvas><button class="btn sec mt" onclick="padC.clear()">ล้าง</button>
+    <label>ลายเซ็นพนักงาน</label><canvas id="sigS" class="sig"></canvas><button class="btn sec mt" onclick="padS.clear()">ล้าง</button>`);
+    window.padC = sigPad('sigC'); window.padS = sigPad('sigS');
+    setBar(`<button class="btn sec" onclick="S.wiz.step=1;SCREENS.returnWiz()">ย้อนกลับ</button><button class="btn" onclick="doReturn()">ยืนยันรับคืนรถ</button>`);
+  }
+};
+function retLate() { const w = S.wiz; return w.waive ? 0 : Number(w.pv.late_fee || 0); }
+function retSum() { const w = S.wiz, net = Number(w.d.contract.deposit || 0) - w.damage - w.overdue - w.other - (w.cancelFee || 0) - retLate(); $('retsum').className = 'alert mt ' + (net >= 0 ? 'ok' : 'warn'); $('retsum').innerHTML = (net >= 0 ? 'คืนเงินให้ผู้เช่า' : 'ผู้เช่าต้องชำระเพิ่ม') + ` <b>${money(Math.abs(net))} บาท</b>`; }
+async function doReturn() {
+  const w = S.wiz;
+  if (padC.empty() || padS.empty()) return toast('ต้องมีลายเซ็นทั้งผู้เช่าและพนักงาน');
+  if (!(await waitUploads())) return;
+  const cid = w.contractId, payload = { mileage: w.mileage || '', checklist: w.acc, damages: w.damages || '', damage_cost: w.damage, overdue_amount: w.overdue, other_cost: w.other, cancel_fee: w.cancelFee || 0, waive_late: !!w.waive, waive_reason: w.waiveReason || '', note: w.note || '', needRepair: !!w.needRepair, sigCustomer: padC.data(), sigStaff: padS.data(), userAgent: navigator.userAgent };
+  bgRun('รับคืนรถ ' + cid, () => api('returnVehicle', cid, payload), r => {
+    doneScreen('รับคืนรถเรียบร้อย', (r.net >= 0 ? 'คืนเงินให้ผู้เช่า ' : 'ผู้เช่าต้องชำระเพิ่ม ') + money(Math.abs(r.net)) + ' บาท' + (r.late_fee ? ' (รวมค่าปรับคืนช้า ' + r.late_days + ' วัน ' + money(r.late_fee) + ' บาท)' : ''), r.pdf_url, cid);
+    if (r.debt_url) { S.lastDebtUrl = r.debt_url; $('app').querySelector('.card').insertAdjacentHTML('beforeend', `<button class="btn sec block mt" onclick="openFile(S.lastDebtUrl)">เปิดหนังสือรับสภาพหนี้</button>`); }
+  }, 25);
+}
+
+/* ===================== ยกเลิกสัญญา ===================== */
+function startCancel(id) {
+  const begin = cid => { S.wiz = { type: 'cancel', contractId: cid }; go('cancelForm'); };
+  if (id) return begin(id);
+  pickContract('ขอยกเลิกสัญญา', 'เลือกสัญญาที่ต้องการยกเลิก ผู้ดูแลระบบหรือผู้จัดการพื้นที่ต้องอนุมัติก่อนมีผล', () => true, begin);
+}
+SCREENS.cancelForm = () => {
+  setHeader('ขอยกเลิกสัญญา', S.wiz.contractId, true);
+  show(`<h2>ขอยกเลิกสัญญา ${esc(S.wiz.contractId)}</h2><p class="hint">เลือกเหตุผลและอธิบายเพิ่มเติม คำขอจะไปรออนุมัติ ระบบคำนวณค่าปรับตามสัญญาให้โดยประมาณ (1/3 เดือน = 50%, 1 ปี = 20% ของค่าเช่าส่วนที่เหลือ)</p>
+  <div class="card"><label>เหตุผล *</label><select id="xr"><option value="">— เลือก —</option>${CANCEL_REASONS.map(r => `<option>${r}</option>`).join('')}</select>
+  <label>รายละเอียด</label><textarea id="xn" rows="3" placeholder="เช่น ผู้เช่าแจ้งย้ายงาน จะนำรถมาคืนวันที่ ..."></textarea></div>`);
+  setBar(`<button class="btn sec" onclick="goBack()">ยกเลิก</button><button class="btn bad" onclick="doCancelReq()">ส่งคำขอ</button>`);
+};
+async function doCancelReq() {
+  if (!$('xr').value) return toast('เลือกเหตุผล');
+  try {
+    const r = await busy('กำลังส่งคำขอ…', api('requestCancel', S.wiz.contractId, $('xr').value, $('xn').value));
+    doneScreen('ส่งคำขอยกเลิกแล้ว', 'รอผู้ดูแลระบบ/ผู้จัดการพื้นที่อนุมัติ' + (r.penalty.amount ? ' · ค่าปรับโดยประมาณ ' + money(r.penalty.amount) + ' บาท' : ''), '', S.wiz.contractId);
+  } catch (e) { fail(e); }
+}
+
+/* ===================== ลายเซ็นแบบหน้าเดียว (ใช้ร่วม) ===================== */
+function signPage(title, hint, summaryHtml, onSubmit) {
+  setHeader(title, locName(S.loc), true);
+  show(`<h2>${esc(title)}</h2><p class="hint">${esc(hint)}</p>${summaryHtml}
+  <label>ลายเซ็นผู้เช่า</label><canvas id="sigC" class="sig"></canvas><button class="btn sec mt" onclick="padC.clear()">ล้าง</button>
+  <label>ลายเซ็นพนักงาน (ผู้ให้เช่า)</label><canvas id="sigS" class="sig"></canvas><button class="btn sec mt" onclick="padS.clear()">ล้าง</button>`);
+  window.padC = sigPad('sigC'); window.padS = sigPad('sigS');
+  window.__signSubmit = async () => {
+    if (padC.empty() || padS.empty()) return toast('ต้องมีลายเซ็นทั้งผู้เช่าและพนักงาน');
+    await onSubmit({ sigCustomer: padC.data(), sigStaff: padS.data(), userAgent: navigator.userAgent });
+  };
+  setBar(`<button class="btn sec" onclick="goBack()">ยกเลิก</button><button class="btn" onclick="__signSubmit()">ยืนยันและเซ็น</button>`);
+}
+
+/* ===================== อุบัติเหตุ / เคลม ===================== */
+function accidentForm(contractId) {
+  modal(`<h2 style="margin-top:0">แจ้งอุบัติเหตุ</h2><p class="hint">สัญญา ${esc(contractId)} · รถคันนี้จะเปลี่ยนเป็น "รอเคลม" สัญญายังใช้งานต่อ แล้วเลือกให้รถสำรองได้ทันที</p>
+  <label>วันที่เกิดเหตุ</label><input id="aDate" type="date" value="${ymd(new Date())}">
+  <label>รายละเอียดเหตุการณ์ / ความเสียหาย *</label><textarea id="aDesc" rows="3" placeholder="เช่น ชนท้ายรถยนต์ ไฟหน้าแตก บังโคลนหัก"></textarea>
+  <label>บริษัทประกัน</label><input id="aIns" value="ประกันชั้น 3+">
+  <label>เลขเคลม (ถ้ามี)</label><input id="aNo">
+  <label>หมายเหตุ</label><input id="aNote">
+  <button class="btn block mt" onclick="doAccident('${esc(contractId)}')">บันทึก</button>`);
+}
+async function doAccident(contractId) {
+  if (!$('aDesc').value.trim()) return toast('กรอกรายละเอียดเหตุการณ์');
+  try {
+    const r = await busy('กำลังบันทึก…', api('reportAccident', contractId, { accident_date: $('aDate').value, description: $('aDesc').value.trim(), insurer: $('aIns').value, claim_no: $('aNo').value, note: $('aNote').value }));
+    closeModal(); S.claimPhotos = { id: r.claim_id, contractId: contractId, photos: {} }; go('claimPhotos');
+  } catch (e) { fail(e); }
+}
+SCREENS.claimPhotos = () => {
+  const k = S.claimPhotos; setHeader('รูปรถอุบัติเหตุ', k.contractId, true);
+  const angles = [['front','ด้านหน้า'],['back','ด้านหลัง'],['left','ด้านซ้าย'],['right','ด้านขวา'],['damage1','จุดเสียหาย 1'],['damage2','จุดเสียหาย 2']];
+  show(`<h2>ถ่ายรูปรถที่เกิดเหตุ</h2><p class="hint">ใช้ประกอบการเคลมประกัน ถ่ายได้มากเท่าที่ต้องการ แล้วกด "ถัดไป"</p>
+  <div class="photos">${angles.map(([a, l]) => `<div class="ph ${k.photos[a] ? 'done' : ''}" onclick="claimSnap('${a}')">${k.photos[a] ? `<img src="${k.photos[a]}">` : '&#x1F4F7;'}<span class="cap">${l}</span></div>`).join('')}</div>`);
+  setBar(`<button class="btn" onclick="go('claims',null,false)">ถัดไป: ให้รถสำรอง / ดูเคส</button>`);
+};
+async function claimSnap(a) {
+  const d = await pickPhoto(); if (!d) return;
+  try { await busy('กำลังอัปโหลดรูป…', api('uploadPhoto', S.claimPhotos.contractId, 'accident_' + a, d)); S.claimPhotos.photos[a] = d; SCREENS.claimPhotos(); } catch (e) { fail(e); }
+}
+
+SCREENS.claims = async showClosed => {
+  setHeader('อุบัติเหตุ / เคลม', locName(S.loc), true); setBar('');
+  show('<p class="muted mt">กำลังโหลด…</p>');
+  try {
+    S.claimList = await api('listClaims', S.loc, !!showClosed);
+    show(`<h2>เคสอุบัติเหตุ${showClosed ? 'ทั้งหมด' : 'ที่ยังไม่ปิด'} (${S.claimList.length})</h2>
+    <p class="hint">แจ้งอุบัติเหตุใหม่ได้จากหน้ารายละเอียดสัญญา (ปุ่ม "แจ้งอุบัติเหตุ")</p>
+    <div class="chips"><span class="chip ${showClosed ? '' : 'on'}" onclick="go('claims',false,false)">ยังไม่ปิด</span><span class="chip ${showClosed ? 'on' : ''}" onclick="go('claims',true,false)">ทั้งหมด</span></div>
+    ${S.claimList.map(k => `<div class="card"><div class="row" style="justify-content:space-between"><b>${esc(k.name)}</b>${pill(k.status, K_PILL)}</div>
+      <div class="small muted">สัญญา ${esc(k.contract_id)} · เกิดเหตุ ${th(k.accident_date)} · ${esc(k.insurer)} ${k.claim_no ? '· เลขเคลม ' + esc(k.claim_no) : ''}</div>
+      <div class="small mt">${esc(k.description)}</div>
+      <div class="kv mt small"><div>รถที่เกิดเหตุ</div><div>${esc(k.original_label)}</div><div>รถสำรอง</div><div>${k.replacement_vin ? esc(k.replacement_label) : `<span style="color:var(--bad)">ยังไม่มี (${k.days_without} วัน)</span>`}</div>
+      ${k.result ? `<div>ผล</div><div>${esc(k.result)}</div>` : ''}</div>
+      ${k.status !== 'ปิดเคส' && may('claim') ? `<div class="row mt" style="flex-wrap:wrap">
+        <button class="btn sec" onclick="claimUpdateForm('${esc(k.claim_id)}')">อัปเดตสถานะ</button>
+        ${!k.replacement_vin ? `<button class="btn" onclick="startReplacement('${esc(k.claim_id)}')">ให้รถสำรอง</button>` : ''}
+        ${k.status === 'ซ่อมเสร็จ' ? `<button class="btn" onclick="startClose('${esc(k.claim_id)}','swap_back')">ซ่อมเสร็จ: ${k.replacement_vin ? 'สลับคืนรถเดิม' : 'ส่งรถเดิมคืนผู้เช่า'}</button>` : ''}
+        ${k.replacement_vin ? `<button class="btn bad" onclick="startClose('${esc(k.claim_id)}','total_loss')">เสียหายทั้งคัน: เปลี่ยนรถถาวร</button>` : ''}
+        <button class="btn sec" onclick="go('contract','${esc(k.contract_id)}')">ดูสัญญา</button></div>` : ''}</div>`).join('') || '<p class="muted">ไม่มีเคส</p>'}`);
+  } catch (e) { fail(e); }
+};
+function claimUpdateForm(id) {
+  const k = S.claimList.find(x => x.claim_id === id);
+  modal(`<h2 style="margin-top:0">อัปเดตเคส</h2>
+  <label>สถานะ</label><select id="uSt">${S.boot.cfg.claimStatus.filter(x => x !== 'ปิดเคส').map(x => `<option ${x === k.status ? 'selected' : ''}>${x}</option>`).join('')}</select>
+  <label>บริษัทประกัน</label><input id="uIns" value="${esc(k.insurer)}">
+  <label>เลขเคลม</label><input id="uNo" value="${esc(k.claim_no)}">
+  <label>ค่าใช้จ่ายที่ประกันไม่คุ้มครอง (บาท)</label><input id="uCost" type="number" value="${esc(k.non_covered_cost)}">
+  <label>หมายเหตุ</label><input id="uNote" value="${esc(k.note)}">
+  <button class="btn block mt" onclick="doClaimUpdate('${esc(id)}')">บันทึก</button>`);
+}
+async function doClaimUpdate(id) {
+  try { await busy('กำลังบันทึก…', api('updateClaim', id, { status: $('uSt').value, insurer: $('uIns').value, claim_no: $('uNo').value, non_covered_cost: $('uCost').value, note: $('uNote').value })); closeModal(); toast('บันทึกแล้ว'); go('claims', null, false); } catch (e) { fail(e); }
+}
+async function startReplacement(id) {
+  try {
+    const list = (await busy('กำลังโหลดรถว่าง…', api('listVehicles', S.loc))).filter(v => v.status === 'ว่าง');
+    S.rep = { claimId: id, vin: '', list: list, acc: ACCESSORIES.slice() }; go('repPick');
+  } catch (e) { fail(e); }
+}
+SCREENS.repPick = () => {
+  const r = S.rep; setHeader('ให้รถสำรอง', locName(S.loc), true);
+  show(`<h2>เลือกรถสำรอง</h2><p class="hint">เลือกรถว่างในสาขานี้ (${r.list.length} คัน) ใส่เลขไมล์และอุปกรณ์ที่ส่งมอบ แล้วให้ผู้เช่าเซ็นบันทึกแนบท้ายสัญญา</p>
+  ${r.list.map(v => `<div class="item ${v.vin === r.vin ? 'sel' : ''}" onclick="S.rep.vin='${esc(v.vin)}';SCREENS.repPick()"><div><div class="l1">${esc(v.fleet_no || '-')} · ${esc(v.plate || '')}</div><div class="l2">${esc(v.model)} · ${esc(v.vin)}</div></div><div>${v.vin === r.vin ? '&#x2714;' : ''}</div></div>`).join('') || '<p class="muted">ไม่มีรถว่าง</p>'}
+  <label>เลขไมล์รถสำรอง (กม.)</label><input type="number" value="${esc(r.mileage || '')}" oninput="S.rep.mileage=this.value">
+  <label>อุปกรณ์ที่ส่งมอบ</label><div class="checks">${ACCESSORIES.map(a => `<label><input type="checkbox" ${r.acc.includes(a) ? 'checked' : ''} onchange="S.rep.acc=this.checked?[...new Set(S.rep.acc.concat('${a}'))]:S.rep.acc.filter(x=>x!=='${a}')"> ${a}</label>`).join('')}</div>`);
+  setBar(`<button class="btn sec" onclick="goBack()">ยกเลิก</button><button class="btn" ${r.vin ? '' : 'disabled'} onclick="go('repSign')">ถัดไป: เซ็น</button>`);
+};
+SCREENS.repSign = () => {
+  const r = S.rep, v = r.list.find(x => x.vin === r.vin);
+  signPage('เซ็นรับรถสำรอง', 'ผู้เช่าเซ็นบันทึกแนบท้ายสัญญา (เปลี่ยนรถชั่วคราว) ค่าเช่าและเงื่อนไขอื่นเป็นไปตามสัญญาเดิม',
+    `<div class="card"><div class="kv"><div>รถสำรอง</div><div>${esc(v.fleet_no)} · ${esc(v.plate)}<br><span class="small muted">${esc(v.vin)}</span></div><div>เลขไมล์</div><div>${esc(r.mileage || '-')}</div></div></div>`,
+    async sig => {
+      const payload = Object.assign({ vin: r.vin, mileage: r.mileage || '', checklist: r.acc }, sig), kid = r.claimId;
+      bgRun('ให้รถสำรอง ' + kid, () => api('giveReplacement', kid, payload), x => doneScreen('ส่งมอบรถสำรองแล้ว', 'สัญญาใช้รถสำรองจนกว่าจะปิดเคส', x.pdf_url, ''), 15);
+    });
+};
+function startClose(id, mode) {
+  const k = S.claimList.find(x => x.claim_id === id);
+  S.closeK = { k: k, mode: mode };
+  if (mode === 'swap_back' && !k.replacement_vin) {
+    if (!confirmBox()) return;
+    return busy('กำลังบันทึก…', api('closeClaim', id, mode, {})).then(() => doneScreen('ปิดเคสแล้ว', 'ส่งรถคันเดิมคืนผู้เช่าเรียบร้อย', '', k.contract_id)).catch(fail);
+  }
+  go('closeSign');
+}
+SCREENS.closeSign = () => {
+  const { k, mode } = S.closeK;
+  const swap = mode === 'swap_back';
+  signPage(swap ? 'สลับคืนรถคันเดิม' : 'เปลี่ยนรถถาวร (เสียหายทั้งคัน)',
+    swap ? 'ผู้เช่าคืนรถสำรองและรับรถคันเดิมที่ซ่อมเสร็จ แล้วเซ็นบันทึกแนบท้ายสัญญา' : 'รถสำรองจะเป็นรถประจำสัญญาจนสิ้นสุดสัญญา รถคันเดิมจะถูกปลดระวาง ผู้เช่าเซ็นบันทึกแนบท้ายสัญญา (ค่าเช่าและเงื่อนไขเดิม)',
+    `<div class="card"><div class="kv"><div>รถคันเดิม</div><div>${esc(k.original_label)}</div><div>รถสำรอง</div><div>${esc(k.replacement_label)}</div></div>
+    ${swap ? `<label>เลขไมล์รถคันเดิม (กม.)</label><input id="cMile" type="number">` : ''}<label>หมายเหตุ</label><input id="cNote"></div>`,
+    async sig => {
+      const payload = Object.assign({ mileage: $('cMile') ? $('cMile').value : '', note: $('cNote').value }, sig);
+      bgRun('ปิดเคสอุบัติเหตุ ' + k.contract_id, () => api('closeClaim', k.claim_id, mode, payload), x => doneScreen('ปิดเคสแล้ว', x.result, x.pdf_url, k.contract_id), 15);
+    });
+};
+
+/* ===================== Dashboard ===================== */
+SCREENS.dashboard = async f => {
+  // f.branch = Dashboard ของสาขาที่เลือกอยู่ · ไม่มี branch = Dashboard รวมทุกสาขา
+  if (f && f.branch !== undefined) S.dashMode = f.branch ? 'branch' : 'all'; else if (f && !f.branch) S.dashMode = 'all';
+  if (!S.dashMode || S.boot.locations.length < 2) S.dashMode = S.boot.locations.length < 2 ? 'branch' : (S.dashMode || 'all');
+  const B = S.dashMode === 'branch';
+  S.dashF = S.dashF || { all: {}, branch: {} };
+  if (f && (f.from || f.model !== undefined || f.locs)) S.dashF[S.dashMode] = Object.assign({}, f);
+  const q = Object.assign({}, S.dashF[S.dashMode], B ? { locs: [S.loc], branch: true } : { branch: false });
+  setHeader(B ? 'Dashboard สาขา' : 'Dashboard รวมทุกสาขา', B ? locName(S.loc) : 'เทียบทุกสาขา', true); setBar('');
+  renderLocBtn();
+  show('<p class="muted mt">กำลังคำนวณ…</p>');
+  try {
+    const d = await api('getDashboard', q); const k = d.kpi, a = d.applied;
+    S.dash = { locs: B ? [S.loc] : (a.locs.length === d.options.locations.length ? [] : a.locs), model: a.model, ownership: a.ownership, from: a.from, to: a.to, branch: B };
+    const allOn = !S.dash.locs.length;
+    const o = d.ops;
+    const maxM = Math.max(1, ...d.series.months.map((m, i) => d.series.newC[i] + d.series.renew[i]));
+    const mlabel = m => { const [y, mm] = m.split('-'); return ['ม.ค.','ก.พ.','มี.ค.','เม.ย.','พ.ค.','มิ.ย.','ก.ค.','ส.ค.','ก.ย.','ต.ค.','พ.ย.','ธ.ค.'][+mm - 1] + String(+y + 543).slice(-2); };
+    const maxB = Math.max(1, ...d.branches.map(b => b.vehicles));
+    show(`${S.boot.locations.length > 1 ? `<div class="chips mt"><span class="chip ${B ? 'on' : ''}" onclick="go('dashboard',{branch:true},false)">สาขา ${esc(locName(S.loc))}</span><span class="chip ${B ? '' : 'on'}" onclick="go('dashboard',{branch:false},false)">รวมทุกสาขา</span>${B ? '<span class="chip" onclick="locPicker()">&#x1F4CD; เปลี่ยนสาขา</span>' : ''}</div>` : ''}
+    ${o ? `<h2>งานที่ต้องตามของสาขา</h2><div class="grid">
+      ${hubTile('&#x1F4B8;', 'ค้างค่าเช่า 4–6 วัน', "go('arrears','call')", o.arrears.call || '', 'ต้องโทรตาม')}
+      ${hubTile('&#x26D4;', 'Grab ยกเลิก ยังไม่คืนรถ', "go('arrears','cancels')", o.arrears.cancels || '', 'เกิน 7 วัน ' + (o.arrears.over7 || 0) + ' ราย')}
+      ${hubTile('&#x1F6A8;', 'งานยึดรถที่เปิดอยู่', "go('seize')", o.seizures || '', '')}
+      ${hubTile('&#x1F9FE;', 'หนี้ที่ต้องเก็บ', "go('debts')", o.debtsOpen || '', o.debtSum ? '฿' + money(o.debtSum) : 'ไม่มีหนี้ค้าง')}
+      </div>
+      <div class="card small">เดือนนี้ในระบบใหม่: เซ็นสัญญา ${o.month.signed} · รับคืนรถ ${o.month.returned} · ยกเลิก ${o.month.cancel} · ยึดรถ ${o.month.seized}${o.waitingSign ? ' · รอเซ็น ' + o.waitingSign : ''}</div>` : ''}
+    <div class="card mt"><b>ตัวกรอง</b>
+      ${B ? '' : `<div class="chips"><span class="chip ${allOn ? 'on' : ''}" onclick="dashLoc('ALL')">ทุกพื้นที่</span>${d.options.locations.map(l => `<span class="chip ${!allOn && S.dash.locs.includes(l.code) ? 'on' : ''}" onclick="dashLoc('${esc(l.code)}')">${esc(l.name)}</span>`).join('')}</div>`}
+      <div class="grid"><div><label>รุ่นรถ</label><select id="dModel"><option value="">ทุกรุ่น</option>${d.options.models.map(m => `<option ${m === a.model ? 'selected' : ''}>${esc(m)}</option>`).join('')}</select></div>
+      <div><label>กรรมสิทธิ์</label><select id="dOwn"><option value="">ทั้งหมด</option>${d.options.owners.map(m => `<option ${m === a.ownership ? 'selected' : ''}>${esc(m)}</option>`).join('')}</select></div>
+      <div><label>ตั้งแต่</label><input id="dFrom" type="date" value="${a.from}"></div><div><label>ถึง</label><input id="dTo" type="date" value="${a.to}"></div></div>
+      <button class="btn block mt" onclick="dashApply()">ใช้ตัวกรอง</button></div>
+    <div class="kpis">
+      <div class="kpi"><div class="k">รถทั้งหมด (ไม่รวมปลดระวาง)</div><div class="v">${money(k.vehicles)}</div></div>
+      <div class="kpi"><div class="k">อัตราการใช้รถ</div><div class="v">${k.utilization}%</div><div class="k">ให้เช่า ${money(k.rented)} · ว่าง ${money(k.free)}</div></div>
+      <div class="kpi"><div class="k">สัญญาที่รถอยู่กับผู้เช่า</div><div class="v">${money(k.activeContracts)}</div></div>
+      <div class="kpi"><div class="k">รายได้ค่าเช่า/เดือน (ประมาณ)</div><div class="v">฿${money(k.monthlyRevenue)}</div></div>
+      <div class="kpi"><div class="k">หมดสัญญาใน 7 วัน</div><div class="v">${money(k.expiring)}</div></div>
+      <div class="kpi"><div class="k">หมดแล้วยังไม่คืนรถ</div><div class="v" style="color:${k.overdueReturn ? 'var(--bad)' : 'inherit'}">${money(k.overdueReturn)}</div></div>
+      <div class="kpi"><div class="k">รถซ่อม/รอเคลม</div><div class="v">${money(k.repair)}</div></div>
+      <div class="kpi"><div class="k">เคสอุบัติเหตุที่ยังไม่ปิด</div><div class="v">${money(k.openClaims)}</div></div>
+    </div>
+    <h2>สัญญาใหม่และต่อสัญญา รายเดือน</h2><div class="card">
+      <div class="legend"><span><i style="background:var(--pri)"></i>สัญญาใหม่</span><span><i style="background:#7dd3c8"></i>ต่อสัญญา</span></div>
+      <div class="vbars">${d.series.months.map((m, i) => `<div class="col" title="${mlabel(m)}: ใหม่ ${d.series.newC[i]} · ต่อ ${d.series.renew[i]}"><div class="seg" style="height:${d.series.renew[i] / maxM * 100}%;background:#7dd3c8"></div><div class="seg" style="height:${d.series.newC[i] / maxM * 100}%;background:var(--pri);border-radius:0"></div></div>`).join('')}</div>
+      <div class="vlbl">${d.series.months.map(m => `<div>${mlabel(m)}</div>`).join('')}</div>
+      <div class="small muted mt">รวมช่วงนี้: ใหม่ ${money(d.series.newC.reduce((x, y) => x + y, 0))} · ต่อสัญญา ${money(d.series.renew.reduce((x, y) => x + y, 0))} · ยกเลิก (ในระบบใหม่) ${money(d.series.cancel.reduce((x, y) => x + y, 0))} · คืนรถ (ในระบบใหม่) ${money(d.series.returned.reduce((x, y) => x + y, 0))}</div></div>
+    ${B ? '' : `<h2>เทียบรายสาขา</h2><div class="card">
+      ${d.branches.map(b => `<div class="hbar" onclick="setLoc('${esc(b.code)}',['dashboard',{branch:true}])" style="cursor:pointer"><div class="lb">${esc(b.name)}</div><div class="tr"><div class="fl" style="width:${b.vehicles / maxB * 100}%;background:linear-gradient(90deg,var(--pri) ${b.utilization}%,#b9e3dd ${b.utilization}%)"></div></div><div class="nv">${b.rented}/${b.vehicles}</div></div>`).join('')}
+      <div class="small muted">แถบเข้ม = ให้เช่า · แถบอ่อน = ว่าง/ซ่อม · แตะสาขาเพื่อเปิด Dashboard ของสาขานั้น</div>
+      <div class="scroll mt"><table class="tbl"><thead><tr><th>สาขา</th><th>รถ</th><th>ใช้รถ %</th><th>ว่าง</th><th>ซ่อม/เคลม</th><th>สัญญา</th><th>หมดใน 7 วัน</th><th>ไม่คืนรถ</th><th>รายได้/เดือน</th></tr></thead>
+      <tbody>${d.branches.map(b => `<tr onclick="setLoc('${esc(b.code)}',['dashboard',{branch:true}])" style="cursor:pointer"><td>${esc(b.name)}</td><td>${b.vehicles}</td><td>${b.utilization}</td><td>${b.free}</td><td>${b.repair}</td><td>${b.active}</td><td>${b.expiring}</td><td style="color:${b.overdue ? 'var(--bad)' : 'inherit'}">${b.overdue}</td><td>${money(b.revenue)}</td></tr>`).join('')}</tbody></table></div></div>`}
+    <h2>รายรุ่น</h2><div class="card">${d.byModel.map(m => `<div class="hbar"><div class="lb" title="${esc(m.model)}">${esc(m.model)}</div><div class="tr"><div class="fl" style="width:${m.vehicles ? m.rented / m.vehicles * 100 : 0}%"></div></div><div class="nv">${m.rented}/${m.vehicles}</div></div>`).join('') || '<span class="muted">-</span>'}</div>`);
+  } catch (e) { fail(e); }
+};
+function dashLoc(code) {
+  const s = S.dash;
+  if (code === 'ALL') s.locs = [];
+  else s.locs = s.locs.includes(code) ? s.locs.filter(x => x !== code) : s.locs.concat(code);
+  dashApply();
+}
+function dashApply() {
+  S.dash.model = $('dModel').value; S.dash.ownership = $('dOwn').value; S.dash.from = $('dFrom').value; S.dash.to = $('dTo').value;
+  go('dashboard', Object.assign({}, S.dash), false);
+}
+
+/* ===================== ผู้ใช้ / รหัสผ่าน ===================== */
+SCREENS.password = () => {
+  setHeader('เปลี่ยนรหัสผ่าน', '', true); setBar('');
+  show(`<div class="card mt"><label>รหัสผ่านเดิม</label><input id="po" type="password"><label>รหัสผ่านใหม่ (อย่างน้อย 6 ตัว)</label><input id="pn" type="password"><label>ยืนยันรหัสผ่านใหม่</label><input id="pn2" type="password">
+  <button class="btn block mt" onclick="doPass()">บันทึก</button></div>`);
+};
+async function doPass() {
+  if ($('pn').value !== $('pn2').value) return toast('รหัสผ่านใหม่ไม่ตรงกัน');
+  try { await busy('กำลังบันทึก…', api('changePassword', $('po').value, $('pn').value)); toast('เปลี่ยนรหัสผ่านแล้ว'); home(); } catch (e) { fail(e); }
+}
+/* สิทธิ์ของแต่ละบทบาท — Admin กำหนดเองได้ (ตรวจจริงที่เซิร์ฟเวอร์) */
+const ROLE_INFO = {
+  ADMIN: 'ผู้ดูแลระบบ — มีทุกสิทธิ์เสมอ เห็นทุกสาขา จัดการผู้ใช้และสิทธิ์',
+  MANAGER: 'หัวหน้าสาขา — สิทธิ์ตามตาราง (ค่าเริ่มต้น: งานสาขาทั้งหมด + อนุมัติ + รายงาน)',
+  STAFF: 'พนักงานสาขา — สิทธิ์ตามตาราง (ค่าเริ่มต้น: ทำสัญญา คืนรถ สต็อก เคลม ติดตาม)',
+  COLLECTOR: 'ทีมติดตามหนี้/ยึดรถ — สิทธิ์ตามตาราง เห็นเฉพาะงานยึดที่มอบหมายให้ตัวเอง',
+  VIEWER: 'ดูอย่างเดียว — ค้นหาและดูสัญญา/รถ (เปิดสิทธิ์เพิ่มได้ในตาราง)'
+};
+async function permEditor() {
+  const box = $('permBox'); if (!box) return;
+  box.innerHTML = '<span class="muted">กำลังโหลด…</span>';
+  try { S.perm = await api('getPerms'); permRender(); } catch (e) { box.innerHTML = `<div class="alert bad">${esc(e.message)}</div>`; }
+}
+function permRender() {
+  const P = S.perm, roles = ['ADMIN'].concat(P.roles), td = 'style="text-align:center"';
+  $('permBox').innerHTML = `<div class="scroll"><table class="tbl"><thead><tr><th>สิ่งที่ทำได้</th>${roles.map(r => `<th ${td}>${r}</th>`).join('')}</tr></thead><tbody>
+    <tr><td style="white-space:normal;min-width:180px">ค้นหา ดูสัญญา ดูรถ เปิดเอกสาร</td>${roles.map(() => `<td ${td}><span style="color:var(--ok)">✓</span></td>`).join('')}</tr>
+    ${P.defs.map(d => `<tr><td style="white-space:normal;min-width:180px">${esc(d.label)}</td><td ${td}><span style="color:var(--ok)">✓</span></td>${P.roles.map(r => `<td ${td}><input type="checkbox" style="width:20px;height:20px" ${P.map[d.key].includes(r) ? 'checked' : ''} onchange="permSet('${d.key}','${r}',this.checked)"></td>`).join('')}</tr>`).join('')}
+    <tr><td style="white-space:normal">จัดการผู้ใช้และสิทธิ์ / ข้อมูลจาก AppSheet / ลบสัญญาทดสอบ / เห็นทุกสาขา</td><td ${td}><span style="color:var(--ok)">✓</span></td>${P.roles.map(() => `<td ${td}><span style="color:#bbb">–</span></td>`).join('')}</tr>
+    </tbody></table></div>
+    <div class="row mt" style="flex-wrap:wrap"><button class="btn" onclick="permSave()">บันทึกสิทธิ์</button><button class="btn sec" onclick="permReset()">คืนค่าเริ่มต้น</button></div>
+    <p class="small muted">ADMIN มีทุกสิทธิ์เสมอ (กันล็อกตัวเองออก) · สิทธิ์ใหม่มีผลเมื่อผู้ใช้เปิดแอปใหม่ หรือออกแล้วเข้าระบบอีกครั้ง (ฝั่งเซิร์ฟเวอร์มีผลทันที) · ระบบตรวจสิทธิ์ที่เซิร์ฟเวอร์ทุกครั้ง</p>`;
+}
+function permSet(k, r, on) { const a = S.perm.map[k]; if (on && !a.includes(r)) a.push(r); if (!on) S.perm.map[k] = a.filter(x => x !== r); }
+async function permSave() { try { S.perm = await busy('กำลังบันทึกสิทธิ์…', api('savePerms', S.perm.map)); toast('บันทึกสิทธิ์แล้ว'); permRender(); } catch (e) { fail(e); } }
+async function permReset() { if (!confirm('คืนสิทธิ์ทั้งหมดเป็นค่าเริ่มต้น?')) return; try { S.perm = await busy('กำลังคืนค่า…', api('resetPerms')); toast('คืนค่าเริ่มต้นแล้ว'); permRender(); } catch (e) { fail(e); } }
+SCREENS.users = async () => {
+  setHeader('จัดการผู้ใช้', '', true); setBar(`<button class="btn" onclick="userForm()">+ เพิ่มผู้ใช้</button>`);
+  try {
+    S.users = await api('listUsers');
+    show(`<details class="card mt" ontoggle="if(this.open)permEditor()"><summary><b>กำหนดสิทธิ์ของแต่ละบทบาท</b> <span class="small muted">(แตะเพื่อเปิด)</span></summary>
+      <div class="mt small">${Object.keys(ROLE_INFO).map(r => `<div><b>${r}</b> — ${esc(ROLE_INFO[r].split(' — ')[1])}</div>`).join('')}</div><div class="mt" id="permBox"></div></details>
+    <h2>ผู้ใช้ (${S.users.length})</h2>
+    ${S.users.map(u => `<div class="item" onclick="userForm('${esc(u.username)}')"><div><div class="l1">${esc(u.display_name)} ${u.active === 'Y' ? '' : pill('ปิดใช้งาน', {})}</div><div class="l2">${esc(u.username)} · ${esc(u.role)} · ${esc(u.locations)}</div></div><div>›</div></div>`).join('')}`);
+  } catch (e) { fail(e); }
+};
+function userForm(name) {
+  const u = name ? S.users.find(x => x.username === name) : { role: 'STAFF', locations: S.loc, active: 'Y' };
+  const locs = String(u.locations || '').split(',').map(s => s.trim());
+  const allLocs = S.boot.locations.length ? S.boot.locations : [];
+  modal(`<h2 style="margin-top:0">${name ? 'แก้ไขผู้ใช้' : 'เพิ่มผู้ใช้'}</h2>
+  <label>ชื่อผู้ใช้ (ภาษาอังกฤษ)</label><input id="uu" value="${esc(u.username || '')}" ${name ? 'readonly' : ''} autocapitalize="none">
+  <label>ชื่อที่แสดง</label><input id="ud" value="${esc(u.display_name || '')}">
+  <label>บทบาท</label><select id="ur" onchange="$('urInfo').textContent=ROLE_INFO[this.value]">${['ADMIN','MANAGER','STAFF','COLLECTOR','VIEWER'].map(r => `<option ${r === u.role ? 'selected' : ''}>${r}</option>`).join('')}</select>
+  <div id="urInfo" class="small muted">${esc(ROLE_INFO[u.role] || '')}</div>
+  <label>พื้นที่ที่เข้าถึงได้</label><div class="checks"><label><input type="checkbox" value="ALL" class="ul" ${locs.includes('ALL') ? 'checked' : ''}> ทุกพื้นที่</label>${allLocs.map(l => `<label><input type="checkbox" class="ul" value="${esc(l.code)}" ${locs.includes(l.code) ? 'checked' : ''}> ${esc(l.name)}</label>`).join('')}</div>
+  <label>สถานะ</label><select id="ua"><option value="Y" ${u.active === 'Y' ? 'selected' : ''}>ใช้งาน</option><option value="N" ${u.active === 'N' ? 'selected' : ''}>ปิดใช้งาน</option></select>
+  ${name ? `<label class="check"><input type="checkbox" id="ureset"> ตั้งรหัสผ่านใหม่ (ระบบสุ่มให้)</label>` : ''}
+  <div id="uout"></div><button class="btn block mt" onclick="doSaveUser()">บันทึก</button>`);
+}
+async function doSaveUser() {
+  const locs = [...document.querySelectorAll('.ul:checked')].map(x => x.value);
+  try {
+    const r = await busy('กำลังบันทึก…', api('saveUser', { username: $('uu').value, display_name: $('ud').value, role: $('ur').value, locations: locs.includes('ALL') ? 'ALL' : locs.join(','), active: $('ua').value, resetPassword: $('ureset') && $('ureset').checked }));
+    if (r.tempPassword) { $('uout').innerHTML = `<div class="alert ok">รหัสผ่านชั่วคราว: <b>${esc(r.tempPassword)}</b><br>แจ้งผู้ใช้ และให้เปลี่ยนรหัสผ่านหลังเข้าระบบครั้งแรก</div>`; return; }
+    closeModal(); toast('บันทึกแล้ว'); go('users', null, false);
+  } catch (e) { $('uout').innerHTML = `<div class="alert bad">${esc(e.message)}</div>`; }
+}
+
+/* ===================== ค้างชำระ (ข้อมูลจากไฟล์ Grab) ===================== */
+const AR_TABS = [['call', 'ต้องโทรตาม (4–6 วัน)'], ['over7', 'เกิน 7 วัน'], ['cancels', 'Grab ยกเลิก รอคืนรถ'], ['grab', 'ค้าง 1–3 วัน (Grab ทวง)'], ['closed', 'หนี้ค้างหลังจบสัญญา']];
+SCREENS.arrears = async tab => {
+  S.arTab = tab || S.arTab || 'call';
+  setHeader('ค้างชำระ', S.arAll ? 'ทุกพื้นที่' : locName(S.loc), true); setBar('');
+  show('<p class="muted mt">กำลังโหลด…</p>');
+  try { S.ar = await api('getArrears', S.arAll ? 'ALL' : S.loc); arRender(); } catch (e) { fail(e); }
+};
+function arRender() {
+  const d = S.ar, t = S.arTab, list = d[t] || [];
+  const tel = p => p ? `<a href="tel:${esc(p.length === 11 && p.startsWith('66') ? '0' + p.slice(2) : p)}">${esc(p.length === 11 && p.startsWith('66') ? '0' + p.slice(2) : p)}</a>` : '-';
+  const hint = {
+    call: 'ค้าง 4–6 วัน ตามสัญญาข้อ 8.2 ผู้ให้เช่าต้องทวงถามเอง โทรแล้วกด "บันทึกการติดตาม" ทุกครั้ง',
+    over7: 'ค้างเกิน 7 วัน Grab ตัดระบบไรเดอร์แล้ว Strom ต้องเรียกเก็บค่าเช่ารายวันส่วนที่เกินเอง',
+    cancels: 'Grab ยกเลิกสัญญาแล้วแต่ยังไม่ได้รถคืน ต้องนัดคืนรถ หรือส่งงานติดตามยึดรถ',
+    grab: 'ค้าง 1–3 วัน Grab ติดตามเอง ดูไว้เฉย ๆ ยังไม่ต้องโทร',
+    closed: 'สัญญาจบแล้ว (คืนรถ/ยกเลิก) แต่ยังมียอดค้างในระบบ Grab เรียงจากยอดมากไปน้อย'
+  }[t];
+  const card = r => {
+    const last = r.last ? `<div class="small mt" style="color:var(--pri-2)">ติดตามล่าสุด ${th(r.last.at)}: <b>${esc(r.last.result)}</b>${r.last.promise_date ? ' (นัด ' + th(r.last.promise_date) + ')' : ''}${r.last.note ? ' · ' + esc(r.last.note) : ''} · ${esc(r.last.by)}</div>` : '<div class="small muted mt">ยังไม่มีการติดตาม</div>';
+    const head = `<div class="row" style="justify-content:space-between"><b>${esc(r.name)}</b>${t === 'cancels'
+      ? `<span class="pill bad">ยกเลิก ${esc(r.cancel_date)}</span>` : `<span class="pill ${Number(r.days) >= 7 ? 'bad' : Number(r.days) >= 4 ? 'warn' : ''}">${esc(r.days)} วัน</span>`}</div>`;
+    const kv = t === 'cancels'
+      ? `<div>โทร</div><div>${tel(r.phone)}</div><div>รถ</div><div>${esc(r.model)} · ${esc(r.plate)}</div><div>นัดคืนรถ</div><div>${esc(r.return_appt || '-')}</div><div>ค้าง (Jaya)</div><div>${esc(r.days_jaya)} วัน × ${money(r.rate)} บาท</div>${r.strom_remark || r.remark ? `<div>หมายเหตุ</div><div>${esc([r.strom_remark, r.remark].filter(String).join(' · '))}</div>` : ''}`
+      : `<div>โทร</div><div>${tel(r.phone)}</div><div>ยอดค้าง</div><div><b>${money(r.amount)}</b> บาท</div><div>สถานะ Grab</div><div>${esc(r.grab_status || '-')}</div>${r.plate ? `<div>รถ</div><div>${esc(r.plate)}</div>` : ''}${r.remark ? `<div>หมายเหตุ</div><div class="small">${esc(r.remark)}</div>` : ''}`;
+    const i = list.indexOf(r);
+    return `<div class="card">${head}<div class="kv mt small">${kv}</div>${last}
+      <div class="row mt" style="flex-wrap:wrap">${may('followup') ? `<button class="btn" onclick="fuForm(${i})">บันทึกการติดตาม</button>` : ''}
+      ${r.contract_id ? `<button class="btn sec" onclick="go('contract','${esc(r.contract_id)}')">ดูสัญญา</button>` : '<span class="small muted">ไม่พบสัญญาในระบบ (เช็คเลขบัตร)</span>'}
+      ${t === 'cancels' && r.contract_id && may('seize_manage') ? `<button class="btn sec" style="color:#b42318;border-color:#b42318" onclick="seizeForm('${esc(r.contract_id)}')">ส่งงานยึด</button>` : ''}</div></div>`;
+  };
+  show(`<div class="chips">${AR_TABS.map(([k, l]) => `<span class="chip ${k === t ? 'on' : ''}" onclick="S.arTab='${k}';arRender()">${l} (${(d[k] || []).length})</span>`).join('')}</div>
+    ${can('ADMIN') ? `<div class="chips"><span class="chip ${S.arAll ? '' : 'on'}" onclick="S.arAll=false;go('arrears',null,false)">${esc(locName(S.loc))}</span><span class="chip ${S.arAll ? 'on' : ''}" onclick="S.arAll=true;go('arrears',null,false)">ทุกพื้นที่</span></div>` : ''}
+    <p class="hint">${hint}</p>
+    <div class="small muted">ข้อมูลจากไฟล์ Grab ณ ${d.as_of ? th(d.as_of) + ' ' + String(d.as_of).slice(11, 16) + ' น.' : '-'} (ดึงอัตโนมัติทุกวัน 07:00)
+    ${may('reports') ? ` · <a href="#" onclick="arSync();return false">ดึงข้อมูลล่าสุด</a>` : ''}</div>
+    ${d.unmatched ? `<div class="alert warn mt">มี ${d.unmatched} รายการที่จับคู่สัญญาในระบบไม่ได้ (เลขบัตรไม่ตรง) แสดงตามรหัสเมืองของ Grab</div>` : ''}
+    ${list.map(card).join('') || '<p class="muted mt">ไม่มีรายการ</p>'}`);
+}
+async function arSync() {
+  try { const r = await busy('กำลังดึงข้อมูลจากไฟล์ Grab… (ประมาณ 20–40 วินาที)', api('syncArrearsNow')); toast(`อัปเดตแล้ว: ค้าง ${r.arrears} ราย · ยกเลิกรอคืนรถ ${r.cancels} ราย`); go('arrears', null, false); } catch (e) { fail(e); }
+}
+function fuForm(i) {
+  const r = S.ar[S.arTab][i]; S.fu = r;
+  modal(`<h2 style="margin-top:0">บันทึกการติดตาม</h2><p class="hint">${esc(r.name)} · ${S.arTab === 'cancels' ? 'ยกเลิก ' + esc(r.cancel_date) : 'ค้าง ' + esc(r.days) + ' วัน ' + money(r.amount) + ' บาท'}</p>
+  <label>ช่องทาง</label><select id="fuCh"><option>โทร</option><option>LINE</option><option>SMS</option><option>พบตัว</option></select>
+  <label>ผลการติดตาม</label><select id="fuRes" onchange="$('fuPd').parentNode.style.display=this.value==='นัดชำระ'||this.value==='จะคืนรถ'?'':'none'"><option value="">-- เลือก --</option>${S.ar.results.map(x => `<option>${x}</option>`).join('')}</select>
+  <div style="display:none"><label>วันที่นัด</label><input id="fuPd" type="date"></div>
+  <label>รายละเอียด</label><textarea id="fuNote" rows="2" placeholder="เช่น ไรเดอร์แจ้งว่าจะโอนวันศุกร์"></textarea>
+  <button class="btn block mt" onclick="doFu()">บันทึก</button>`);
+}
+async function doFu() {
+  const r = S.fu;
+  try {
+    await busy('กำลังบันทึก…', api('logFollowup', { national_id: r.national_id, contract_id: r.contract_id, channel: $('fuCh').value, result: $('fuRes').value, promise_date: $('fuPd').value, note: $('fuNote').value, days: r.days || r.days_jaya, amount: r.amount || '' }));
+    closeModal(); toast('บันทึกแล้ว'); go('arrears', null, false);
+  } catch (e) { fail(e); }
+}
+
+/* ===================== ติดตามยึดรถ ===================== */
+const SZ_PILL = {'พบรถจอดทิ้ง':'bad','ส่งงานยึด':'bad','กำลังติดตาม':'warn','นัดคืนรถ':'warn','ยึดได้แล้ว':'pri','ส่งประเมิน':'pri','แจ้งค่าเสียหายแล้ว':'ok','ปิดเคส':''};
+async function seizeForm(cid) {
+  let people = [];
+  try { people = await busy('กำลังโหลด…', api('listAssignees', S.loc)); } catch (e) { }
+  const cf = S.boot.cfg;
+  modal(`<h2 style="margin-top:0;color:#b42318">ส่งงานติดตามยึดรถ</h2><p class="hint">สัญญา ${esc(cid)} — ถ้าสัญญายัง Active ระบบจะเปลี่ยนเป็น "ยกเลิก" และรถเป็น "ติดตามยึด" พร้อมออกใบสั่งงาน PDF ให้ทีมปฏิบัติการ</p>
+  <label>เหตุผล *</label><select id="szR"><option value="">-- เลือก --</option>${(cf.seizeReasons || []).map(x => `<option>${x}</option>`).join('')}</select>
+  <label>มอบหมายให้</label><select id="szA"><option value="">-- ยังไม่ระบุ --</option>${people.map(p => `<option value="${esc(p.username)}">${esc(p.name)} (${esc(p.role)})</option>`).join('')}</select>
+  <label class="check"><input type="checkbox" id="szF"> ติดตามพื้นที่ห่างไกล/ต่างจังหวัด (+${money(cf.trackFarFee || 6000)} บาท)</label>
+  <div class="small muted">ค่าติดตามรถคืน ${money(cf.trackFee || 1500)} บาท (สัญญาข้อ 12) ตั้งหนี้ให้อัตโนมัติเมื่อยึดได้</div>
+  <label>หมายเหตุถึงทีมยึด</label><textarea id="szN" rows="2" placeholder="เช่น ไรเดอร์ทำงานแถวสยาม ช่วงเย็น"></textarea>
+  <button class="btn bad block mt" onclick="doSeizeOrder('${esc(cid)}')">ส่งงานยึด + ออกใบสั่งงาน</button>`);
+}
+async function doSeizeOrder(cid) {
+  if (!$('szR').value) return toast('เลือกเหตุผล');
+  try {
+    const payload = { reason: $('szR').value, assigned_to: $('szA').value, far: $('szF').checked, note: $('szN').value };
+    closeModal();
+    bgRun('ส่งงานยึด ' + cid, () => api('createSeizure', cid, payload), r => doneScreen('ส่งงานยึดแล้ว', 'ใบสั่งงาน ' + r.seizure_id + ' · ดูงานได้ที่เมนูติดตามยึดรถ', r.pdf_url, cid), 12);
+  } catch (e) { fail(e); }
+}
+SCREENS.seize = async () => {
+  setHeader('ติดตามยึดรถ', S.szAll ? 'ทุกพื้นที่' : locName(S.loc), true);
+  setBar([may('seize_record') || may('seize_manage') ? `<button class="btn bad" onclick="S.ab=null;go('abandon')">พบรถจอดทิ้ง</button>` : '', may('seize_manage') ? `<button class="btn sec" onclick="szListPdf()">พิมพ์รายชื่อให้ทีมยึด (PDF)</button>` : ''].join(''));
+  show('<p class="muted mt">กำลังโหลด…</p>');
+  try { S.sz = await api('listSeizures', S.szAll ? 'ALL' : S.loc, !!S.szClosed); szRender(); } catch (e) { fail(e); }
+};
+function szRender() {
+  const list = S.sz, tel = p => p ? `<a href="tel:${esc(p)}">${esc(p)}</a>` : '-';
+  show(`<div class="chips"><span class="chip ${S.szClosed ? '' : 'on'}" onclick="S.szClosed=false;go('seize',null,false)">งานที่เปิดอยู่</span><span class="chip ${S.szClosed ? 'on' : ''}" onclick="S.szClosed=true;go('seize',null,false)">รวมที่ปิดแล้ว</span>
+    ${can('ADMIN') ? `<span class="chip ${S.szAll ? 'on' : ''}" onclick="S.szAll=!S.szAll;go('seize',null,false)">ทุกพื้นที่</span>` : ''}</div>
+    <p class="hint">ขั้นตอน: ส่งงานยึด → ติดตาม (บันทึกทุกครั้ง) → <b>ยึดได้แล้ว</b> (ถ่ายรูป + เซ็นยินยอมประเมิน) → ส่งประเมิน → <b>แจ้งค่าเสียหาย</b> → ปิดงาน</p>
+    ${list.map((z, i) => `<div class="card"><div class="row" style="justify-content:space-between"><b>${esc(z.name)}</b>${pill(z.status, SZ_PILL)}</div>
+      <div class="kv small mt"><div>โทร</div><div>${tel(z.phone)}</div><div>ที่อยู่</div><div>${esc(z.address || '-')}</div><div>รถ</div><div>${esc(z.plate || '-')} · ${esc(z.vin)}</div>
+      <div>เหตุผล</div><div>${esc(z.reason || '-')}</div>${z.kind === 'ทิ้งรถ' ? `<div>พบรถที่</div><div>${esc(z.found_location || '-')}${Number(z.tow_cost) ? ' · ค่ารถยก ' + money(z.tow_cost) + ' บาท' : ''}</div>` : ''}<div>ผู้รับผิดชอบ</div><div>${esc(z.assigned_name || 'ยังไม่ระบุ')}</div><div>สั่งงาน</div><div>${th(z.ordered_at)}${z.far_area === 'Y' ? ' · ต่างจังหวัด' : ''}</div>
+      ${z.damage_total ? `<div>ค่าเสียหาย</div><div>${money(z.damage_total)} บาท</div>` : ''}${z.note ? `<div>หมายเหตุ</div><div>${esc(z.note)}</div>` : ''}${z.result ? `<div>ผล</div><div>${esc(z.result)}</div>` : ''}</div>
+      ${z.last ? `<div class="small mt" style="color:var(--pri-2)">ติดตามล่าสุด ${th(z.last.at)}: <b>${esc(z.last.result)}</b>${z.last.note ? ' · ' + esc(z.last.note) : ''} · ${esc(z.last.by)}</div>` : ''}
+      <div class="row mt" style="flex-wrap:wrap">${z.status === 'ปิดเคส' ? '' : szButtons(z, i)}
+      ${z.order_url ? `<button class="btn sec" onclick="openFile('${esc(z.order_url)}')">ใบสั่งงาน</button>` : ''}
+      <button class="btn sec" onclick="go('contract','${esc(z.contract_id)}')">ดูสัญญา</button></div></div>`).join('') || '<p class="muted mt">ไม่มีงานยึด</p>'}`);
+}
+function szButtons(z, i) {
+  const b = [], before = ['พบรถจอดทิ้ง','ส่งงานยึด','กำลังติดตาม','นัดคืนรถ'].includes(z.status), after = ['ยึดได้แล้ว','ส่งประเมิน','แจ้งค่าเสียหายแล้ว'].includes(z.status);
+  if (before && may('followup') && z.kind !== 'ทิ้งรถ') b.push(`<button class="btn" onclick="szFu(${i})">บันทึกการติดตาม</button>`);
+  if (before && may('seize_record')) b.push(`<button class="btn bad" onclick="startSeizeWiz(${i})">${z.kind === 'ทิ้งรถ' ? 'ยกรถกลับแล้ว (บันทึกรับรถ)' : 'ยึดรถได้แล้ว'}</button>`);
+  if (z.status === 'ยึดได้แล้ว' && may('seize_record')) b.push(`<button class="btn sec" onclick="szStatus(${i},'ส่งประเมิน')">ส่งประเมินแล้ว</button>`);
+  if (after && may('damage')) b.push(`<button class="btn" onclick="startDamage(${i})">แจ้งค่าเสียหาย</button>`);
+  if (may('seize_manage')) { b.push(`<button class="btn sec" onclick="szAssign(${i})">มอบหมาย</button>`); b.push(`<button class="btn sec" onclick="szClose(${i})">ปิดงาน</button>`); }
+  return b.join('');
+}
+async function szListPdf() { try { const r = await busy('กำลังสร้างรายชื่อ…', api('seizureListPdf', S.szAll ? 'ALL' : S.loc)); openFile(r.url); } catch (e) { fail(e); } }
+function szFu(i) {
+  const z = S.sz[i];
+  modal(`<h2 style="margin-top:0">บันทึกการติดตามยึดรถ</h2><p class="hint">${esc(z.name)} · ${esc(z.plate || z.vin)}</p>
+  <label>ช่องทาง</label><select id="fuCh"><option>ลงพื้นที่</option><option>โทร</option><option>LINE</option><option>GPS</option></select>
+  <label>ผลการติดตาม</label><select id="fuRes"><option value="">-- เลือก --</option>${(S.boot.cfg.seizeResults || []).map(x => `<option>${x}</option>`).join('')}</select>
+  <label>วันที่นัดคืนรถ (ถ้ามี)</label><input id="fuPd" type="date">
+  <label>รายละเอียด</label><textarea id="fuNote" rows="2" placeholder="เช่น พบรถจอดหน้าหอพัก ซอย 5"></textarea>
+  <button class="btn block mt" onclick="doSzFu(${i})">บันทึก</button>`);
+}
+async function doSzFu(i) {
+  const z = S.sz[i];
+  try {
+    await busy('กำลังบันทึก…', api('logFollowup', { type: 'seize', contract_id: z.contract_id, national_id: '', channel: $('fuCh').value, result: $('fuRes').value, promise_date: $('fuPd').value, note: $('fuNote').value }));
+    const st = $('fuPd').value || $('fuRes').value === 'พบตัว นัดคืนรถ' ? 'นัดคืนรถ' : z.status === 'ส่งงานยึด' ? 'กำลังติดตาม' : '';
+    if (st && st !== z.status) await api('updateSeizure', z.seizure_id, { status: st });
+    closeModal(); toast('บันทึกแล้ว'); go('seize', null, false);
+  } catch (e) { fail(e); }
+}
+async function szStatus(i, st) { try { await busy('กำลังบันทึก…', api('updateSeizure', S.sz[i].seizure_id, { status: st })); go('seize', null, false); } catch (e) { fail(e); } }
+async function szAssign(i) {
+  const z = S.sz[i]; let people = [];
+  try { people = await busy('กำลังโหลด…', api('listAssignees', z.location_code)); } catch (e) { return fail(e); }
+  modal(`<h2 style="margin-top:0">มอบหมายงานยึด</h2><select id="szA2"><option value="">-- ยังไม่ระบุ --</option>${people.map(p => `<option value="${esc(p.username)}" ${p.username === z.assigned_to ? 'selected' : ''}>${esc(p.name)}</option>`).join('')}</select>
+  <button class="btn block mt" onclick="api('updateSeizure','${esc(z.seizure_id)}',{assigned_to:$('szA2').value}).then(()=>{closeModal();go('seize',null,false)}).catch(fail)">บันทึก</button>`);
+}
+function szClose(i) {
+  const z = S.sz[i];
+  modal(`<h2 style="margin-top:0">ปิดงานยึด</h2><p class="hint">${esc(z.name)} · ${esc(z.plate || z.vin)} · สถานะ ${esc(z.status)}</p>
+  <label>ผลการปิดงาน</label><select id="scR"><option value="">-- เลือก --</option><option>ได้รถคืน ปิดงาน</option><option>ผู้เช่านำรถมาคืนเอง</option><option>ยกเลิกงานยึด (ต่อสัญญา/เคลียร์ยอดแล้ว)</option><option>ดำเนินคดี</option></select>
+  <label>สถานะรถหลังปิดงาน</label><select id="scV"><option value="ว่าง">ว่าง (พร้อมให้เช่า)</option><option value="ส่งซ่อม">ส่งซ่อม</option></select>
+  <label>หมายเหตุ</label><input id="scN">
+  <div class="small muted mt">หนี้ที่ค้างอยู่ไม่ถูกปิดตาม ต้องรับชำระที่เมนู "หนี้ที่ต้องเก็บ"</div>
+  <button class="btn block mt" onclick="doSzClose(${i})">ปิดงาน</button>`);
+}
+async function doSzClose(i) {
+  if (!$('scR').value) return toast('เลือกผลการปิดงาน');
+  try { await busy('กำลังปิดงาน…', api('closeSeizure', S.sz[i].seizure_id, { result: $('scR').value, vehicle_status: $('scV').value, note: $('scN').value })); closeModal(); S.today = null; toast('ปิดงานแล้ว'); go('seize', null, false); } catch (e) { fail(e); }
+}
+
+/* ---- พบรถจอดทิ้ง ---- */
+SCREENS.abandon = () => {
+  setHeader('พบรถจอดทิ้ง', locName(S.loc), true); setBar('');
+  const a = S.ab || (S.ab = { q: '', res: null, pick: null });
+  show(`<p class="hint">ใช้เมื่อพบรถของบริษัทถูกผู้เช่านำไปจอดทิ้งไว้ ทั้งกรณี <b>ยังอยู่ในสัญญา</b> (ระบบยกเลิกสัญญาทันที) และ <b>สัญญาหมด/ถูกยกเลิกแล้ว</b> (คิดค่าปรับคืนรถล่าช้าวันละ ${money(S.boot.cfg.lateFee)} บาท ถึงวันที่พบรถ) จากนั้นเข้าเมนูติดตามยึดรถ → กด "ยกรถกลับแล้ว" เพื่อถ่ายรูป เซ็น และตั้งหนี้</p>
+  <div class="row"><input id="abQ" style="flex:1" placeholder="ทะเบียน / VIN / เบอร์รถ / GPS" value="${esc(a.q)}" onkeydown="if(event.key==='Enter')abFind()"><button class="btn" onclick="abFind()">ค้นหา</button></div>
+  <div id="abRes">${a.res ? abList() : ''}</div>`);
+};
+async function abFind() {
+  const q = $('abQ').value.trim(); if (q.length < 3) return toast('พิมพ์อย่างน้อย 3 ตัว');
+  try { S.ab.q = q; S.ab.res = await busy('กำลังค้นหา…', api('abandonLookup', S.loc, q)); S.ab.pick = null; $('abRes').innerHTML = abList(); } catch (e) { fail(e); }
+}
+function abList() {
+  const r = S.ab.res || [];
+  if (!r.length) return '<p class="muted mt">ไม่พบรถ ตรวจทะเบียน/VIN อีกครั้ง (รถต้องอยู่ในพื้นที่ที่คุณมีสิทธิ์)</p>';
+  return r.map((v, i) => { const c = v.contract;
+    const st = !c ? '<span class="pill">ไม่มีสัญญา</span>' : c.in_contract ? '<span class="pill warn">ยังอยู่ในสัญญา</span>' : `<span class="pill bad">${esc(c.status)}</span>`;
+    return `<div class="card"><div class="row" style="justify-content:space-between"><b>${esc(v.plate || '-')} · ${esc(v.fleet_no || '')}</b>${st}</div>
+    <div class="kv small mt"><div>VIN</div><div>${esc(v.vin)}</div><div>รุ่น</div><div>${esc(v.model || '-')}</div><div>พื้นที่</div><div>${esc(locName(v.location_code))}</div><div>สถานะรถ</div><div>${esc(v.status || '-')}</div>
+    ${c ? `<div>ผู้เช่าล่าสุด</div><div>${esc(c.name)} ${c.phone ? '· ' + esc(c.phone) : ''}</div><div>สัญญา</div><div>${esc(c.contract_id)} · หมด ${esc(c.end_th)}</div>
+      ${c.in_contract ? `<div>ผลเมื่อบันทึก</div><div><b style="color:#b42318">ยกเลิกสัญญาทันที</b> (ผู้เช่าทิ้งรถ = ผิดสัญญา)</div>` : c.closed ? '' : `<div>กำหนดคืน</div><div>${esc(c.due_th)} (${esc(c.basis)})</div><div>ค่าปรับล่าช้า</div><div><b>${c.late_days} วัน = ${money(c.late_fee)} บาท</b></div>`}
+      ${c.grab_owed ? `<div>ค่าเช่าค้าง</div><div>${money(c.grab_owed)} บาท (${esc(c.grab_text)})</div>` : ''}` : ''}</div>
+    ${v.open_seizure ? '<div class="small mt" style="color:#b42318">รถคันนี้มีงานยึดเปิดอยู่แล้ว — ไปที่เมนูติดตามยึดรถ</div><button class="btn sec mt" onclick="go(\'seize\')">ไปงานยึด</button>'
+      : !c ? '<div class="small muted mt">ไม่พบสัญญาของรถคันนี้ ถ้ารถว่างอยู่แล้ว ให้นำกลับเข้าสต็อกตามปกติ</div>'
+      : c.closed ? `<div class="small muted mt">สัญญาล่าสุดปิดแล้ว (${esc(c.status)}) รถไม่ได้อยู่กับผู้เช่า ตรวจสอบสต็อกรถ</div>`
+      : `<button class="btn bad block mt" onclick="abForm(${i})">เลือกคันนี้ → บันทึกพบรถ</button>`}</div>`; }).join('');
+}
+async function abForm(i) {
+  const v = S.ab.res[i], c = v.contract, cf = S.boot.cfg; let people = [];
+  try { people = await busy('กำลังโหลด…', api('listAssignees', v.location_code)); } catch (e) { }
+  modal(`<h2 style="margin-top:0;color:#b42318">บันทึกพบรถจอดทิ้ง</h2><p class="hint">${esc(v.plate || v.vin)} · ${esc(c.name)} · สัญญา ${esc(c.contract_id)}${c.in_contract ? '<br><b style="color:#b42318">สัญญานี้จะถูกยกเลิกทันทีเมื่อกดบันทึก</b>' : ''}</p>
+  <label>สถานที่พบรถ *</label><input id="abL" placeholder="เช่น ลานจอดหน้าคอนโด xx ซอยลาดพร้าว 101">
+  <label class="check"><input type="checkbox" id="abF"> พื้นที่ห่างไกล/ต่างจังหวัด (+${money(cf.trackFarFee)} บาท)</label>
+  <label>ค่ารถยก/ขนย้ายตามจริง (บาท) — ถ้ายังไม่ทราบใส่ภายหลังตอนบันทึกรับรถได้</label><input id="abT" type="number" min="0" placeholder="0">
+  <label>มอบหมายให้ (คนไปยกรถ)</label><select id="abA"><option value="">-- ตัวเอง --</option>${people.map(p => `<option value="${esc(p.username)}">${esc(p.name)}</option>`).join('')}</select>
+  <label>หมายเหตุ</label><textarea id="abN" rows="2" placeholder="เช่น จอดทิ้งมาประมาณ 2 สัปดาห์ แบตหมด กุญแจไม่อยู่"></textarea>
+  <div class="small muted mt">ค่าติดตาม ${money(cf.trackFee)} บาท (สัญญาข้อ 12) + ค่ารถยก + ค่าปรับล่าช้า + ค่าเช่าค้าง จะตั้งเป็นหนี้เมื่อบันทึกรับรถกลับ</div>
+  <button class="btn bad block mt" onclick="doAbandon(${i})">บันทึกพบรถ</button>`);
+}
+async function doAbandon(i) {
+  const v = S.ab.res[i];
+  if (!$('abL').value.trim()) return toast('ระบุสถานที่พบรถ');
+  try {
+    const r = await busy('กำลังบันทึก…', api('reportAbandoned', { vin: v.vin, contract_id: v.contract.contract_id, location: $('abL').value.trim(), far: $('abF').checked, tow_cost: Number($('abT').value || 0), assigned_to: $('abA').value, note: $('abN').value }));
+    closeModal(); S.ab = null; S.today = null; S.szClosed = false;
+    toast(r.cancelled ? 'บันทึกแล้ว · ยกเลิกสัญญาแล้ว' : 'บันทึกพบรถแล้ว'); go('seize');
+  } catch (e) { fail(e); }
+}
+
+/* ---- ยึดรถได้แล้ว (เอกสารขั้นที่ 1) ---- */
+function startSeizeWiz(i) { const z = S.sz[i], ab = z.kind === 'ทิ้งรถ'; S.wiz = { type: 'seize', z: z, contractId: z.contract_id, seizePhotos: {}, acc: [], present: !ab, far: z.far_area === 'Y', location: ab ? z.found_location || '' : '', tow: ab ? (z.tow_cost || '') : '' }; go('seizeWiz'); }
+SCREENS.seizeWiz = () => {
+  const w = S.wiz, z = w.z; setHeader('ยึดรถได้แล้ว', z.name, true);
+  show(`<div class="card"><div class="kv small"><div>ผู้เช่า</div><div>${esc(z.name)}</div><div>รถ</div><div>${esc(z.plate || '-')} · ${esc(z.vin)}</div><div>สัญญา</div><div>${esc(z.contract_id)}</div></div></div>
+  <h2>1. ถ่ายรูปรถ ณ จุดที่ได้รถ (อย่างน้อย 4 รูป)</h2>
+  <div class="photos">${PHOTO_ANGLES.map(([k, l]) => `<div class="ph ${w.seizePhotos[k] ? 'done' : ''}" onclick="snap('seize_${k}','${k}')">${w.seizePhotos[k] ? `<img src="${w.seizePhotos[k]}">` : '&#x1F4F7;'}<span class="cap">${l}</span></div>`).join('')}</div>
+  <h2>2. ข้อมูลรถ</h2>
+  <label>สถานที่พบรถ</label><input value="${esc(w.location || '')}" placeholder="เช่น หน้าหอพัก xx ซอยรามคำแหง 24" oninput="S.wiz.location=this.value">
+  <label>เลขไมล์ (กม.)</label><input type="number" value="${esc(w.mileage || '')}" oninput="S.wiz.mileage=this.value">
+  <label>อุปกรณ์ที่ได้คืน</label><div class="checks">${ACCESSORIES.map(a => `<label><input type="checkbox" ${w.acc.includes(a) ? 'checked' : ''} onchange="toggleAcc('${a}',this.checked)"> ${a}</label>`).join('')}</div>
+  <label>สภาพรถโดยสังเขป</label><textarea rows="2" placeholder="เช่น บังลมแตก ไฟท้ายหาย ยังไม่ประเมินราคา" oninput="S.wiz.condition=this.value">${esc(w.condition || '')}</textarea>
+  <label class="check"><input type="checkbox" ${w.far ? 'checked' : ''} onchange="S.wiz.far=this.checked"> ติดตามพื้นที่ห่างไกล/ต่างจังหวัด (+${money(S.boot.cfg.trackFarFee)} บาท)</label>
+  <label>ค่ารถยก/ขนย้ายตามจริง (บาท) — ไม่มีใส่ 0</label><input type="number" min="0" value="${esc(w.tow || '')}" placeholder="0" oninput="S.wiz.tow=this.value">
+  <div class="small muted">คิดรวมกับค่าติดตาม ${money(S.boot.cfg.trackFee)} บาท (สัญญาข้อ 12)${z.kind === 'ทิ้งรถ' ? ' + ค่าปรับคืนรถล่าช้า (ถ้าสัญญาหมด/ถูกยกเลิกก่อนวันพบรถ) + ค่าเช่าค้าง' : ' + ค่าเช่าค้าง'}</div>
+  <h2>3. ลงชื่อ</h2>
+  <div class="chips"><span class="chip ${w.present ? 'on' : ''}" onclick="S.wiz.present=true;SCREENS.seizeWiz()">ผู้เช่าอยู่ด้วย</span><span class="chip ${w.present ? '' : 'on'}" onclick="S.wiz.present=false;SCREENS.seizeWiz()">ผู้เช่าไม่อยู่ (ใช้พยาน)</span></div>
+  <p class="hint">${w.present ? 'ผู้เช่าเซ็นยินยอมให้ประเมินความเสียหาย และเซ็นหนังสือรับสภาพหนี้ค่าติดตาม/ค่าเช่าค้าง (ชำระเต็มจำนวน 7 วัน ไม่มีผ่อน) ในครั้งเดียว' : 'ให้พยาน (เช่น นิติบุคคล/รปภ./เพื่อนบ้าน/เจ้าหน้าที่อีกคน) เซ็นรับรองการรับรถ ระบบจะตั้งหนี้และออก "หนังสือแจ้งให้ชำระหนี้" ให้ส่งผู้เช่าทาง LINE/ไปรษณีย์'}</p>
+  ${w.present ? '' : `<label>ชื่อพยาน *</label><input value="${esc(w.witness || '')}" oninput="S.wiz.witness=this.value">`}
+  <label>${w.present ? 'ลายเซ็นผู้เช่า' : 'ลายเซ็นพยาน'}</label><canvas id="sigC" class="sig"></canvas><button class="btn sec mt" onclick="padC.clear()">ล้าง</button>
+  <label>ลายเซ็นเจ้าหน้าที่</label><canvas id="sigS" class="sig"></canvas><button class="btn sec mt" onclick="padS.clear()">ล้าง</button>`);
+  window.padC = sigPad('sigC'); window.padS = sigPad('sigS');
+  setBar(`<button class="btn sec" onclick="goBack()">ยกเลิก</button><button class="btn bad" onclick="doSeize()">บันทึกยึดรถ</button>`);
+};
+async function doSeize() {
+  const w = S.wiz;
+  if (Object.keys(w.seizePhotos).length < 4) return toast('ถ่ายรูปรถอย่างน้อย 4 รูป');
+  if (padC.empty() || padS.empty()) return toast('ต้องมีลายเซ็นทั้งสองช่อง');
+  if (!w.present && !String(w.witness || '').trim()) return toast('ระบุชื่อพยาน');
+  if (!(await waitUploads())) return;
+  const sig = padC.data(), z = w.z, present = w.present, cid = w.contractId;
+  const payload = { location: w.location || '', mileage: w.mileage || '', checklist: w.acc, condition: w.condition || '', far: !!w.far, tow_cost: Number(w.tow || 0), rider_present: present,
+    sigCustomer: present ? sig : '', sigWitness: present ? '' : sig, witness_name: w.witness || '', sigStaff: padS.data(), userAgent: navigator.userAgent };
+  bgRun((z.kind === 'ทิ้งรถ' ? 'รับรถจอดทิ้ง ' : 'ยึดรถ ') + cid, () => api('seizeVehicle', z.seizure_id, payload), r => {
+    doneScreen(z.kind === 'ทิ้งรถ' ? 'บันทึกรับรถที่จอดทิ้งแล้ว' : 'บันทึกยึดรถแล้ว', 'ตั้งหนี้ ' + money(r.total) + ' บาท (ดูที่เมนู "หนี้ที่ต้องเก็บ") · ขั้นต่อไป: ส่งประเมินความเสียหาย แล้วกด "แจ้งค่าเสียหาย"', r.pdf_url, cid);
+    if (r.debt_url) { S.lastDebtUrl = r.debt_url; $('app').querySelector('.card').insertAdjacentHTML('beforeend', `<button class="btn sec block mt" onclick="openFile(S.lastDebtUrl)">${present ? 'เปิดหนังสือรับสภาพหนี้' : 'เปิดหนังสือแจ้งให้ชำระหนี้ (ส่งให้ผู้เช่า)'}</button>`); }
+  }, 30);
+}
+
+/* ---- แจ้งค่าเสียหาย (เอกสารขั้นที่ 2) ---- */
+function startDamage(i) { const z = S.sz[i]; S.wiz = { type: 'damage', z: z, contractId: z.contract_id, damagePhotos: {}, items: [{ desc: '', amount: '' }], sign: false }; go('damageWiz'); }
+SCREENS.damageWiz = () => {
+  const w = S.wiz, z = w.z; setHeader('แจ้งค่าเสียหาย', z.name, true);
+  const total = w.items.reduce((a, x) => a + (Number(x.amount) || 0), 0);
+  show(`<p class="hint">กรอกผลประเมินจากศูนย์ซ่อมเป็นรายการ ระบบออก "ใบแจ้งค่าเสียหายและหนังสือยอมรับความเสียหาย" และตั้งหนี้ให้อัตโนมัติ (ชำระเต็มจำนวนภายใน 7 วัน)</p>
+  <div class="card">${w.items.map((x, k) => `<div class="row" style="gap:6px"><input style="flex:2" placeholder="รายการ เช่น เปลี่ยนบังลมหน้า" value="${esc(x.desc)}" oninput="S.wiz.items[${k}].desc=this.value">
+    <input style="flex:1" type="number" placeholder="บาท" value="${esc(x.amount)}" oninput="S.wiz.items[${k}].amount=this.value;dmSum()">
+    <button class="btn sec" onclick="S.wiz.items.splice(${k},1);if(!S.wiz.items.length)S.wiz.items.push({desc:'',amount:''});SCREENS.damageWiz()">&#x2715;</button></div>`).join('')}
+    <button class="btn sec mt" onclick="S.wiz.items.push({desc:'',amount:''});SCREENS.damageWiz()">+ เพิ่มรายการ</button>
+    <div id="dmsum" class="alert warn mt">รวม <b>${money(total)} บาท</b></div></div>
+  <label>รูปความเสียหาย / ใบประเมิน (ถ้ามี)</label>
+  <div class="photos">${[1, 2, 3, 4, 5, 6].map(k => `<div class="ph ${w.damagePhotos[k] ? 'done' : ''}" onclick="snap('damage_${k}','${k}')">${w.damagePhotos[k] ? `<img src="${w.damagePhotos[k]}">` : '&#x1F4F7;'}<span class="cap">รูป ${k}</span></div>`).join('')}</div>
+  <label>หมายเหตุผู้ประเมิน</label><input value="${esc(w.note || '')}" oninput="S.wiz.note=this.value">
+  <label class="check"><input type="checkbox" ${w.sign ? 'checked' : ''} onchange="S.wiz.sign=this.checked;SCREENS.damageWiz()"> ผู้เช่าอยู่ด้วย ให้เซ็นยอมรับความเสียหายตอนนี้</label>
+  ${w.sign ? `<label>ลายเซ็นผู้เช่า</label><canvas id="sigC" class="sig"></canvas><button class="btn sec mt" onclick="padC.clear()">ล้าง</button>
+  <label>ลายเซ็นเจ้าหน้าที่</label><canvas id="sigS" class="sig"></canvas><button class="btn sec mt" onclick="padS.clear()">ล้าง</button>` : '<p class="hint">ถ้าไม่เซ็นตอนนี้ ระบบออกเป็นหนังสือแจ้งให้ส่งถึงผู้เช่า (เปิด PDF แล้วส่งทาง LINE)</p>'}`);
+  if (w.sign) { window.padC = sigPad('sigC'); window.padS = sigPad('sigS'); }
+  setBar(`<button class="btn sec" onclick="goBack()">ยกเลิก</button><button class="btn" onclick="doDamage()">ออกใบแจ้งค่าเสียหาย</button>`);
+};
+function dmSum() { const t = S.wiz.items.reduce((a, x) => a + (Number(x.amount) || 0), 0); $('dmsum').innerHTML = `รวม <b>${money(t)} บาท</b>`; }
+async function doDamage() {
+  const w = S.wiz, items = w.items.filter(x => String(x.desc).trim() && Number(x.amount) > 0);
+  if (!items.length) return toast('ใส่รายการความเสียหายและจำนวนเงิน');
+  if (w.sign && (padC.empty() || padS.empty())) return toast('ต้องมีลายเซ็นทั้งสองช่อง');
+  if (!(await waitUploads())) return;
+  const cid = w.contractId, zid = w.z.seizure_id, payload = { items: items, note: w.note || '', sigCustomer: w.sign ? padC.data() : '', sigStaff: w.sign ? padS.data() : '', userAgent: navigator.userAgent };
+  bgRun('แจ้งค่าเสียหาย ' + cid, () => api('damageNotice', zid, payload), r => doneScreen('ออกใบแจ้งค่าเสียหายแล้ว', 'ตั้งหนี้ค่าเสียหาย ' + money(r.total) + ' บาท ครบกำหนดชำระใน 7 วัน', r.pdf_url, cid), 15);
+}
+
+/* ===================== หนี้ที่ต้องเก็บ ===================== */
+const DB_PILL = {'ค้างชำระ':'bad','ชำระครบ':'ok','ดำเนินคดี':'warn','ตัดหนี้สูญ':''};
+SCREENS.debts = async () => {
+  setHeader('หนี้ที่ต้องเก็บ', S.dbAll ? 'ทุกพื้นที่' : locName(S.loc), true); setBar('');
+  show('<p class="muted mt">กำลังโหลด…</p>');
+  try { S.db = await api('listReceivables', S.dbAll ? 'ALL' : S.loc, !!S.dbClosed); dbRender(); } catch (e) { fail(e); }
+};
+function dbRender() {
+  const list = S.db, open = list.filter(d => d.status === 'ค้างชำระ'), sum = open.reduce((a, d) => a + d.balance, 0), today = ymd(new Date());
+  show(`<div class="chips"><span class="chip ${S.dbClosed ? '' : 'on'}" onclick="S.dbClosed=false;go('debts',null,false)">ค้างชำระ</span><span class="chip ${S.dbClosed ? 'on' : ''}" onclick="S.dbClosed=true;go('debts',null,false)">ทั้งหมด</span>
+    ${can('ADMIN') ? `<span class="chip ${S.dbAll ? 'on' : ''}" onclick="S.dbAll=!S.dbAll;go('debts',null,false)">ทุกพื้นที่</span>` : ''}</div>
+    <div class="card"><div class="small muted">ยอดค้างรวม</div><div style="font-size:24px;font-weight:700">${money(sum)} บาท</div><div class="small muted">${open.length} รายการ · ชำระเต็มจำนวนครั้งเดียว ไม่มีผ่อน · เกินกำหนดคิดเบี้ยปรับ 15%/ปี (ข้อ 8.2)</div></div>
+    ${list.map((d, i) => `<div class="card"><div class="row" style="justify-content:space-between"><b>${esc(d.name)}</b>${pill(d.status, DB_PILL)}</div>
+      <div class="kv small mt"><div>ประเภท</div><div>${esc(d.source)}</div><div>รายการ</div><div>${d.items.map(x => esc(x[0]) + ' ' + money(x[1])).join('<br>')}</div>
+      <div>ยอดหนี้</div><div>${money(d.amount)} บาท${Number(d.paid) ? ' · ชำระแล้ว ' + money(d.paid) : ''}</div>
+      <div>คงค้าง</div><div><b>${money(d.balance)}</b> บาท</div><div>ครบกำหนด</div><div${d.status === 'ค้างชำระ' && d.due_date < today ? ' style="color:var(--bad);font-weight:700"' : ''}>${th(d.due_date)}${d.status === 'ค้างชำระ' && d.due_date < today ? ' (เลยกำหนด)' : ''}</div>${d.note ? `<div>หมายเหตุ</div><div>${esc(d.note)}</div>` : ''}</div>
+      <div class="row mt" style="flex-wrap:wrap">${d.status === 'ค้างชำระ' && may('payment') ? `<button class="btn" onclick="payForm(${i})">รับชำระ</button>` : ''}
+      ${d.status === 'ค้างชำระ' && may('debt_status') ? `<button class="btn sec" onclick="dbStatus(${i})">เปลี่ยนสถานะ</button>` : ''}
+      ${d.doc_url ? `<button class="btn sec" onclick="openFile('${esc(d.doc_url)}')">เอกสาร</button>` : ''}
+      ${d.contract_id ? `<button class="btn sec" onclick="go('contract','${esc(d.contract_id)}')">ดูสัญญา</button>` : ''}</div></div>`).join('') || '<p class="muted mt">ไม่มีหนี้ค้าง</p>'}`);
+}
+function payForm(i) {
+  const d = S.db[i];
+  modal(`<h2 style="margin-top:0">รับชำระหนี้</h2><p class="hint">${esc(d.name)} · ${esc(d.source)} · คงค้าง ${money(d.balance)} บาท</p>
+  <label>จำนวนเงินที่ได้รับ</label><input id="pmA" type="number" value="${d.balance}">
+  <label>ช่องทาง</label><select id="pmC"><option>โอน</option><option>เงินสด</option><option>หักจาก Grab</option><option>อื่นๆ</option></select>
+  <label>เลขอ้างอิง / สลิป</label><input id="pmR">
+  <label>หมายเหตุ</label><input id="pmN">
+  <button class="btn block mt" onclick="doPay(${i})">บันทึกรับชำระ</button>`);
+}
+async function doPay(i) {
+  try { const r = await busy('กำลังบันทึก…', api('recordPayment', S.db[i].debt_id, { amount: $('pmA').value, channel: $('pmC').value, ref: $('pmR').value, note: $('pmN').value }));
+    closeModal(); S.today = null; toast(r.balance > 0 ? 'บันทึกแล้ว คงค้าง ' + money(r.balance) + ' บาท' : 'ชำระครบแล้ว'); go('debts', null, false); } catch (e) { fail(e); }
+}
+function dbStatus(i) {
+  const d = S.db[i];
+  modal(`<h2 style="margin-top:0">เปลี่ยนสถานะหนี้</h2><p class="hint">${esc(d.name)} · คงค้าง ${money(d.balance)} บาท</p>
+  <select id="dsS">${(S.boot.cfg.debtStatus || []).filter(x => x !== 'ค้างชำระ').map(x => `<option>${x}</option>`).join('')}</select>
+  <label>เหตุผล *</label><input id="dsN">
+  <button class="btn block mt" onclick="if(!$('dsN').value.trim())return toast('ระบุเหตุผล');api('setReceivableStatus','${esc(d.debt_id)}',$('dsS').value,$('dsN').value).then(()=>{closeModal();go('debts',null,false)}).catch(fail)">บันทึก</button>`);
+}
+
+/* ===================== รายงานผลงานประจำวัน ===================== */
+SCREENS.report = async () => {
+  S.rpDay = S.rpDay || new Date(Date.now() + 7 * 3600000).toISOString().slice(0, 10);
+  setHeader('รายงานประจำวัน', S.rpAll ? 'ทุกพื้นที่' : locName(S.loc), true); setBar('');
+  show('<p class="muted mt">กำลังโหลด…</p>');
+  try { S.rp = await api('getDailyReport', S.rpDay, S.rpAll ? 'ALL' : S.loc); rpRender(); } catch (e) { fail(e); }
+};
+function rpRender() {
+  const r = S.rp, pct = (a, b) => b ? Math.round(a * 100 / b) + '%' : '-';
+  const kpi = (label, val, sub, cls) => `<div class="card" style="flex:1;min-width:140px;margin:0"><div class="small muted">${label}</div><div style="font-size:24px;font-weight:700" class="${cls || ''}">${val}</div><div class="small muted">${sub || ''}</div></div>`;
+  const maxT = Math.max(1, ...r.trend.map(t => t.debt + t.renew + t.seize));
+  const totalCalls = r.staff.reduce((a, s) => a + s.debt + s.renew + s.seize, 0);
+  show(`<div class="card"><div class="row" style="flex-wrap:wrap;align-items:center">
+      <input type="date" value="${esc(r.day)}" onchange="S.rpDay=this.value;go('report',null,false)" style="max-width:180px">
+      ${can('ADMIN') ? `<span class="chip ${S.rpAll ? '' : 'on'}" onclick="S.rpAll=false;go('report',null,false)">${esc(locName(S.loc))}</span><span class="chip ${S.rpAll ? 'on' : ''}" onclick="S.rpAll=true;go('report',null,false)">ทุกพื้นที่</span>` : ''}
+      <button class="btn sec" onclick="rpCopy()">คัดลอกสรุปส่ง LINE</button></div></div>
+    <div class="row" style="flex-wrap:wrap;gap:8px">
+      ${kpi('โทรตามหนี้', r.debt.called + ' / ' + r.debt.must, 'ครอบคลุม ' + pct(r.debt.called, r.debt.must), r.debt.called < r.debt.must ? 'num warn' : 'num')}
+      ${kpi('โทรต่อสัญญา', r.renew.called + ' / ' + r.renew.expiring, 'หมดใน 7 วัน · ต่อแล้ว ' + r.renew.renewed)}
+      ${kpi('นัดชำระครบวันนี้', r.promises.filter(p => p.paid).length + ' / ' + r.promises.length, 'จ่ายตามนัด')}
+      ${kpi('บันทึกการติดตามทั้งหมด', totalCalls, 'ครั้ง')}
+    </div>
+    <h2>ผลงานรายคน</h2>
+    <div class="card" style="overflow-x:auto"><table style="width:100%;border-collapse:collapse;font-size:14px">
+      <tr style="text-align:left;border-bottom:1px solid var(--line)"><th>เจ้าหน้าที่</th><th>ตามหนี้</th><th>นัดชำระ</th><th>โทรต่อสัญญา</th><th>ต่อสัญญาสำเร็จ</th><th>สัญญาใหม่</th><th>รับคืนรถ</th><th>ยึดรถ</th></tr>
+      ${r.staff.map(s => `<tr style="border-bottom:1px solid var(--line)${s.debt + s.renew + s.seize + s.renewed + s.newc + s.returned ? '' : ';color:var(--bad)'}"><td>${esc(s.name)}</td><td>${s.debt}</td><td>${s.promises}</td><td>${s.renew}</td><td>${s.renewed}</td><td>${s.newc}</td><td>${s.returned}</td><td>${s.seize}</td></tr>`).join('')}
+    </table><div class="small muted mt">ชื่อสีแดง = ยังไม่มีผลงานในวันที่เลือก</div></div>
+    <h2>แนวโน้ม 7 วัน (จำนวนการติดตาม)</h2>
+    <div class="card">${r.trend.map(t => `<div class="row small" style="align-items:center"><div style="width:70px">${th(t.day).slice(0, -5)}</div>
+      <div style="flex:1;display:flex;height:14px;background:var(--line);border-radius:4px;overflow:hidden">
+      <div style="width:${t.debt * 100 / maxT}%;background:var(--warn)"></div><div style="width:${t.renew * 100 / maxT}%;background:var(--pri)"></div><div style="width:${t.seize * 100 / maxT}%;background:var(--bad)"></div></div>
+      <div style="width:40px;text-align:right">${t.debt + t.renew + t.seize}</div></div>`).join('')}
+      <div class="small muted mt"><span style="color:var(--warn)">■</span> ตามหนี้ <span style="color:var(--pri)">■</span> ต่อสัญญา <span style="color:var(--bad)">■</span> ยึดรถ</div></div>
+    <h2>ยังไม่ได้โทรตามหนี้ (${r.debt.notCalled.length})</h2>
+    <div class="card">${r.debt.notCalled.map(m => `<div class="row small" style="justify-content:space-between;border-bottom:1px solid var(--line);padding:6px 0"><div><b>${esc(m.name)}</b> · ${esc(m.group)}${m.days ? ' · ' + esc(m.days) + ' วัน' : ''}${m.amount ? ' · ' + money(m.amount) + ' บาท' : ''}</div><div>${m.phone ? `<a href="tel:${esc(m.phone)}">${esc(m.phone)}</a>` : ''}</div></div>`).join('') || '<div class="muted">โทรครบทุกรายแล้ว</div>'}</div>
+    <h2>นัดชำระครบกำหนดวันนี้ (${r.promises.length})</h2>
+    <div class="card">${r.promises.map(p => `<div class="row small" style="justify-content:space-between;border-bottom:1px solid var(--line);padding:6px 0"><div><b>${esc(p.name)}</b> · ผู้รับนัด ${esc(p.by)}</div><div>${p.paid ? '<span class="pill ok">จ่ายแล้ว</span>' : `<span class="pill bad">ยังค้าง ${esc(p.days)} วัน</span>`}</div></div>`).join('') || '<div class="muted">ไม่มีนัดชำระวันนี้</div>'}</div>
+    <h2>สัญญาหมดใน 7 วัน (${r.renew.expiring})</h2>
+    <div class="card">${r.renew.list.map(x => `<div class="row small" style="justify-content:space-between;border-bottom:1px solid var(--line);padding:6px 0;cursor:pointer" onclick="go('contract','${esc(x.contract_id)}')"><div><b>${esc(x.name)}</b> · หมด ${esc(x.end)}</div><div>${x.renewed ? '<span class="pill ok">ต่อแล้ว</span>' : x.called ? `<span class="pill">${esc(x.called)}</span>` : '<span class="pill warn">ยังไม่ได้โทร</span>'}</div></div>`).join('') || '<div class="muted">ไม่มี</div>'}</div>
+    <p class="small muted">รายชื่อค้างชำระอ้างอิงข้อมูล Grab ณ ${r.as_of ? th(r.as_of) + ' ' + String(r.as_of).slice(11, 16) + ' น.' : '-'}</p>`);
+}
+function rpCopy() {
+  const r = S.rp;
+  const lines = [`สรุปงานติดตาม ${th(r.day)} · ${S.rpAll ? 'ทุกพื้นที่' : locName(S.loc)}`,
+    `โทรตามหนี้ ${r.debt.called}/${r.debt.must} ราย (ยังไม่โทร ${r.debt.notCalled.length})`,
+    `นัดชำระครบวันนี้ ${r.promises.length} ราย จ่ายแล้ว ${r.promises.filter(p => p.paid).length}`,
+    `สัญญาหมดใน 7 วัน ${r.renew.expiring} ราย โทรแล้ว ${r.renew.called} ต่อแล้ว ${r.renew.renewed}`, '', 'ผลงานรายคน:']
+    .concat(r.staff.map(s => `- ${s.name}: ตามหนี้ ${s.debt} · นัดชำระ ${s.promises} · โทรต่อสัญญา ${s.renew} · ต่อสำเร็จ ${s.renewed} · สัญญาใหม่ ${s.newc} · คืนรถ ${s.returned}`));
+  const t = lines.join('\n');
+  const ta = document.createElement('textarea'); ta.value = t; document.body.appendChild(ta); ta.select(); let ok = false; try { ok = document.execCommand('copy'); } catch (e) { } ta.remove();
+  if (ok) toast('คัดลอกแล้ว วางใน LINE ได้เลย'); else modal(`<h2 style="margin-top:0">สรุปงาน</h2><textarea rows="12">${esc(t)}</textarea><p class="small muted">กดค้างเพื่อคัดลอก</p>`);
+}
+
+/* ===================== ส่งลิงก์ให้ลูกค้าเซ็น (ฝั่งพนักงาน) ===================== */
+function signLinkAlert(l) {
+  if (l.status === 'ลูกค้าเซ็นแล้ว') return `<div class="alert ok">ลูกค้าเซ็นออนไลน์แล้วเมื่อ ${esc(th(l.signed_at))} กด "เซ็นในนามผู้ให้เช่า" เพื่อออกสัญญาฉบับสมบูรณ์</div>`;
+  if (l.expired) return `<div class="alert bad">ลิงก์ที่ส่งให้ลูกค้าหมดอายุแล้ว กด "ส่งลิงก์ใหม่"</div>`;
+  return `<div class="alert info">ส่งลิงก์ให้ลูกค้าแล้ว รอลูกค้าเซ็น (ใช้ได้ถึง ${esc(th(l.expires_at))}) · ${l.opened_at ? 'ลูกค้าเปิดดูแล้ว' : 'ลูกค้ายังไม่เปิดลิงก์'}</div>`;
+}
+async function sendSignLink(id) {
+  if (!confirm('สร้างลิงก์ให้ลูกค้าเซ็นสัญญา ' + id + ' ?\nถ้าเคยส่งลิงก์ไปแล้ว ลิงก์เก่าจะใช้ไม่ได้')) return;
+  try {
+    const r = await busy('กำลังสร้างสัญญาฉบับร่างและลิงก์… (ประมาณ 10–20 วินาที)', api('createSignLink', id));
+    const enc = encodeURIComponent(r.message);
+    modal(`<h2 style="margin-top:0">ส่งลิงก์ให้ลูกค้าเซ็น</h2><p class="hint">ส่งข้อความนี้ให้ลูกค้าทาง LINE หรือ SMS ลิงก์ใช้ได้ถึง ${esc(r.expires)} ใช้ได้กับสัญญานี้เท่านั้น ห้ามส่งให้คนอื่น</p>
+    <textarea id="slMsg" rows="8" readonly>${esc(r.message)}</textarea>
+    <div class="row mt" style="flex-wrap:wrap"><button class="btn" onclick="copyText('slMsg')">คัดลอกข้อความ</button>
+    <a class="btn sec" href="https://line.me/R/share?text=${enc}" target="_blank">ส่งทาง LINE</a>
+    <a class="btn sec" href="sms:${esc(r.phone)}?&body=${enc}" target="_blank">ส่ง SMS</a></div>
+    <p class="small muted mt">ขั้นตอนของลูกค้า: กรอกเลขบัตร 4 หลักท้าย &rarr; อ่านสัญญา &rarr; ถ่ายรูปตัวเองคู่บัตรประชาชน &rarr; เซ็นชื่อ<br>เมื่อลูกค้าเซ็นแล้ว สัญญาจะขึ้นที่หน้าแรก "ลูกค้าเซ็นออนไลน์แล้ว รอผู้ให้เช่าเซ็น"</p>
+    <button class="btn sec block mt" onclick="closeModal();S.wiz=null;S.history=[];go('contract','${esc(id)}',false)">เสร็จ</button>`);
+  } catch (e) { fail(e); }
+}
+function copyText(id) {
+  const el = $(id); el.removeAttribute('readonly'); el.select(); let ok = false;
+  try { ok = document.execCommand('copy'); } catch (e) { }
+  el.setAttribute('readonly', '');
+  if (ok) return toast('คัดลอกแล้ว');
+  if (navigator.clipboard) navigator.clipboard.writeText(el.value).then(() => toast('คัดลอกแล้ว'), () => toast('คัดลอกไม่ได้ กดค้างที่ข้อความเพื่อคัดลอกเอง'));
+  else toast('กดค้างที่ข้อความเพื่อคัดลอกเอง');
+}
+function countersign(id) {
+  modal(`<h2 style="margin-top:0">เซ็นในนามผู้ให้เช่า</h2><p class="hint">ลูกค้าเซ็นออนไลน์แล้ว เซ็นในกรอบเพื่อออกสัญญาฉบับสมบูรณ์ ลูกค้าเปิดลิงก์เดิมเพื่อดาวน์โหลดสัญญาได้</p>
+  <canvas id="sigS" class="sig"></canvas>
+  <div class="row mt"><button class="btn sec" onclick="padS.clear()">ล้าง</button><button class="btn" onclick="doCountersign('${esc(id)}')">ยืนยันการเซ็น</button></div>`);
+  window.padS = sigPad('sigS');
+}
+async function doCountersign(id) {
+  if (padS.empty()) return toast('กรุณาเซ็นชื่อ');
+  const payload = { remote: true, staff: padS.data(), userAgent: navigator.userAgent };
+  closeModal();
+  bgRun('ออกสัญญา ' + id, () => api('signContract', id, payload), r => doneScreen('ออกสัญญาฉบับสมบูรณ์แล้ว', 'สัญญา ' + id + ' เริ่มใช้งานแล้ว', r.pdf_url, id), 25);
+}
+
+/* ===================== หน้าเซ็นสำหรับลูกค้า (เปิดจากลิงก์ ไม่ต้องล็อกอิน) ===================== */
+const RS_STEPS = ['ยืนยันตัวตน', 'อ่านสัญญา', 'ถ่ายรูปคู่บัตร', 'เซ็นชื่อ'];
+async function startRemoteSign(tok) {
+  S.rsTok = tok; S.rs = { step: 0 };
+  setHeader('ลงนามสัญญาออนไลน์', 'STROM · Grab', false); setBar('');
+  show('<p class="muted mt">กำลังโหลด…</p>');
+  try {
+    const d = await apiRaw('getSignRequest', tok);
+    S.rs.d = d; S.boot = { cfg: { notice: d.notice, lessor: d.lessor } }; rsRender();
+  } catch (e) { show(`<div class="alert bad mt">${esc(e.message)}</div>`); }
+}
+function rsOpenDoc() { openBlob(() => apiRaw('getSignDoc', S.rsTok, S.rs.id4)); }
+function rsRender() {
+  const r = S.rs, d = r.d, x = r.info;
+  if (d.locked) { setBar(''); return show(`<div class="alert bad mt">กรอกเลขบัตรผิดเกินกำหนด ลิงก์นี้ถูกล็อก กรุณาติดต่อเจ้าหน้าที่เพื่อขอลิงก์ใหม่</div>`); }
+  if (r.done || (d.status === 'ลูกค้าเซ็นแล้ว')) {
+    setBar('');
+    return show(`<div class="card mt" style="text-align:center"><div style="font-size:48px">&#x2705;</div><h2>ได้รับลายเซ็นของท่านแล้ว</h2><p>ขอบคุณค่ะ ขั้นต่อไปบริษัทจะลงนามฝั่งผู้ให้เช่า เมื่อเสร็จแล้วท่านเปิดลิงก์เดิมนี้อีกครั้งเพื่อดาวน์โหลดสัญญาฉบับสมบูรณ์ได้</p></div>`);
+  }
+  // ขั้นที่ 0: ยืนยันเลขบัตรก่อนเห็นข้อมูลใด ๆ
+  if (!x) {
+    const done = d.status === 'เสร็จสมบูรณ์';
+    show((done ? '' : stepHead(RS_STEPS, 0)) + `<h2>${done ? 'ดาวน์โหลดสัญญาฉบับสมบูรณ์' : 'ยืนยันตัวตน'}</h2>
+    <p class="hint">สัญญาเลขที่ <b>${esc(d.contract_id)}</b> จาก ${esc(d.lessor)}<br>เพื่อความปลอดภัยของข้อมูล กรุณากรอกเลขบัตรประชาชน 4 หลักท้ายของผู้เช่า</p>
+    <div class="card"><label>เลขบัตรประชาชน 4 หลักท้าย</label><input id="id4" inputmode="numeric" maxlength="4" autocomplete="off" value="${esc(r.id4 || '')}" oninput="S.rs.id4=this.value" onkeydown="if(event.key==='Enter')rsVerify()">
+    <p class="small muted mt">กรอกผิดได้ไม่เกิน ${d.tries_left} ครั้ง</p></div>`);
+    setBar(`<button class="btn" onclick="rsVerify()">${done ? 'ยืนยันและดาวน์โหลด' : 'ถัดไป'}</button>`);
+    return;
+  }
+  if (d.status === 'เสร็จสมบูรณ์') {
+    setBar('');
+    return show(`<div class="card mt" style="text-align:center"><div style="font-size:48px">&#x2705;</div><h2>สัญญาสมบูรณ์แล้ว</h2><p>สัญญาเลขที่ ${esc(x.contract_id)} ลงนามครบทั้งสองฝ่ายแล้ว กรุณาดาวน์โหลดเก็บไว้</p>
+    <button class="btn block mt" onclick="rsOpenDoc()">ดาวน์โหลดสัญญา PDF</button></div>`);
+  }
+  if (r.step === 1) {
+    show(stepHead(RS_STEPS, 1) + `<h2>${x.kind === 'ต่อ' ? 'สัญญาต่ออายุการเช่า' : 'สัญญาเช่ารถ'}</h2>
+    <p class="hint">สวัสดีคุณ${esc(x.name)} กรุณาตรวจข้อมูล กดอ่านสัญญาฉบับเต็ม แล้วอ่านประกาศความเป็นส่วนตัวให้จบ</p>
+    <div class="card"><div class="kv"><div>เลขที่สัญญา</div><div>${esc(x.contract_id)}</div><div>ผู้เช่า</div><div>${esc(x.name)}</div><div>เลขบัตร</div><div>${esc(x.id_masked)}</div>
+    <div>รถ</div><div>${esc(x.model)} ${x.plate ? '· ' + esc(x.plate) : ''}<br><span class="small muted">${esc(x.vin)}</span></div>
+    <div>ระยะเวลา</div><div>${esc(x.duration)}<br>${esc(x.start)} – ${esc(x.end)}</div>
+    <div>ค่าเช่า</div><div>${money(x.daily_rate)} บาท/วัน${x.promotion ? ' · ' + esc(x.promotion) : ''}</div><div>มัดจำ</div><div>${money(x.deposit)} บาท</div></div></div>
+    <button class="btn sec block" onclick="rsOpenDoc()">&#x1F4C4; อ่านสัญญาฉบับเต็ม (PDF)</button>
+    <div class="notice mt" onscroll="if(this.scrollTop+this.clientHeight>=this.scrollHeight-8)$('ack').disabled=false">${noticeHtml()}</div>
+    <label class="check"><input type="checkbox" id="ack" ${r.ack ? 'checked' : 'disabled'}> ข้าพเจ้าได้อ่านและรับทราบประกาศความเป็นส่วนตัวแล้ว (เลื่อนอ่านให้จบก่อน)</label>
+    <label class="check"><input type="checkbox" id="rd" ${r.read ? 'checked' : ''}> ข้าพเจ้าได้อ่านสัญญาและเอกสารแนบท้ายครบถ้วนแล้ว เข้าใจและยอมรับเงื่อนไขทุกข้อ</label>
+    <label class="check"><input type="checkbox" id="mkt" ${r.mkt ? 'checked' : ''}> ยินยอมให้ส่งข่าวสาร โปรโมชั่น และบริการใหม่ทาง LINE (ไม่บังคับ)</label>
+    <label class="check"><input type="checkbox" id="grp" ${r.grp ? 'checked' : ''}> ยินยอมให้บริษัทในกลุ่มติดต่อเสนอบริการชาร์จ/สลับแบตเตอรี่ (ไม่บังคับ)</label>`);
+    setBar(`<button class="btn" onclick="rsNext1()">ถัดไป</button>`);
+    const nt = document.querySelector('.notice'); if (nt && nt.scrollHeight <= nt.clientHeight + 8) $('ack').disabled = false;
+  } else if (r.step === 2) {
+    show(stepHead(RS_STEPS, 2) + `<h2>ถ่ายรูปคู่บัตรประชาชน</h2><p class="hint">ถ่ายรูปตัวท่านถือบัตรประชาชนตัวจริง ให้เห็นใบหน้าและบัตรชัดเจน</p>
+    <div class="photos"><div class="ph ${r.selfie ? 'done' : ''}" onclick="rsSelfie()" style="grid-column:span 3">${r.selfie ? `<img src="${r.selfie}">` : '&#x1F933;'}<span class="cap">${r.selfie ? 'แตะเพื่อถ่ายใหม่' : 'แตะเพื่อถ่ายรูป'}</span></div></div>`);
+    setBar(`<button class="btn sec" onclick="S.rs.step=1;rsRender()">ย้อนกลับ</button><button class="btn" onclick="rsNext2()">ถัดไป</button>`);
+  } else {
+    show(stepHead(RS_STEPS, 3) + `<h2>เซ็นชื่อ</h2><p class="hint">เซ็นชื่อในกรอบด้านล่างด้วยนิ้ว ลายเซ็นนี้จะใช้ในสัญญาและเอกสารแนบท้ายทุกฉบับ</p>
+    <canvas id="sigC" class="sig"></canvas><button class="btn sec mt" onclick="padC.clear()">ล้างลายเซ็น</button>
+    <p class="small muted mt">เมื่อกด "ยืนยันลงนาม" ถือว่าท่านลงลายมือชื่ออิเล็กทรอนิกส์ในสัญญาเลขที่ ${esc(x.contract_id)} ตามพระราชบัญญัติว่าด้วยธุรกรรมทางอิเล็กทรอนิกส์ พ.ศ. 2544</p>`);
+    window.padC = sigPad('sigC');
+    setBar(`<button class="btn sec" onclick="S.rs.step=2;rsRender()">ย้อนกลับ</button><button class="btn" onclick="rsSubmit()">ยืนยันลงนาม</button>`);
+  }
+  window.scrollTo(0, 0);
+}
+async function rsVerify() {
+  const r = S.rs;
+  if (!/^\d{4}$/.test(String(r.id4 || ''))) return toast('กรอกเลขบัตรประชาชน 4 หลักท้าย');
+  try { r.info = await busy('กำลังตรวจสอบ…', apiRaw('verifyId4', S.rsTok, r.id4)); r.step = 1; rsRender(); }
+  catch (e) {
+    fail(e);
+    const m = String(e.message).match(/เหลือ (\d+) ครั้ง/); if (m) { r.d.tries_left = Number(m[1]); if (r.d.tries_left === 0) r.d.locked = true; rsRender(); }
+    if (/ล็อก/.test(e.message)) { r.d.locked = true; rsRender(); }
+  }
+}
+function rsNext1() {
+  const r = S.rs; r.ack = $('ack').checked; r.read = $('rd').checked; r.mkt = $('mkt').checked; r.grp = $('grp').checked;
+  if (!r.ack) return toast('กรุณาเลื่อนอ่านประกาศความเป็นส่วนตัวให้จบ แล้วติ๊กรับทราบ');
+  if (!r.read) return toast('กรุณาอ่านสัญญาแล้วติ๊กยอมรับเงื่อนไข');
+  r.step = 2; rsRender();
+}
+async function rsSelfie() { const d = await pickPhoto('user'); if (d) { S.rs.selfie = d; rsRender(); } }
+function rsNext2() { if (!S.rs.selfie) return toast('กรุณาถ่ายรูปตัวท่านคู่บัตรประชาชน'); S.rs.step = 3; rsRender(); }
+async function rsSubmit() {
+  const r = S.rs;
+  if (padC.empty()) return toast('กรุณาเซ็นชื่อในกรอบ');
+  try {
+    await busy('กำลังบันทึกลายเซ็น…', apiRaw('submitRemoteSign', S.rsTok, { id4: r.id4, selfie: r.selfie, signature: padC.data(), pdpaAck: r.ack, marketing: r.mkt, group: r.grp, userAgent: navigator.userAgent }));
+    r.done = true; rsRender();
+  } catch (e) { fail(e); }
+}
+
+/* ===================== เริ่มต้น ===================== */
+window.addEventListener('error', e => { const a = $('app'); if (a && !a.innerHTML) a.innerHTML = '<div class="alert bad mt">เกิดข้อผิดพลาด: ' + esc(e.message) + '</div>'; });
+function startApp() { S.token ? boot() : screenLogin(); }
+function startWith(t) { try { t ? startRemoteSign(t) : startApp(); } catch (e) { $('app').innerHTML = '<div class="alert bad mt">เกิดข้อผิดพลาด: ' + esc(e.message) + '</div>'; } }
+if (IN_GAS) {
+  // ลิงก์เซ็นสัญญาของลูกค้า: ...exec?sign=xxxx
+  try { google.script.url.getLocation(loc => startWith(loc && loc.parameter && loc.parameter.sign)); } catch (e) { startWith(null); }
+} else {
+  // grab.stromthailand.com/sign/<รหัส> หรือ ?sign=<รหัส>
+  const p = location.pathname.replace(/^\/+|\/+$/g, ''), m = p.match(/^sign\/([A-Za-z0-9_-]{8,80})$/);
+  const q = new URLSearchParams(location.search).get('sign');
+  if (p && !m && !q) history.replaceState(null, '', '/');
+  startWith(m ? m[1] : q);
+}
 </script>
 </body>
 </html>
