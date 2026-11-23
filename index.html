@@ -124,7 +124,7 @@
   <div class="title"><span id="hTitle">Grab Fleet</span><div class="sub" id="hSub"></div></div>
   <button id="hTask" class="hide" onclick="taskList()"></button>
   <button id="hLoc" class="hide" onclick="locPicker()"></button>
-  <button id="hMenu" class="hide" onclick="navTo('more')">เมนู</button>
+  <button id="hMenu" class="hide" onclick="navTo('more')" title="ตั้งค่าระบบ" aria-label="ตั้งค่าระบบ" style="font-size:18px;padding:6px 10px">&#x2699;&#xFE0E;</button>
 </div></header>
 <div class="wrap" id="app"></div>
 <div id="barHost"></div>
@@ -296,7 +296,7 @@ const NAV_OF = { home: 'home', list: 'home', search: 'home', contract: 'home',
   more: 'more', active: 'home', users: 'more', password: 'more', legacy: 'more', packages: 'more' };
 function navTabs() {
   return [['home', '&#x1F3E0;', 'หน้าแรก', true], ['follow', '&#x1F4DE;', 'ติดตาม', !can('VIEWER') || may('followup') || may('payment') || may('seize_record')], ['cars', '&#x1F6F5;', 'รถ', true],
-    ['reports', '&#x1F4CA;', 'รายงาน', may('reports')], ['more', '&#x2630;', 'อื่นๆ', true]].filter(t => t[3]);
+    ['reports', '&#x1F4CA;', 'รายงาน', may('reports')]].filter(t => t[3]);
 }
 function navBadge(k) {
   const t = S.today; if (!t) return 0;
@@ -397,7 +397,7 @@ function openMenu() {
 const hubTile = (ic, label, onclick, badge, sub, off) => `<div class="tile${off ? ' off' : ''}" ${off ? '' : `onclick="${onclick}"`} style="position:relative"><span class="ic">${ic}</span>${label}${sub ? `<span class="small muted" style="font-weight:400">${sub}</span>` : ''}${badge ? `<span class="pill bad" style="position:absolute;top:8px;right:8px">${badge}</span>` : ''}</div>`;
 async function ensureToday() { if (!S.today || S.todayLoc !== S.loc) { try { S.today = await api('getToday', S.loc); S.todayLoc = S.loc; renderNav(); } catch (e) { } } return S.today || {}; }
 SCREENS.follow = async () => {
-  setHeader('ติดตาม', locName(S.loc), true); setBar('');
+  setHeader('ติดตาม', locName(S.loc), false); setBar('');
   show('<p class="muted mt">กำลังโหลด…</p>');
   const t = await ensureToday(), a = t.arrears || {};
   show(`<h2>งานติดตาม</h2><p class="hint">โทรแล้วกด "บันทึกการติดตาม" ทุกครั้ง ผลงานจะไปขึ้นในรายงานประจำวัน</p><div class="grid">
@@ -412,7 +412,7 @@ SCREENS.follow = async () => {
   </div>`);
 };
 SCREENS.cars = async () => {
-  setHeader('รถ', locName(S.loc), true); setBar('');
+  setHeader('รถ', locName(S.loc), false); setBar('');
   show('<p class="muted mt">กำลังโหลด…</p>');
   const t = await ensureToday(), vc = t.vehicleCounts || {};
   show(`<h2>รถในพื้นที่</h2><div class="small muted">ว่าง ${vc['ว่าง'] || 0} · ให้เช่า ${vc['ให้เช่า'] || 0} · จองแล้ว ${vc['จองแล้ว'] || 0} · ซ่อม ${vc['ส่งซ่อม'] || 0} · รอเคลม ${vc['รอเคลม'] || 0}</div><div class="grid mt">
@@ -422,7 +422,7 @@ SCREENS.cars = async () => {
   </div>`);
 };
 SCREENS.reports = async () => {
-  setHeader('รายงาน', locName(S.loc), true); setBar('');
+  setHeader('รายงาน', locName(S.loc), false); setBar('');
   show('<p class="muted mt">กำลังโหลด…</p>');
   const t = await ensureToday();
   show(`<h2>รายงานและอนุมัติ</h2><div class="grid">
@@ -433,7 +433,7 @@ SCREENS.reports = async () => {
   </div>`);
 };
 SCREENS.more = () => {
-  setHeader('อื่นๆ', locName(S.loc), true); setBar('');
+  setHeader('ตั้งค่าระบบ', locName(S.loc), true); setBar('');
   show(`<div class="card mt"><b>${esc(S.user.display_name)}</b><div class="small muted">${esc(S.user.username)} · ${esc(S.user.role)} · พื้นที่ ${esc(locName(S.loc))}</div></div>
     ${can('ADMIN') ? `<div class="item" onclick="go('legacy')"><div><div class="l1">ข้อมูลจาก AppSheet</div><div class="l2">ดึงสัญญา/รถจาก AppSheet เข้าระบบอัตโนมัติทุกวัน จนกว่าจะเริ่มใช้จริง</div></div><div>›</div></div>` : ''}
     ${may('packages') ? `<div class="item" onclick="go('packages')"><div><div class="l1">แพ็กเกจและราคาค่าเช่า</div><div class="l2">ตั้งค่าเช่ารายวันและเงินมัดจำ แยกตามสาขา รุ่น และระยะเวลา</div></div><div>›</div></div>` : ''}
@@ -509,7 +509,7 @@ async function lgSet(d) { try { S.lg = await busy('กำลังบันท�
 /* ===================== เลือกพื้นที่ ===================== */
 SCREENS.pickLoc = () => {
   setHeader('เลือกพื้นที่', S.user.display_name, S.history.length > 0); setBar('');
-  show(`<h2>เลือกพื้นที่ที่จะทำงาน</h2><p class="hint">เปลี่ยนพื้นที่ภายหลังได้จากปุ่ม "เมนู" มุมขวาบน</p>
+  show(`<h2>เลือกพื้นที่ที่จะทำงาน</h2><p class="hint">เปลี่ยนพื้นที่ภายหลังได้จากปุ่ม 📍 ชื่อพื้นที่ ด้านบน</p>
   ${S.boot.locations.map(l => `<div class="item" onclick="setLoc('${esc(l.code)}')"><div><div class="l1">${esc(l.name)}</div><div class="l2">${esc(l.code)}</div></div><div>›</div></div>`).join('')}`);
 };
 /* จำพื้นที่ล่าสุดแยกตามผู้ใช้ (เครื่องเดียวกันหลายคนใช้ ไม่ติดพื้นที่ของคนก่อน) */
